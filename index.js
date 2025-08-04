@@ -125,6 +125,185 @@ const uploadPage = `
             20% { text-shadow: 2px -2px 8px black, 0 0 20px #00ffff; }
             30% { text-shadow: -2px -2px 8px black, 0 0 20px #ffff00; }
         }
+            /* MAXIMUM CHAOS GALLERY BUTTON STYLING */
+        .gallery-access {
+            text-align: center;
+            margin: 3em 0;
+            animation: gallery-section-float 4s ease-in-out infinite;
+        }
+        @keyframes gallery-section-float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        .gallery-btn {
+            display: inline-block;
+            padding: 2em 3em;
+            font-size: 1.8em;
+            font-weight: bold;
+            text-decoration: none;
+            color: black;
+            background: linear-gradient(45deg, #ff00cc, #00ffff, #ffff00, #ff0000, #ff00cc);
+            background-size: 800% 800%;
+            border-radius: 30px;
+            border: 5px solid gold;
+            font-family: 'Comic Sans MS', cursive;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            text-shadow: 2px 2px 4px white, -1px -1px 2px black;
+            box-shadow: 
+                0 0 50px rgba(255,255,255,0.6),
+                inset 0 0 30px rgba(0,0,0,0.3),
+                0 10px 30px rgba(0,0,0,0.4);
+            animation: 
+                gallery-btn-rave 2s infinite,
+                gallery-btn-pulse 3s infinite,
+                gallery-btn-chaos 4s infinite,
+                gallery-btn-float 5s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+            transform: rotate(-1deg);
+            transition: all 0.3s ease;
+        }
+        
+        @keyframes gallery-btn-rave {
+            0% { background-position: 0% 50%; }
+            25% { background-position: 100% 25%; }
+            50% { background-position: 50% 100%; }
+            75% { background-position: 0% 75%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes gallery-btn-pulse {
+            0% { 
+                box-shadow: 
+                    0 0 50px rgba(255,255,255,0.6),
+                    inset 0 0 30px rgba(0,0,0,0.3),
+                    0 10px 30px rgba(0,0,0,0.4);
+                transform: rotate(-1deg) scale(1);
+            }
+            25% { 
+                box-shadow: 
+                    0 0 70px rgba(255,0,204,0.8),
+                    inset 0 0 40px rgba(255,255,0,0.2),
+                    0 15px 40px rgba(255,0,204,0.3);
+                transform: rotate(0deg) scale(1.02);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 60px rgba(0,255,255,0.7),
+                    inset 0 0 35px rgba(255,0,204,0.25),
+                    0 12px 35px rgba(0,255,255,0.35);
+                transform: rotate(1deg) scale(0.98);
+            }
+            75% { 
+                box-shadow: 
+                    0 0 80px rgba(255,255,0,0.9),
+                    inset 0 0 45px rgba(0,255,255,0.2),
+                    0 18px 45px rgba(255,255,0,0.25);
+                transform: rotate(-0.5deg) scale(1.01);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 50px rgba(255,255,255,0.6),
+                    inset 0 0 30px rgba(0,0,0,0.3),
+                    0 10px 30px rgba(0,0,0,0.4);
+                transform: rotate(-1deg) scale(1);
+            }
+        }
+        
+        @keyframes gallery-btn-chaos {
+            0% { filter: brightness(1) contrast(1) saturate(1); }
+            20% { filter: brightness(1.2) contrast(1.1) saturate(1.3); }
+            40% { filter: brightness(0.9) contrast(1.3) saturate(1.5); }
+            60% { filter: brightness(1.1) contrast(0.9) saturate(1.2); }
+            80% { filter: brightness(1.05) contrast(1.2) saturate(0.8); }
+            100% { filter: brightness(1) contrast(1) saturate(1); }
+        }
+        
+        @keyframes gallery-btn-float {
+            0%, 100% { transform: rotate(-1deg) translateY(0px); }
+            25% { transform: rotate(0.5deg) translateY(-5px); }
+            50% { transform: rotate(1deg) translateY(-10px); }
+            75% { transform: rotate(-0.5deg) translateY(-3px); }
+        }
+        
+        .gallery-btn:hover {
+            animation: 
+                gallery-btn-rave 0.5s infinite,
+                gallery-btn-pulse 1s infinite,
+                gallery-btn-chaos 1s infinite,
+                gallery-btn-hover-shake 0.3s infinite;
+            transform: rotate(2deg) scale(1.1);
+            filter: brightness(1.3) saturate(1.5);
+            border-color: #ffff00;
+            text-shadow: 3px 3px 6px white, -2px -2px 4px black, 0 0 20px #ff00cc;
+        }
+        
+        @keyframes gallery-btn-hover-shake {
+            0% { transform: rotate(2deg) scale(1.1) translateX(0px); }
+            25% { transform: rotate(1deg) scale(1.12) translateX(-2px); }
+            50% { transform: rotate(3deg) scale(1.08) translateX(2px); }
+            75% { transform: rotate(1.5deg) scale(1.11) translateX(-1px); }
+            100% { transform: rotate(2deg) scale(1.1) translateX(1px); }
+        }
+        
+        /* GALLERY BUTTON SPARKLE EFFECT */
+        .gallery-btn::before {
+            content: "✨💎✨💎✨💎✨💎✨💎✨💎✨💎✨";
+            position: absolute;
+            top: -10px;
+            left: -50px;
+            right: -50px;
+            height: 20px;
+            animation: sparkle-move 3s linear infinite;
+            pointer-events: none;
+            font-size: 1.2em;
+            opacity: 0.8;
+        }
+        
+        @keyframes sparkle-move {
+            0% { transform: translateX(-100px) rotate(0deg); }
+            100% { transform: translateX(100px) rotate(360deg); }
+        }
+        
+        /* GALLERY BUTTON PARTICLE TRAIL */
+        .gallery-btn::after {
+            content: "🎰🖼️💀🔥🎰🖼️💀🔥🎰🖼️💀🔥";
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            right: 0;
+            height: 30px;
+            animation: particle-trail 4s linear infinite;
+            pointer-events: none;
+            font-size: 0.8em;
+            opacity: 0.6;
+            text-align: center;
+        }
+        
+        @keyframes particle-trail {
+            0% { transform: translateY(0px) scale(1) rotate(0deg); opacity: 0.6; }
+            50% { transform: translateY(-10px) scale(1.1) rotate(180deg); opacity: 0.3; }
+            100% { transform: translateY(-20px) scale(0.8) rotate(360deg); opacity: 0; }
+        }
+        
+        /* MOBILE RESPONSIVE GALLERY BUTTON */
+        @media (max-width: 768px) {
+            .gallery-btn {
+                font-size: 1.4em;
+                padding: 1.5em 2em;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .gallery-btn {
+                font-size: 1.2em;
+                padding: 1.2em 1.5em;
+                border-radius: 20px;
+            }
+        }
+
         .casino-info {
             font-size: 1.6em;
             margin: 2em;
@@ -430,7 +609,15 @@ const uploadPage = `
         <p>🔥 <strong>POWERED BY:</strong> Pure Ohio energy, Skibidi toilet blessings, and your mom's disappointment 🔥</p>
         <p>💀 <strong>BUILT WITH:</strong> Maximum brainrot, weaponized cringe, and Comic Sans supremacy 💀</p>
         <p>🎭 <strong>CERTIFIED:</strong> Gen Alpha nightmare, Boomer tears collector, Millennial trauma activator 🎭</p>
+        
+        <!-- 🎰💀 ABSOLUTE CHAOS GALLERY BUTTON 💀🎰 -->
+        <div class="gallery-access" style="margin-top: 3em;">
+            <a href="/gallery" class="gallery-btn">
+                🖼️🎰💀 WITNESS THE GALLERY OF ABSOLUTE FUCKING CHAOS 💀🎰🖼️
+            </a>
+        </div>
     </div>
+
 
     <script>
         // Add some chaotic interactivity because why the fuck not
@@ -660,13 +847,17 @@ app.post('/upload', upload.single('image'), async (req, res) => {
 
     const id = data[0].id
     
-    // MAXIMUM BRAINROT CHAOS RESULT PAGE
+    // MAXIMUM BRAINROT CHAOS RESULT PAGE - BUTTONS THAT ACTUALLY FUCKING WORK ON 1080P TWIN!!!
     const resultPage = `
     <!DOCTYPE html>
     <html>
     <head>
         <title>🎰💀 GAMBLING RESULTS OF PURE FUCKING CHAOS 💀🎰</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
+            * {
+                box-sizing: border-box;
+            }
             body { 
                 font-family: 'Comic Sans MS', cursive; 
                 background: linear-gradient(45deg, #ff00cc, #00ffff, #ffff00, #ff0000, #ff00cc);
@@ -675,64 +866,56 @@ app.post('/upload', upload.single('image'), async (req, res) => {
                 color: white; 
                 text-align: center; 
                 padding: 2rem;
-                overflow: hidden;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                overflow-x: hidden;
                 cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><text y="16" font-size="16">🎲</text></svg>'), auto;
             }
             @keyframes result-chaos {
                 0% { background-position: 0% 50%; }
-                20% { background-position: 100% 50%; }
-                40% { background-position: 100% 100%; }
-                60% { background-position: 0% 100%; }
-                80% { background-position: 50% 0%; }
+                50% { background-position: 100% 50%; }
                 100% { background-position: 0% 50%; }
             }
             @keyframes body-wiggle {
-                0% { transform: rotate(0deg) scale(1); }
-                25% { transform: rotate(0.5deg) scale(1.01); }
-                50% { transform: rotate(-0.3deg) scale(0.99); }
-                75% { transform: rotate(0.2deg) scale(1.005); }
-                100% { transform: rotate(0deg) scale(1); }
+                0%, 100% { transform: rotate(0deg); }
+                25% { transform: rotate(0.3deg); }
+                50% { transform: rotate(0deg); }
+                75% { transform: rotate(-0.3deg); }
             }
-            h1 {
-                font-size: 3.5em;
-                animation: title-explosion 1.5s infinite, title-brainrot 2s infinite;
-                text-shadow: 3px 3px 8px black, 0 0 30px #fff;
-                margin: 0.5em 0;
-                text-transform: uppercase;
-                letter-spacing: 0.1em;
+            h1 { 
+                font-size: clamp(1.5rem, 5vw, 3rem);
+                text-shadow: 4px 4px 8px black, 0 0 30px #ff00cc;
+                animation: title-chaos 2s infinite, title-float 3s infinite;
+                margin: 1rem 0;
             }
-            @keyframes title-explosion {
-                0% { transform: scale(1) rotate(0deg); }
-                25% { transform: scale(1.03) rotate(1deg); }
-                50% { transform: scale(1.07) rotate(-1deg); }
-                75% { transform: scale(1.02) rotate(0.5deg); }
-                100% { transform: scale(1) rotate(0deg); }
+            @keyframes title-chaos {
+                0% { color: #ffff00; transform: scale(1); }
+                25% { color: #ff00cc; transform: scale(1.02); }
+                50% { color: #00ffff; transform: scale(0.98); }
+                75% { color: #ff0000; transform: scale(1.01); }
+                100% { color: #ffff00; transform: scale(1); }
             }
-            @keyframes title-brainrot {
-                0% { filter: hue-rotate(0deg) brightness(1); }
-                25% { filter: hue-rotate(90deg) brightness(1.2); }
-                50% { filter: hue-rotate(180deg) brightness(0.9); }
-                75% { filter: hue-rotate(270deg) brightness(1.1); }
-                100% { filter: hue-rotate(360deg) brightness(1); }
+            @keyframes title-float {
+                0%, 100% { transform: translateY(0px); }
+                50% { transform: translateY(-5px); }
             }
             .brainrot-subtitle {
-                font-size: 1.4em;
-                color: #ffff00;
-                margin: 1em 0;
-                animation: subtitle-chaos 2s infinite;
+                font-size: clamp(1rem, 3vw, 1.5rem);
+                color: #00ffff;
                 text-shadow: 2px 2px 4px black;
-                font-weight: bold;
+                animation: subtitle-pulse 1.5s infinite;
+                margin: 1rem 0;
             }
-            @keyframes subtitle-chaos {
-                0% { transform: skew(0deg, 0deg); }
-                25% { transform: skew(2deg, 1deg); }
-                50% { transform: skew(-2deg, -1deg); }
-                75% { transform: skew(1deg, -2deg); }
-                100% { transform: skew(0deg, 0deg); }
+            @keyframes subtitle-pulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.7; }
             }
             .result { 
-                font-size: 2.8em; 
-                margin: 1.5em 0; 
+                font-size: clamp(1.2rem, 4vw, 2.5rem);
+                margin: 2rem auto;
                 background: rgba(0,0,0,0.95); 
                 padding: 2em; 
                 border-radius: 30px; 
@@ -755,41 +938,66 @@ app.post('/upload', upload.single('image'), async (req, res) => {
             }
             @keyframes result-glow {
                 0% { border-color: gold; }
-                20% { border-color: #ff00cc; }
-                40% { border-color: #00ffff; }
-                60% { border-color: #ffff00; }
-                80% { border-color: #ff0000; }
+                33% { border-color: #ff00cc; }
+                66% { border-color: #00ffff; }
                 100% { border-color: gold; }
             }
-            @keyframes result-chaos {
-                0% { filter: brightness(1) saturate(1); }
-                25% { filter: brightness(1.2) saturate(1.5); }
-                50% { filter: brightness(0.9) saturate(2); }
-                75% { filter: brightness(1.1) saturate(1.3); }
-                100% { filter: brightness(1) saturate(1); }
+            .roll-info {
+                font-size: clamp(1rem, 3vw, 1.5rem);
+                color: #ffff00;
+                text-shadow: 2px 2px 4px black;
+                animation: roll-pulse 1s infinite;
+                margin: 2rem 0;
             }
-            a { 
-                color: #00ffff; 
-                font-size: 2em; 
+            @keyframes roll-pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+            }
+
+            /* BUTTON CONTAINER - FIXED FOR 1080P VISIBILITY BESTIE!!! */
+            .button-container {
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+                align-items: center;
+                justify-content: center;
+                margin: 3rem 0;
+                width: 100%;
+                max-width: 800px;
+                position: relative;
+                z-index: 1000;
+            }
+
+            /* BUTTON STYLING - ENHANCED VISIBILITY FOR ALL SCREENS TWIN!!! */
+            .button-container a { 
+                color: white; 
                 text-decoration: none; 
-                background: linear-gradient(45deg, black, #333, #666, #333, black);
-                background-size: 400% 400%;
+                background: linear-gradient(45deg, #000, #333, #000);
+                background-size: 200% 200%;
                 padding: 1.5em 3em; 
                 border-radius: 20px; 
                 border: 4px solid white;
                 display: inline-block;
-                margin: 1.5em;
                 animation: link-rave 1.5s infinite, link-chaos 2s infinite;
                 font-weight: bold;
                 text-transform: uppercase;
                 letter-spacing: 0.1em;
-                box-shadow: 0 0 30px rgba(255,255,255,0.5);
+                box-shadow: 0 0 30px rgba(255,255,255,0.8), 0 0 60px rgba(255,255,255,0.3);
+                min-width: 300px;
+                font-size: clamp(1rem, 2.5vw, 1.3rem);
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
             }
-            a:hover { 
+
+            .button-container a:hover { 
                 animation: link-rave 0.5s infinite, link-chaos 0.5s infinite;
                 transform: scale(1.1) rotate(2deg);
                 filter: brightness(1.3);
+                box-shadow: 0 0 50px rgba(255,255,255,1), 0 0 100px rgba(255,255,255,0.5);
             }
+
+            /* ENHANCED BUTTON ANIMATIONS THAT ABSOLUTELY SEND!!! */
             @keyframes link-rave {
                 0% { background: linear-gradient(45deg, black, #333); color: #00ffff; transform: scale(1); }
                 20% { background: linear-gradient(45deg, #ff00cc, #000); color: #ffff00; transform: scale(1.02); }
@@ -803,42 +1011,17 @@ app.post('/upload', upload.single('image'), async (req, res) => {
                 50% { background-position: 100% 50%; }
                 100% { background-position: 0% 50%; }
             }
-            .roll-info {
-                font-size: 1.8em;
-                color: #ffff00;
-                margin: 2em 0;
-                background: rgba(0,0,0,0.8);
-                padding: 1.5em;
-                border-radius: 20px;
-                animation: dice-roll 2s infinite, roll-chaos 3s infinite;
-                border: 3px dashed #ffff00;
-                display: inline-block;
-                box-shadow: 0 0 40px rgba(255,255,0,0.5);
-                font-weight: bold;
-            }
-            @keyframes dice-roll {
-                0% { transform: rotate(0deg); }
-                25% { transform: rotate(3deg); }
-                50% { transform: rotate(-3deg); }
-                75% { transform: rotate(2deg); }
-                100% { transform: rotate(0deg); }
-            }
-            @keyframes roll-chaos {
-                0% { border-color: #ffff00; box-shadow: 0 0 40px rgba(255,255,0,0.5); }
-                50% { border-color: #ff00cc; box-shadow: 0 0 60px rgba(255,0,204,0.7); }
-                100% { border-color: #ffff00; box-shadow: 0 0 40px rgba(255,255,0,0.5); }
-            }
-            /* CHAOS PARTICLES FOR RESULTS */
-            body::before {
-                content: "🎰💀🔥💩🎲🚽🧠💀🎰💀🔥💩🎲🚽🧠💀🎰💀🔥💩🎲🚽🧠💀";
+
+            /* CHAOS PARTICLES BACKGROUND */
+            .chaos-particles {
                 position: fixed;
                 top: 0;
                 left: 0;
                 width: 100%;
                 height: 100%;
                 pointer-events: none;
-                animation: particle-chaos 8s linear infinite;
                 z-index: -1;
+                animation: particle-chaos 8s linear infinite;
                 font-size: 3em;
                 opacity: 0.15;
             }
@@ -846,26 +1029,80 @@ app.post('/upload', upload.single('image'), async (req, res) => {
                 0% { transform: translateY(120vh) rotate(0deg) scale(1); }
                 100% { transform: translateY(-120vh) rotate(1080deg) scale(0.3); }
             }
+
             .brainrot-footer {
                 margin-top: 3em;
-                font-size: 1.2em;
+                font-size: clamp(0.9rem, 2.5vw, 1.2rem);
                 color: #00ffff;
                 animation: footer-pulse 2s infinite;
+                max-width: 800px;
             }
             @keyframes footer-pulse {
                 0% { opacity: 0.8; }
                 50% { opacity: 1; }
                 100% { opacity: 0.8; }
             }
+
+            /* MOBILE RESPONSIVE FIXES */
+            @media (max-width: 768px) {
+                body {
+                    padding: 1rem;
+                }
+                .button-container a {
+                    min-width: 250px;
+                    padding: 1.2em 2em;
+                }
+                .result {
+                    padding: 1.5em;
+                    margin: 1.5rem auto;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .button-container {
+                    gap: 1rem;
+                }
+                .button-container a {
+                    min-width: 200px;
+                    padding: 1em 1.5em;
+                }
+            }
+
+            /* HIGH RESOLUTION MONITOR FIXES (1080p+) - THIS IS THE SHIT YOU NEEDED TWIN!!! */
+            @media (min-width: 1920px) and (min-height: 1080px) {
+                body {
+                    padding: 3rem;
+                }
+                .button-container {
+                    margin: 4rem 0;
+                }
+                .button-container a {
+                    padding: 2em 4em;
+                    min-width: 400px;
+                    font-size: 1.5rem;
+                }
+            }
+
+            @media (min-width: 1440px) and (min-height: 900px) {
+                .button-container a {
+                    padding: 1.8em 3.5em;
+                    min-width: 350px;
+                }
+            }
         </style>
     </head>
     <body>
+        <div class="chaos-particles">🎰💀🔥💩🎲💀🔥💩🎰💀🔥💩🎲💀🔥💩</div>
+        
         <h1>🎰💀 CASINO RESULTS OF PURE FUCKING CHAOS 💀🎰</h1>
         <div class="brainrot-subtitle">*no cap this shit just hit different twin* 💀💀💀</div>
         <div class="result">${gamblingResult.resultMessage}</div>
         <div class="roll-info">🎲 THE FUCKING DICE OF DESTINY ROLLED: ${gamblingResult.rollPercentage}% 🎲<br><em>RNG Jesus has spoken bestie!</em></div>
-        <p><a href="/i/${id}">🖼️💀 WITNESS THE ABSOLUTE CARNAGE 💀🖼️</a></p>
-        <p><a href="/">🎰🔥 FEED MORE SOULS TO THE CHAOS MACHINE! 🔥🎰</a></p>
+        
+        <div class="button-container">
+            <a href="/i/${id}">🖼️💀 WITNESS THE ABSOLUTE CARNAGE 💀🖼️</a>
+            <a href="/">🎰🔥 FEED MORE SOULS TO THE CHAOS MACHINE! 🔥🎰</a>
+        </div>
         
         <div class="brainrot-footer">
             <p>🚽 <strong>SKIBIDI TOILET APPROVED:</strong> This result is absolutely SENDING! 🚽</p>
@@ -896,7 +1133,6 @@ app.post('/upload', upload.single('image'), async (req, res) => {
     
     res.send(resultPage)
 })
-
 function base64ToBytes(b64) {
 	// base64 length * 3/4 - padding
 	let padding = 0
@@ -1242,7 +1478,506 @@ app.get('/i/:id/raw/download', async (req, res) => {
     // Send the buffer directly
     res.send(Buffer.from(data.data, 'base64'))
 })
+// ...existing code...
 
+app.get('/i/:id/raw/download', async (req, res) => {
+    const { data, error } = await supabase.from('images').select().eq('id', req.params.id).single()
+    if (error || !data) return res.status(404).send('image died like your dad\'s dreams bestie 💀')
+
+    // Extract the base mimetype (remove gambling metadata)
+    const baseMimetype = data.mimetype.split(';')[0]
+    
+    // Generate a filename with proper extension
+    const extension = baseMimetype.includes('jpeg') ? 'jpg' : 
+                     baseMimetype.includes('png') ? 'png' : 
+                     baseMimetype.includes('gif') ? 'gif' : 
+                     baseMimetype.includes('webp') ? 'webp' : 'jpg'
+    
+    const filename = `pissandshit_chaos_${req.params.id}.${extension}`
+    
+    // Set proper headers for download
+    res.set({
+        'Content-Type': baseMimetype,
+        'Content-Disposition': `attachment; filename="${filename}"`,
+        'Content-Description': 'Absolute fucking chaos image (probably destroyed)'
+    })
+    
+    // Send the buffer directly
+    res.send(Buffer.from(data.data, 'base64'))
+})
+app.get('/gallery', async (req, res) => {
+    try {
+        // Get all images from database (limit to prevent chaos overload)
+        const { data: images, error } = await supabase
+            .from('images')
+            .select('id, mimetype')
+            .order('id', { ascending: false })
+            .limit(50)
+
+        if (error) {
+            console.error('Gallery fetch error:', error)
+            return res.status(500).send('Gallery exploded like your brain cells 💀')
+        }
+
+        // Generate image cards with gambling info
+        const imageCards = images.map((img, index) => {
+            let gamblingBadge = ""
+            let gamblingClass = "unknown"
+            
+            if (img.mimetype.includes('gambling=')) {
+                const parts = img.mimetype.split(';')
+                const gamblingResult = parts.find(p => p.includes('gambling='))?.split('=')[1] || 'UNKNOWN'
+                const rollResult = parts.find(p => p.includes('roll='))?.split('=')[1] || '0'
+                
+                const badges = {
+                    'EXTREME_NUCLEAR': { text: '💀☢️ NUKED', class: 'nuclear', color: '#ff0000' },
+                    'NORMAL_SHIT': { text: '💩 SHITTY', class: 'shit', color: '#ff8800' },
+                    'LUCKY_SURVIVOR': { text: '✨ LUCKY', class: 'lucky', color: '#00ff00' }
+                }
+                
+                const badge = badges[gamblingResult] || { text: '❓ UNKNOWN', class: 'unknown', color: '#666666' }
+                gamblingBadge = `<div class="gambling-badge ${badge.class}" style="background-color: ${badge.color};">${badge.text}<br><small>${rollResult}%</small></div>`
+                gamblingClass = badge.class
+            }
+
+            return `
+            <div class="image-card ${gamblingClass}" style="animation-delay: ${index * 0.1}s;">
+                ${gamblingBadge}
+                <div class="image-container">
+                    <img src="/i/${img.id}/raw" alt="Chaos Image ${img.id}" loading="lazy" />
+                    <div class="image-overlay">
+                        <a href="/i/${img.id}" class="view-btn">👁️ WITNESS</a>
+                    </div>
+                </div>
+                <div class="image-id">ID: ${img.id.substring(0, 8)}...</div>
+            </div>`
+        }).join('')
+
+        const galleryPage = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>🎰🖼️ PISSANDSHITIMAGES GALLERY OF PURE FUCKING CHAOS 🖼️🎰</title>
+            <style>
+                body {
+                    margin: 0;
+                    padding: 0;
+                    font-family: 'Comic Sans MS', 'Papyrus', 'Brush Script MT', cursive, sans-serif;
+                    background: linear-gradient(135deg, #111111, #330033, #003333, #333300, #111111);
+                    background-size: 800% 800%;
+                    color: white;
+                    animation: gallery-chaos 8s infinite, body-drift 6s ease-in-out infinite;
+                    overflow-x: hidden;
+                    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><text y="16" font-size="16">🖼️</text></svg>'), auto;
+                }
+                @keyframes gallery-chaos {
+                    0% { background-position: 0% 50%; }
+                    25% { background-position: 100% 25%; }
+                    50% { background-position: 50% 100%; }
+                    75% { background-position: 0% 75%; }
+                    100% { background-position: 0% 50%; }
+                }
+                @keyframes body-drift {
+                    0%, 100% { transform: translateY(0px) rotate(0deg); }
+                    33% { transform: translateY(-3px) rotate(0.2deg); }
+                    66% { transform: translateY(2px) rotate(-0.2deg); }
+                }
+                
+                .header {
+                    text-align: center;
+                    padding: 2rem;
+                    position: relative;
+                }
+                
+                h1 {
+                    font-size: 4rem;
+                    text-shadow: 4px 4px 12px black, 0 0 40px #ff00cc, 0 0 80px #00ffff;
+                    margin: 0.5em 0;
+                    animation: gallery-title 2s infinite, title-shake 1.5s infinite;
+                    transform: rotate(-2deg);
+                    letter-spacing: 0.1em;
+                    text-transform: uppercase;
+                }
+                @keyframes gallery-title {
+                    0% { 
+                        color: #ffffff;
+                        text-shadow: 4px 4px 12px black, 0 0 40px #ff00cc, 0 0 80px #00ffff;
+                        filter: brightness(1);
+                    }
+                    25% { 
+                        color: #ffff00;
+                        text-shadow: 4px 4px 12px black, 0 0 60px #ffff00, 0 0 100px #ff00cc;
+                        filter: brightness(1.2);
+                    }
+                    50% { 
+                        color: #00ffff;
+                        text-shadow: 4px 4px 12px black, 0 0 50px #00ffff, 0 0 90px #ffff00;
+                        filter: brightness(0.9);
+                    }
+                    75% { 
+                        color: #ff00cc;
+                        text-shadow: 4px 4px 12px black, 0 0 70px #ff00cc, 0 0 110px #00ffff;
+                        filter: brightness(1.1);
+                    }
+                    100% { 
+                        color: #ffffff;
+                        text-shadow: 4px 4px 12px black, 0 0 40px #ff00cc, 0 0 80px #00ffff;
+                        filter: brightness(1);
+                    }
+                }
+                @keyframes title-shake {
+                    0% { transform: rotate(-2deg) translateX(0px) scale(1); }
+                    20% { transform: rotate(-1deg) translateX(-1px) scale(1.01); }
+                    40% { transform: rotate(-3deg) translateX(1px) scale(0.99); }
+                    60% { transform: rotate(-1.5deg) translateX(-0.5px) scale(1.005); }
+                    80% { transform: rotate(-2.5deg) translateX(0.5px) scale(0.995); }
+                    100% { transform: rotate(-2deg) translateX(0px) scale(1); }
+                }
+                
+                .brainrot-subtitle {
+                    font-size: 1.6em;
+                    color: #ffff00;
+                    margin: 1em 0;
+                    animation: subtitle-glitch 3s infinite;
+                    text-shadow: 2px 2px 6px black;
+                    font-weight: bold;
+                    text-transform: lowercase;
+                }
+                @keyframes subtitle-glitch {
+                    0%, 90% { transform: skew(0deg, 0deg); }
+                    5% { transform: skew(2deg, 1deg); }
+                    10% { transform: skew(-1deg, -0.5deg); }
+                    15% { transform: skew(0.5deg, -1deg); }
+                    20% { transform: skew(0deg, 0deg); }
+                }
+                
+                .gallery-stats {
+                    background: rgba(0,0,0,0.9);
+                    padding: 1.5em;
+                    border-radius: 20px;
+                    border: 3px dashed gold;
+                    display: inline-block;
+                    margin: 2em;
+                    animation: stats-pulse 3s infinite, stats-float 4s ease-in-out infinite;
+                    box-shadow: 0 0 40px rgba(255,215,0,0.3);
+                }
+                @keyframes stats-pulse {
+                    0% { border-color: gold; box-shadow: 0 0 40px rgba(255,215,0,0.3); }
+                    33% { border-color: #ff00cc; box-shadow: 0 0 50px rgba(255,0,204,0.4); }
+                    66% { border-color: #00ffff; box-shadow: 0 0 45px rgba(0,255,255,0.35); }
+                    100% { border-color: gold; box-shadow: 0 0 40px rgba(255,215,0,0.3); }
+                }
+                @keyframes stats-float {
+                    0%, 100% { transform: translateY(0px) rotate(1deg); }
+                    50% { transform: translateY(-8px) rotate(-1deg); }
+                }
+                
+                .gallery-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                    gap: 2rem;
+                    padding: 2rem;
+                    max-width: 1400px;
+                    margin: 0 auto;
+                }
+                
+                .image-card {
+                    background: rgba(0,0,0,0.8);
+                    border-radius: 20px;
+                    overflow: hidden;
+                    position: relative;
+                    animation: card-entrance 0.8s ease-out, card-float 6s ease-in-out infinite;
+                    box-shadow: 0 0 30px rgba(255,255,255,0.1);
+                    border: 2px solid transparent;
+                    transition: all 0.3s ease;
+                }
+                @keyframes card-entrance {
+                    from { opacity: 0; transform: translateY(50px) rotate(10deg) scale(0.8); }
+                    to { opacity: 1; transform: translateY(0px) rotate(0deg) scale(1); }
+                }
+                @keyframes card-float {
+                    0%, 100% { transform: translateY(0px) rotate(0deg); }
+                    33% { transform: translateY(-5px) rotate(0.5deg); }
+                    66% { transform: translateY(3px) rotate(-0.5deg); }
+                }
+                
+                .image-card:hover {
+                    transform: scale(1.05) rotate(2deg);
+                    box-shadow: 0 0 50px rgba(255,255,255,0.3);
+                    z-index: 10;
+                }
+                
+                .image-card.nuclear {
+                    border-color: #ff0000;
+                    box-shadow: 0 0 30px rgba(255,0,0,0.3);
+                }
+                .image-card.shit {
+                    border-color: #ff8800;
+                    box-shadow: 0 0 30px rgba(255,136,0,0.3);
+                }
+                .image-card.lucky {
+                    border-color: #00ff00;
+                    box-shadow: 0 0 30px rgba(0,255,0,0.3);
+                }
+                
+                .gambling-badge {
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    padding: 0.5em;
+                    border-radius: 10px;
+                    font-size: 0.9em;
+                    font-weight: bold;
+                    text-align: center;
+                    z-index: 5;
+                    animation: badge-pulse 2s infinite;
+                    border: 2px solid rgba(255,255,255,0.3);
+                    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+                }
+                @keyframes badge-pulse {
+                    0% { transform: scale(1); }
+                    50% { transform: scale(1.05); }
+                    100% { transform: scale(1); }
+                }
+                
+                .image-container {
+                    position: relative;
+                    height: 250px;
+                    overflow: hidden;
+                }
+                
+                .image-container img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    transition: transform 0.3s ease;
+                    animation: img-subtle-chaos 8s infinite;
+                }
+                @keyframes img-subtle-chaos {
+                    0% { filter: brightness(1) contrast(1) saturate(1); }
+                    25% { filter: brightness(1.05) contrast(1.1) saturate(1.1); }
+                    50% { filter: brightness(0.95) contrast(1.2) saturate(1.2); }
+                    75% { filter: brightness(1.02) contrast(0.9) saturate(0.9); }
+                    100% { filter: brightness(1) contrast(1) saturate(1); }
+                }
+                
+                .image-container:hover img {
+                    transform: scale(1.1) rotate(1deg);
+                }
+                
+                .image-overlay {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(0,0,0,0.8);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    opacity: 0;
+                    transition: opacity 0.3s ease;
+                }
+                
+                .image-container:hover .image-overlay {
+                    opacity: 1;
+                }
+                
+                .view-btn {
+                    background: linear-gradient(45deg, #ff00cc, #00ffff, #ffff00, #ff0000);
+                    background-size: 400% 400%;
+                    color: black;
+                    text-decoration: none;
+                    padding: 1em 2em;
+                    border-radius: 15px;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    animation: btn-rave 2s infinite;
+                    box-shadow: 0 0 20px rgba(255,255,255,0.5);
+                }
+                @keyframes btn-rave {
+                    0% { background-position: 0% 50%; transform: scale(1); }
+                    25% { background-position: 100% 50%; transform: scale(1.02); }
+                    50% { background-position: 100% 100%; transform: scale(0.98); }
+                    75% { background-position: 0% 100%; transform: scale(1.01); }
+                    100% { background-position: 0% 50%; transform: scale(1); }
+                }
+                
+                .view-btn:hover {
+                    animation: btn-rave 0.5s infinite;
+                    transform: scale(1.1);
+                }
+                
+                .image-id {
+                    padding: 1em;
+                    text-align: center;
+                    font-size: 0.9em;
+                    color: #ccc;
+                    background: rgba(0,0,0,0.5);
+                }
+                
+                .navigation-buttons {
+                    text-align: center;
+                    padding: 3em;
+                }
+                
+                .nav-btn {
+                    display: inline-block;
+                    margin: 1em;
+                    padding: 1.5em 3em;
+                    background: linear-gradient(45deg, #ff0000, #ffff00, #ff00cc, #00ffff);
+                    background-size: 600% 600%;
+                    color: black;
+                    text-decoration: none;
+                    border-radius: 25px;
+                    font-weight: bold;
+                    font-size: 1.2em;
+                    text-transform: uppercase;
+                    animation: nav-chaos 3s infinite, nav-float 4s ease-in-out infinite;
+                    box-shadow: 0 0 40px rgba(255,255,255,0.3);
+                    letter-spacing: 0.1em;
+                }
+                @keyframes nav-chaos {
+                    0% { background-position: 0% 50%; filter: brightness(1); }
+                    25% { background-position: 100% 25%; filter: brightness(1.2); }
+                    50% { background-position: 50% 100%; filter: brightness(0.9); }
+                    75% { background-position: 0% 75%; filter: brightness(1.1); }
+                    100% { background-position: 0% 50%; filter: brightness(1); }
+                }
+                @keyframes nav-float {
+                    0%, 100% { transform: translateY(0px) rotate(0deg); }
+                    50% { transform: translateY(-10px) rotate(1deg); }
+                }
+                
+                .nav-btn:hover {
+                    animation: nav-chaos 1s infinite, nav-float 1s infinite;
+                    transform: scale(1.1) rotate(3deg);
+                }
+                
+                /* CHAOS PARTICLES FOR GALLERY */
+                body::before {
+                    content: "🖼️🎰💀🔥🖼️🎰💀🔥🚽🖼️🎰💀🔥🖼️🧠💀🔥🖼️🎰💀🔥";
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    pointer-events: none;
+                    animation: gallery-particles 12s linear infinite;
+                    z-index: -1;
+                    font-size: 2em;
+                    opacity: 0.08;
+                }
+                @keyframes gallery-particles {
+                    0% { transform: translateY(120vh) translateX(-50px) rotate(0deg); }
+                    100% { transform: translateY(-120vh) translateX(50px) rotate(1080deg); }
+                }
+                
+                .brainrot-footer {
+                    margin-top: 4em;
+                    text-align: center;
+                    font-size: 1.1em;
+                    color: #00ffff;
+                    animation: footer-chaos 4s infinite;
+                    padding: 2em;
+                }
+                @keyframes footer-chaos {
+                    0% { opacity: 0.8; transform: rotate(0deg); }
+                    50% { opacity: 1; transform: rotate(0.3deg); }
+                    100% { opacity: 0.8; transform: rotate(0deg); }
+                }
+                
+                /* MOBILE RESPONSIVE CHAOS */
+                @media (max-width: 768px) {
+                    .gallery-grid {
+                        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                        gap: 1rem;
+                        padding: 1rem;
+                    }
+                    h1 {
+                        font-size: 2.5rem;
+                    }
+                    .image-container {
+                        height: 200px;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>🎰🖼️ GALLERY OF PURE FUCKING CHAOS 🖼️🎰</h1>
+                <div class="brainrot-subtitle">
+                    *witness the destruction bestie, no cap this gallery is absolutely SENDING* 💀💀💀
+                </div>
+                <div class="gallery-stats">
+                    <strong>🎲 CHAOS STATISTICS 🎲</strong><br>
+                    <em>🖼️ Images Displayed: ${images.length}</em><br>
+                    <em>💀 Total Carnage: Immeasurable</em><br>
+                    <em>🧠 Brainrot Level: Maximum</em>
+                </div>
+            </div>
+            
+            <div class="gallery-grid">
+                ${imageCards || '<div style="grid-column: 1/-1; text-align: center; font-size: 2em; color: #666;">No images yet bestie... Upload some chaos! 💀</div>'}
+            </div>
+            
+            <div class="navigation-buttons">
+                <a href="/" class="nav-btn">🎰💀 SACRIFICE MORE SOULS 💀🎰</a>
+                <a href="#" onclick="location.reload()" class="nav-btn">🔄🔥 RELOAD THE CHAOS 🔥🔄</a>
+            </div>
+            
+            <div class="brainrot-footer">
+                <p>🚽 <strong>SKIBIDI TOILET APPROVED:</strong> This gallery is absolutely SENDING! 🚽</p>
+                <p>🧠 <strong>BRAINROT STATUS:</strong> Terminal gallery experience achieved</p>
+                <p>💀 <strong>OHIO LEVEL:</strong> Gallery chaos maximum overdrive</p>
+                <p>👑 <strong>SIGMA ENERGY:</strong> Every image is now part of the grindset</p>
+                <p>🎭 <strong>WARNING:</strong> Prolonged exposure may cause uncontrollable urge to gamble images</p>
+            </div>
+
+            <script>
+                // Gallery chaos interactions
+                document.addEventListener('mousemove', (e) => {
+                    if (Math.random() < 0.002) { // 0.2% chance on mouse move
+                        document.body.style.filter = \`hue-rotate(\${Math.random() * 360}deg)\`;
+                        setTimeout(() => {
+                            document.body.style.filter = 'none';
+                        }, 200);
+                    }
+                });
+                
+                // Random gallery effects
+                setInterval(() => {
+                    if (Math.random() < 0.1) {
+                        const cards = document.querySelectorAll('.image-card');
+                        const randomCard = cards[Math.floor(Math.random() * cards.length)];
+                        if (randomCard) {
+                            randomCard.style.transform = 'scale(1.02) rotate(' + (Math.random() * 4 - 2) + 'deg)';
+                            setTimeout(() => {
+                                randomCard.style.transform = '';
+                            }, 1000);
+                        }
+                    }
+                }, 5000);
+                
+                // Console chaos for gallery
+                console.log("🖼️🎰 YO WELCOME TO THE GALLERY OF ABSOLUTE CHAOS! 🎰🖼️");
+                console.log("💀 TOTAL IMAGES: ${images.length}");
+                console.log("🎲 GAMBLING VICTIMS ON DISPLAY");
+                console.log("🚽 SKIBIDI TOILET SAYS: WITNESS THE CARNAGE!");
+                console.log("🧠 GALLERY BRAINROT LEVEL: OVER 9000!");
+                console.log("🔥 THIS GALLERY IS ABSOLUTELY SENDING BESTIE!");
+            </script>
+        </body>
+        </html>`
+
+        res.send(galleryPage)
+    } catch (error) {
+        console.error('Gallery explosion:', error)
+        res.status(500).send('Gallery had a mental breakdown bestie 💀🔥')
+    }
+})
+// ...existing code...
 // ...existing code...
 app.listen(port, () => {
 	console.log(`PISSANDSHITIMAGES listening on port ${port}`)
