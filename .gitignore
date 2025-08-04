@@ -1,0 +1,5 @@
+# we dont fucking want our env getting spoiled do we
+
+.env
+.vercel
+node_modules
