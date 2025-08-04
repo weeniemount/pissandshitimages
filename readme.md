@@ -171,7 +171,7 @@ TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
 - **Quality Maintained:** 0%
 - **Chaos Level:** MAXIMUM
 - **Comic Sans Usage:** 100%
-
+ 
 ---
 
 *Made with 💩 and pure chaos energy*
