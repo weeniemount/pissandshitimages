@@ -270,20 +270,43 @@ async function gamblingShitifyImage(buffer, mimetype) {
     
     console.log(`🎰 GAMBLING TIME! Rolling dice... got ${roll.toFixed(2)}%`)
     
+    let result = {}
+    
     if (roll < 25) {
         // 25% chance - EXTREME NUCLEAR SHITTIFICATION
         console.log('🔥💀 JACKPOT! EXTREME NUCLEAR SHITTIFICATION ACTIVATED! 💀🔥')
-        return await shitifyImageExtreme(buffer, mimetype)
+        const shitResult = await shitifyImageExtreme(buffer, mimetype)
+        result = {
+            ...shitResult,
+            gamblingResult: 'EXTREME_NUCLEAR',
+            rollPercentage: roll.toFixed(2),
+            resultMessage: '🔥💀 EXTREME NUCLEAR DESTRUCTION! Your image got NUKED! 💀🔥'
+        }
     } else if (roll < 50) {
         // 25% chance - NORMAL ULTRA SHITTIFICATION  
         console.log('💩 NORMAL SHITTIFICATION - YOU GET SOME SHIT! 💩')
-        return await shitifyImageUltra(buffer, mimetype)
+        const shitResult = await shitifyImageUltra(buffer, mimetype)
+        result = {
+            ...shitResult,
+            gamblingResult: 'NORMAL_SHIT',
+            rollPercentage: roll.toFixed(2),
+            resultMessage: '💩 NORMAL SHITTIFICATION! Your image got moderately fucked! 💩'
+        }
     } else {
         // 50% chance - NO SHITTIFICATION (LUCKY BASTARD)
         console.log('✨ LUCKY WINNER! NO SHITTIFICATION - YOUR IMAGE SURVIVES! ✨')
-        return { buffer, mimetype }
+        result = {
+            buffer,
+            mimetype,
+            gamblingResult: 'LUCKY_SURVIVOR',
+            rollPercentage: roll.toFixed(2),
+            resultMessage: '✨🍀 JACKPOT! Your image survived unharmed! LUCKY BASTARD! 🍀✨'
+        }
     }
+    
+    return result
 }
+
 
 
 app.get('/', (req, res) => {
@@ -292,27 +315,20 @@ app.get('/', (req, res) => {
 
 // upload endpoint
 // Enhanced upload endpoint with gambling results
+// Fixed upload endpoint - NO MORE DOUBLE ROLLING!
 app.post('/upload', upload.single('image'), async (req, res) => {
     if (!req.file) return res.status(400).send('no file dumbass')
     
-    // 🎰 GAMBLING SHITIFICATION! 🎰
-    const roll = Math.random() * 100
-    let resultMessage = ''
-    
-    if (roll < 25) {
-        resultMessage = '🔥💀 EXTREME NUCLEAR DESTRUCTION! Your image got NUKED! 💀🔥'
-    } else if (roll < 50) {
-        resultMessage = '💩 NORMAL SHITTIFICATION! Your image got moderately fucked! 💩'
-    } else {
-        resultMessage = '✨🍀 JACKPOT! Your image survived unharmed! LUCKY BASTARD! 🍀✨'
-    }
-    
-    const { buffer: shittyBuffer, mimetype: shittyMimetype } = await gamblingShitifyImage(req.file.buffer, req.file.mimetype)
-    const base64 = shittyBuffer.toString('base64')
+    // 🎰 SINGLE ROLL GAMBLING! 🎰
+    const gamblingResult = await gamblingShitifyImage(req.file.buffer, req.file.mimetype)
+    const base64 = gamblingResult.buffer.toString('base64')
+
+    // Store with gambling metadata encoded in mimetype (since we can't change DB schema easily)
+    const enhancedMimetype = `${gamblingResult.mimetype};gambling=${gamblingResult.gamblingResult};roll=${gamblingResult.rollPercentage}`
 
     const { data, error } = await supabase
     .from('images')
-    .insert([{ data: base64, mimetype: shittyMimetype }])
+    .insert([{ data: base64, mimetype: enhancedMimetype }])
     .select()
 
     if (error) {
@@ -327,7 +343,7 @@ app.post('/upload', upload.single('image'), async (req, res) => {
 
     const id = data[0].id
     
-    // Fancy gambling result page
+    // Fancy gambling result page using the SINGLE roll result
     const resultPage = `
     <!DOCTYPE html>
     <html>
@@ -364,11 +380,17 @@ app.post('/upload', upload.single('image'), async (req, res) => {
                 border: 2px solid white;
             }
             a:hover { background: #333; }
+            .roll-info {
+                font-size: 1.2em;
+                color: #ffff00;
+                margin: 1em 0;
+            }
         </style>
     </head>
     <body>
         <h1>🎰 CASINO RESULTS 🎰</h1>
-        <div class="result">${resultMessage}</div>
+        <div class="result">${gamblingResult.resultMessage}</div>
+        <div class="roll-info">🎲 You rolled: ${gamblingResult.rollPercentage}% 🎲</div>
         <p><a href="/i/${id}">🖼️ VIEW YOUR GAMBLED IMAGE 🖼️</a></p>
         <p><a href="/">🎰 GAMBLE AGAIN! 🎰</a></p>
     </body>
