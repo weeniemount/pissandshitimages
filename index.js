@@ -40,112 +40,230 @@ const uploadPage = `
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>🎰 PISSANDSHITIMAGES CASINO 🎰</title>
+    <title>🎰💩 PISSANDSHITIMAGES CASINO OF CHAOS 💩🎰</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            background: linear-gradient(135deg, #ff00cc, #3333ff, #00ff00);
+            font-family: 'Comic Sans MS', 'Papyrus', 'Brush Script MT', cursive, sans-serif;
+            background: linear-gradient(135deg, #ff00cc, #3333ff, #00ff00, #ff0000, #ffff00);
+            background-size: 400% 400%;
             color: white;
             text-align: center;
-            animation: casino-lights 2s infinite alternate;
+            animation: casino-lights 3s infinite;
+            overflow-x: hidden;
         }
         @keyframes casino-lights {
-            from { background: linear-gradient(135deg, #ff00cc, #3333ff, #00ff00); }
-            to { background: linear-gradient(135deg, #00ff00, #ff00cc, #3333ff); }
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         h1 {
             font-size: 4em;
-            text-shadow: 2px 2px 8px black;
-            margin-top: 1em;
-            animation: neon-glow 1.5s infinite alternate;
+            text-shadow: 2px 2px 8px black, 0 0 20px #ff00cc, 0 0 40px #00ffff;
+            margin-top: 0.5em;
+            animation: neon-glow 2s infinite alternate, shake 2s infinite;
+            transform: rotate(-2deg);
+            letter-spacing: 0.1em;
         }
         @keyframes neon-glow {
-            from { text-shadow: 2px 2px 8px black, 0 0 20px #ff00cc; }
-            to { text-shadow: 2px 2px 8px black, 0 0 40px #00ffff, 0 0 60px #ff00cc; }
+            from { 
+                text-shadow: 2px 2px 8px black, 0 0 20px #ff00cc, 0 0 40px #00ffff;
+                color: #ffffff;
+            }
+            to { 
+                text-shadow: 2px 2px 8px black, 0 0 60px #ffff00, 0 0 80px #ff00cc;
+                color: #ffff00;
+            }
+        }
+        @keyframes shake {
+            0% { transform: rotate(-2deg) translateX(0px); }
+            25% { transform: rotate(-1deg) translateX(-1px); }
+            50% { transform: rotate(-3deg) translateX(1px); }
+            75% { transform: rotate(-1deg) translateX(-0.5px); }
+            100% { transform: rotate(-2deg) translateX(0.5px); }
         }
         .casino-info {
             font-size: 1.5em;
             margin: 2em;
-            background: rgba(0,0,0,0.7);
-            padding: 1em;
-            border-radius: 15px;
-            border: 2px solid gold;
+            background: rgba(0,0,0,0.8);
+            padding: 1.5em;
+            border-radius: 20px;
+            border: 3px dashed gold;
             display: inline-block;
+            box-shadow: 0 0 30px #ff00cc, inset 0 0 20px rgba(255,255,0,0.3);
+            animation: pulse-border 3s infinite, float 4s ease-in-out infinite;
+            transform: rotate(1deg);
+        }
+        @keyframes pulse-border {
+            0% { border-color: gold; box-shadow: 0 0 30px #ff00cc; }
+            33% { border-color: #ff00cc; box-shadow: 0 0 40px gold; }
+            66% { border-color: #00ffff; box-shadow: 0 0 35px #ffff00; }
+            100% { border-color: gold; box-shadow: 0 0 30px #ff00cc; }
+        }
+        @keyframes float {
+            0%, 100% { transform: rotate(1deg) translateY(0px); }
+            50% { transform: rotate(-1deg) translateY(-10px); }
         }
         .odds {
             color: #ffff00;
             font-weight: bold;
-            text-shadow: 1px 1px 3px black;
+            text-shadow: 2px 2px 4px black, 0 0 10px #ffff00;
+            animation: gentle-blink 2s infinite;
+        }
+        @keyframes gentle-blink {
+            0%, 80% { opacity: 1; }
+            90%, 100% { opacity: 0.7; }
         }
         form {
             margin-top: 3em;
-            background: rgba(255,255,255,0.1);
-            padding: 2em;
-            border-radius: 20px;
+            background: linear-gradient(45deg, rgba(255,0,204,0.3), rgba(0,255,255,0.3));
+            padding: 3em;
+            border-radius: 25px;
             display: inline-block;
-            box-shadow: 0 0 30px magenta;
-            border: 3px solid gold;
+            box-shadow: 0 0 50px magenta, 0 0 100px #00ffff;
+            border: 5px solid gold;
+            animation: form-wiggle 3s ease-in-out infinite, glow-pulse 2s infinite;
+            transform: rotate(-1deg);
+        }
+        @keyframes form-wiggle {
+            0%, 100% { transform: rotate(-1deg) scale(1); }
+            25% { transform: rotate(1deg) scale(1.01); }
+            50% { transform: rotate(-0.5deg) scale(0.99); }
+            75% { transform: rotate(0.5deg) scale(1.005); }
+        }
+        @keyframes glow-pulse {
+            0% { box-shadow: 0 0 50px magenta, 0 0 100px #00ffff; }
+            50% { box-shadow: 0 0 70px #ffff00, 0 0 120px #ff00cc; }
+            100% { box-shadow: 0 0 50px magenta, 0 0 100px #00ffff; }
         }
         input[type="file"] {
-            padding: 1em;
-            font-size: 1.2em;
-            border: 2px dashed white;
-            border-radius: 10px;
-            background-color: rgba(255,255,255,0.2);
+            padding: 1.5em;
+            font-size: 1.3em;
+            border: 3px dashed white;
+            border-radius: 15px;
+            background: linear-gradient(45deg, rgba(255,255,255,0.2), rgba(255,255,0,0.2));
             color: white;
+            font-family: 'Comic Sans MS', cursive;
+            animation: input-rainbow 4s infinite;
+        }
+        @keyframes input-rainbow {
+            0% { border-color: white; background: rgba(255,255,255,0.2); }
+            25% { border-color: #ff00cc; background: rgba(255,0,204,0.2); }
+            50% { border-color: #00ffff; background: rgba(0,255,255,0.2); }
+            75% { border-color: #ffff00; background: rgba(255,255,0,0.2); }
+            100% { border-color: white; background: rgba(255,255,255,0.2); }
         }
         button {
-            margin-top: 1em;
-            padding: 1em 2em;
-            font-size: 1.5em;
-            background: linear-gradient(45deg, #ff0000, #ffff00, #ff0000);
+            margin-top: 2em;
+            padding: 1.5em 3em;
+            font-size: 1.8em;
+            background: linear-gradient(45deg, #ff0000, #ffff00, #ff0000, #ff00cc, #00ffff);
+            background-size: 400% 400%;
             color: black;
             border: none;
-            border-radius: 15px;
+            border-radius: 20px;
             cursor: pointer;
-            box-shadow: 0 0 20px #fff;
-            transition: transform 0.3s ease;
             font-weight: bold;
+            font-family: 'Comic Sans MS', cursive;
+            animation: button-rave 2s infinite, slot-machine 1.5s infinite, rainbow-bg 3s infinite;
+            text-shadow: 1px 1px 2px white;
+            box-shadow: 0 0 30px #fff, inset 0 0 20px rgba(0,0,0,0.3);
         }
-        button:hover {
-            transform: scale(1.1) rotate(2deg);
-            box-shadow: 0 0 40px gold;
-            animation: slot-machine 0.5s infinite;
+        @keyframes button-rave {
+            0% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.02) rotate(0.5deg); }
+            50% { transform: scale(1.05) rotate(-0.5deg); }
+            75% { transform: scale(1.02) rotate(0.25deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        @keyframes rainbow-bg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         @keyframes slot-machine {
-            0% { transform: scale(1.1) rotate(2deg); }
-            25% { transform: scale(1.15) rotate(-1deg); }
-            50% { transform: scale(1.1) rotate(1deg); }
-            75% { transform: scale(1.05) rotate(-0.5deg); }
-            100% { transform: scale(1.1) rotate(2deg); }
+            0% { box-shadow: 0 0 30px #fff; }
+            25% { box-shadow: 0 0 40px #ff00cc; }
+            50% { box-shadow: 0 0 35px #00ffff; }
+            75% { box-shadow: 0 0 45px #ffff00; }
+            100% { box-shadow: 0 0 30px #fff; }
+        }
+        button:hover {
+            animation: button-rave 0.5s infinite, slot-machine 0.5s infinite, rainbow-bg 1s infinite;
+            font-size: 2em;
+        }
+        .warning {
+            margin-top: 2em;
+            font-size: 1.3em;
+            background: rgba(255,100,0,0.8);
+            padding: 1em;
+            border-radius: 15px;
+            border: 2px solid yellow;
+            display: inline-block;
+            animation: warning-gentle 3s infinite;
+            max-width: 600px;
+        }
+        @keyframes warning-gentle {
+            0% { background: rgba(255,100,0,0.8); color: white; }
+            50% { background: rgba(255,200,0,0.8); color: black; }
+            100% { background: rgba(255,100,0,0.8); color: white; }
+        }
+        /* CHAOS PARTICLES */
+        body::before {
+            content: "💩🎰💀🔥💩🎰💀🔥💩🎰💀🔥💩🎰💀🔥💩🎰💀🔥";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            animation: particle-chaos 8s linear infinite;
+            z-index: -1;
+            font-size: 2em;
+            opacity: 0.1;
+        }
+        @keyframes particle-chaos {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+        h2 {
+            animation: title-bounce 2s ease-in-out infinite;
+            color: #ffff00;
+            text-shadow: 2px 2px 4px black;
+        }
+        @keyframes title-bounce {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
         }
     </style>
 </head>
 <body>
-    <h1>🎰💩 PISSANDSHITIMAGES CASINO 💩🎰</h1>
+    <h1>🎰💩 PISSANDSHITIMAGES CASINO OF CHAOS 💩🎰</h1>
     
     <div class="casino-info">
-        <h2>🎲 GAMBLING ODDS 🎲</h2>
-        <p><span class="odds">50%</span> - LUCKY! No shittification 🍀</p>
-        <p><span class="odds">25%</span> - NORMAL shit quality 💩</p>
-        <p><span class="odds">25%</span> - EXTREME NUCLEAR DESTRUCTION 💀🔥</p>
-        <p><strong>PLACE YOUR BETS! UPLOAD YOUR IMAGE!</strong></p>
+        <h2>🎲 GAMBLING ODDS OF DOOM 🎲</h2>
+        <p><span class="odds">50%</span> - LUCKY BASTARD! No shittification 🍀✨</p>
+        <p><span class="odds">25%</span> - NORMAL shit quality 💩🤮</p>
+        <p><span class="odds">25%</span> - EXTREME NUCLEAR DESTRUCTION 💀🔥☢️</p>
+        <p><strong>PLACE YOUR FUCKING BETS! UPLOAD YOUR SOUL!</strong></p>
+        <p><em>⚡ THE CHAOS GODS WILL DECIDE YOUR FATE ⚡</em></p>
     </div>
     
     <form action="/upload" method="POST" enctype="multipart/form-data">
         <input type="file" name="image" accept="image/*" required><br>
-        <button type="submit">🎰 SPIN THE SHITWHEEL! 🎰</button>
+        <button type="submit">🎰💀 SACRIFICE TO THE SHITWHEEL OF DESTINY! 💀🎰</button>
     </form>
     
-    <p style="margin-top: 2em; font-size: 1.2em;">
-        ⚠️ <strong>WARNING:</strong> Your image quality is not guaranteed! ⚠️<br>
-        🎰 <em>The house always wins... except when you get lucky!</em> 🎰
-    </p>
+    <div class="warning">
+        ⚠️💀 <strong>DANGER ZONE:</strong> Your image quality is NOT guaranteed! 💀⚠️<br>
+        🎰 <em>The house ALWAYS wins... except when RNG gods smile upon you!</em> 🎰<br>
+        💩 <strong>ENTER AT YOUR OWN RISK!</strong> 💩
+    </div>
 </body>
 </html>
 `
+
 async function shitifyImageExtreme(buffer, mimetype) {
     try {
         console.log(`Processing image: ${mimetype}, size: ${buffer.length} bytes`)
@@ -323,7 +441,7 @@ app.post('/upload', upload.single('image'), async (req, res) => {
     const gamblingResult = await gamblingShitifyImage(req.file.buffer, req.file.mimetype)
     const base64 = gamblingResult.buffer.toString('base64')
 
-    // Store with gambling metadata encoded in mimetype (since we can't change DB schema easily)
+    // Store with gambling metadata encoded in mimetype
     const enhancedMimetype = `${gamblingResult.mimetype};gambling=${gamblingResult.gamblingResult};roll=${gamblingResult.rollPercentage}`
 
     const { data, error } = await supabase
@@ -343,56 +461,115 @@ app.post('/upload', upload.single('image'), async (req, res) => {
 
     const id = data[0].id
     
-    // Fancy gambling result page using the SINGLE roll result
+    // SAFE but chaotic gambling result page
     const resultPage = `
     <!DOCTYPE html>
     <html>
     <head>
-        <title>🎰 GAMBLING RESULTS 🎰</title>
+        <title>🎰💀 GAMBLING RESULTS OF CHAOS 💀🎰</title>
         <style>
             body { 
                 font-family: 'Comic Sans MS', cursive; 
-                background: linear-gradient(45deg, #ff00cc, #00ffff); 
+                background: linear-gradient(45deg, #ff00cc, #00ffff, #ffff00, #ff0000);
+                background-size: 400% 400%;
+                animation: result-chaos 4s infinite;
                 color: white; 
                 text-align: center; 
                 padding: 3rem;
+                overflow: hidden;
+            }
+            @keyframes result-chaos {
+                0% { background-position: 0% 50%; }
+                25% { background-position: 100% 50%; }
+                50% { background-position: 100% 100%; }
+                75% { background-position: 0% 100%; }
+                100% { background-position: 0% 50%; }
+            }
+            h1 {
+                font-size: 3em;
+                animation: title-explosion 2s infinite;
+                text-shadow: 0 0 20px #fff;
+            }
+            @keyframes title-explosion {
+                0% { transform: scale(1) rotate(0deg); }
+                50% { transform: scale(1.05) rotate(1deg); }
+                100% { transform: scale(1) rotate(-1deg); }
             }
             .result { 
-                font-size: 2em; 
+                font-size: 2.5em; 
                 margin: 2em 0; 
-                background: rgba(0,0,0,0.8); 
-                padding: 1em; 
-                border-radius: 20px; 
-                border: 3px solid gold;
-                animation: celebration 2s infinite alternate;
+                background: rgba(0,0,0,0.9); 
+                padding: 1.5em; 
+                border-radius: 25px; 
+                border: 5px solid gold;
+                animation: celebration 2s infinite alternate, result-glow 3s infinite;
+                box-shadow: 0 0 50px gold;
             }
             @keyframes celebration {
-                from { box-shadow: 0 0 20px gold; }
-                to { box-shadow: 0 0 40px gold, 0 0 60px #ff00cc; }
+                from { 
+                    box-shadow: 0 0 50px gold, 0 0 100px #ff00cc;
+                    transform: scale(1);
+                }
+                to { 
+                    box-shadow: 0 0 70px #ffff00, 0 0 120px #00ffff;
+                    transform: scale(1.02);
+                }
+            }
+            @keyframes result-glow {
+                0% { border-color: gold; }
+                33% { border-color: #ff00cc; }
+                66% { border-color: #00ffff; }
+                100% { border-color: gold; }
             }
             a { 
                 color: #00ffff; 
-                font-size: 1.5em; 
+                font-size: 1.8em; 
                 text-decoration: none; 
-                background: black; 
-                padding: 0.5em 1em; 
-                border-radius: 10px; 
-                border: 2px solid white;
+                background: linear-gradient(45deg, black, #333);
+                padding: 1em 2em; 
+                border-radius: 15px; 
+                border: 3px solid white;
+                display: inline-block;
+                margin: 1em;
+                animation: link-rave 2s infinite;
+                font-weight: bold;
             }
-            a:hover { background: #333; }
+            a:hover { 
+                animation: link-rave 1s infinite;
+                transform: scale(1.1);
+            }
+            @keyframes link-rave {
+                0% { background: linear-gradient(45deg, black, #333); color: #00ffff; }
+                25% { background: linear-gradient(45deg, #ff00cc, #000); color: #ffff00; }
+                50% { background: linear-gradient(45deg, #00ffff, #333); color: #ff00cc; }
+                75% { background: linear-gradient(45deg, #ffff00, #000); color: #00ffff; }
+                100% { background: linear-gradient(45deg, black, #333); color: #00ffff; }
+            }
             .roll-info {
-                font-size: 1.2em;
+                font-size: 1.5em;
                 color: #ffff00;
-                margin: 1em 0;
+                margin: 2em 0;
+                background: rgba(0,0,0,0.7);
+                padding: 1em;
+                border-radius: 15px;
+                animation: dice-roll 3s infinite;
+                border: 2px dashed #ffff00;
+            }
+            @keyframes dice-roll {
+                0% { transform: rotate(0deg); }
+                25% { transform: rotate(2deg); }
+                50% { transform: rotate(-2deg); }
+                75% { transform: rotate(1deg); }
+                100% { transform: rotate(0deg); }
             }
         </style>
     </head>
     <body>
-        <h1>🎰 CASINO RESULTS 🎰</h1>
+        <h1>🎰💀 CASINO RESULTS OF CHAOS 💀🎰</h1>
         <div class="result">${gamblingResult.resultMessage}</div>
-        <div class="roll-info">🎲 You rolled: ${gamblingResult.rollPercentage}% 🎲</div>
-        <p><a href="/i/${id}">🖼️ VIEW YOUR GAMBLED IMAGE 🖼️</a></p>
-        <p><a href="/">🎰 GAMBLE AGAIN! 🎰</a></p>
+        <div class="roll-info">🎲 THE DICE OF DESTINY ROLLED: ${gamblingResult.rollPercentage}% 🎲</div>
+        <p><a href="/i/${id}">🖼️💀 WITNESS THE CARNAGE 💀🖼️</a></p>
+        <p><a href="/">🎰🔥 FEED MORE SOULS TO THE MACHINE! 🔥🎰</a></p>
     </body>
     </html>
     `
