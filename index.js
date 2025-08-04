@@ -1,3 +1,20 @@
+// Mom i want the db schemas
+// okay sweetie here it is
+/*
+-- Create new table with UUID primary key
+CREATE TABLE images (
+	id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+	data text NOT NULL,
+	mimetype text NOT NULL
+);
+
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+
+Thank you mom
+no problem sweetie */
+
+
 import express from 'express'
 import multer from 'multer'
 import { createClient } from '@supabase/supabase-js'
