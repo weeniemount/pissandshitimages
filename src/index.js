@@ -24,6 +24,45 @@ const upload = multer();
 const PORT = process.env.PORT || 3000;
 const cookieParser = require('cookie-parser');
 
+// Helper function to calculate stats
+async function getImageStats(images) {
+  const stats = {
+    total: images.length,
+    hidden: 0,
+    visible: 0,
+    luckySurvivor: 0,
+    extremeNuclear: 0,
+    normalShit: 0,
+    totalSize: 0
+  };
+
+  for (const img of images) {
+    const [_, ...meta] = img.mimetype.split(';');
+    const metaObj = Object.fromEntries(meta.map(s => s.split('=')));
+    const roll = parseFloat(metaObj.roll || '0');
+
+    if (metaObj.hidden === 'true') {
+      stats.hidden++;
+    } else {
+      stats.visible++;
+    }
+
+    if (roll >= 50) {
+      stats.luckySurvivor++;
+    } else if (roll < 25) {
+      stats.extremeNuclear++;
+    } else {
+      stats.normalShit++;
+    }
+
+    if (img.data) {
+      stats.totalSize += Buffer.from(img.data, 'base64').length;
+    }
+  }
+
+  return stats;
+}
+
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
@@ -475,12 +514,15 @@ app.get('/raw/:id', async (req, res) => {
 
 // Gallery page
 app.get('/gallery', async (req, res) => {
-  const { data, error } = await supabase
+  const { data: images, error } = await supabase
     .from('images')
-    .select('id,mimetype')
+    .select('id,mimetype,data')
     .order('id', { ascending: false });
     
   if (error) return res.status(500).send('DB error: ' + error.message);
+
+  // Calculate stats
+  const stats = await getImageStats(images);
   
   // Filter out hidden images by checking metadata
   const visibleImages = (data || []).filter(img => {
@@ -622,11 +664,56 @@ app.get('/gallery', async (req, res) => {
                 transform: scale(1.05);
                 background: #ff5252;
             }
+            .stats-container {
+                max-width: 1200px;
+                margin: 0 auto 20px auto;
+            }
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+                margin: 20px;
+            }
+            .stat-box {
+                background: white;
+                padding: 15px;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .stat-box h3 {
+                color: #ff6b6b;
+                margin-top: 0;
+                margin-bottom: 10px;
+            }
+            .nav-buttons {
+                margin-bottom: 20px;
+            }
         </style>
     </head>
     <body>
         <h1>🖼️ Gallery - pissandshitimages 💩</h1>
-        <div>
+        <div class="stats-container">
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <h3>🖼️ Image Counts</h3>
+                    <p>Total Images: ${stats.total}</p>
+                    <p>Visible Images: ${stats.visible}</p>
+                    <p>Hidden Images: ${stats.hidden}</p>
+                </div>
+                <div class="stat-box">
+                    <h3>🎲 Roll Stats</h3>
+                    <p>✨ Lucky Survivors: ${stats.luckySurvivor}</p>
+                    <p>💩 Normal Shit: ${stats.normalShit}</p>
+                    <p>💀 Extreme Nuclear: ${stats.extremeNuclear}</p>
+                </div>
+                <div class="stat-box">
+                    <h3>📦 Storage</h3>
+                    <p>Total Size: ${(stats.totalSize / 1024 / 1024).toFixed(2)} MB</p>
+                    <p>Avg Size: ${(stats.totalSize / stats.total / 1024).toFixed(2)} KB per image</p>
+                </div>
+            </div>
+        </div>
+        <div class="nav-buttons">
             <a href="/" class="upload-button" style="margin-right: 10px;">📸 Upload More Shit!</a>
             <a href="/leaderboard" class="upload-button">🏆 View Leaderboard</a>
         </div>
@@ -732,16 +819,24 @@ app.get('/admin', authenticateAdmin, async (req, res) => {
   const to = from + perPage - 1;
 
   // Get paginated list without image data
+  // Get all images for stats
+  const { data: allImages, error: statsError } = await supabase
+    .from('images')
+    .select('mimetype');
+
+  if (statsError) return res.status(500).send('DB error: ' + statsError.message);
+
+  const stats = await getImageStats(allImages);
+
+  // Get paginated images
   const { data: images, count, error } = await supabase
     .from('images')
-    .select('id,mimetype', { count: 'exact' })
+    .select('id,mimetype,data', { count: 'exact' })
     .order('id', { ascending: false })
     .range(from, to);
 
   if (error) return res.status(500).send('DB error: ' + error.message);
 
-  // Get total size from a separate stats table or cache if needed
-  // For now, we'll just show count
   const totalPages = Math.ceil(count / perPage);
 
   res.send(`
@@ -833,6 +928,57 @@ app.get('/admin', authenticateAdmin, async (req, res) => {
                 background-color: #cccccc;
                 pointer-events: none;
             }
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+                margin-top: 20px;
+            }
+            .stat-box {
+                background: #fff;
+                padding: 15px;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .stat-box h3 {
+                color: #ff6b6b;
+                margin-top: 0;
+                margin-bottom: 10px;
+            }
+            .shitlevel-badge {
+                display: inline-block;
+                padding: 5px 10px;
+                border-radius: 15px;
+                color: white;
+                font-weight: bold;
+            }
+            .shitlevel-badge.lucky {
+                background: #4CAF50;
+            }
+            .shitlevel-badge.extreme {
+                background: #f44336;
+            }
+            .shitlevel-badge.normal {
+                background: #ff9800;
+            }
+            .visibility-btn {
+                padding: 5px 10px;
+                border: none;
+                border-radius: 3px;
+                cursor: pointer;
+                margin-right: 5px;
+            }
+            .visibility-btn.visible {
+                background: #4CAF50;
+                color: white;
+            }
+            .visibility-btn.hidden {
+                background: #ff9800;
+                color: white;
+            }
+            .visibility-btn:hover {
+                opacity: 0.9;
+            }
         </style>
     </head>
     <body>
@@ -840,8 +986,26 @@ app.get('/admin', authenticateAdmin, async (req, res) => {
         
         <div class="stats">
             <h2>📊 Stats</h2>
-            <p>Total Images: ${count}</p>
-            <p>Showing ${from + 1} - ${Math.min(to + 1, count)} of ${count} images</p>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <h3>🖼️ Image Counts</h3>
+                    <p>Total Images: ${stats.total}</p>
+                    <p>Visible Images: ${stats.visible}</p>
+                    <p>Hidden Images: ${stats.hidden}</p>
+                    <p>Showing ${from + 1} - ${Math.min(to + 1, count)} of ${count}</p>
+                </div>
+                <div class="stat-box">
+                    <h3>🎲 Roll Stats</h3>
+                    <p>✨ Lucky Survivors: ${stats.luckySurvivor}</p>
+                    <p>💩 Normal Shit: ${stats.normalShit}</p>
+                    <p>💀 Extreme Nuclear: ${stats.extremeNuclear}</p>
+                </div>
+                <div class="stat-box">
+                    <h3>📦 Storage</h3>
+                    <p>Total Size: ${(stats.totalSize / 1024 / 1024).toFixed(2)} MB</p>
+                    <p>Avg Size: ${(stats.totalSize / stats.total / 1024).toFixed(2)} KB per image</p>
+                </div>
+            </div>
         </div>
 
         <div class="image-list">
@@ -870,9 +1034,19 @@ app.get('/admin', authenticateAdmin, async (req, res) => {
                     <tr>
                         <td><img src="/raw/${img.id}" class="thumbnail" loading="lazy" /></td>
                         <td><a href="/image/${img.id}" target="_blank">${img.id}</a></td>
-                        <td>${shitLevel} (${roll.toFixed(2)}%)</td>
+                        <td>
+                            <span class="shitlevel-badge ${roll >= 50 ? 'lucky' : roll < 25 ? 'extreme' : 'normal'}">
+                                ${shitLevel} (${roll.toFixed(2)}%)
+                            </span>
+                        </td>
                         <td>${new Date(metaObj.date).toLocaleString()}</td>
                         <td>
+                            <form action="/admin/toggle-visibility/${img.id}" method="post" style="display:inline;">
+                                <input type="hidden" name="currentState" value="${metaObj.hidden === 'true'}">
+                                <button type="submit" class="visibility-btn ${metaObj.hidden === 'true' ? 'hidden' : 'visible'}">
+                                    ${metaObj.hidden === 'true' ? '👁️ Show' : '🕶️ Hide'}
+                                </button>
+                            </form>
                             <form action="/admin/delete/${img.id}" method="post" style="display:inline;">
                                 <button type="submit" class="delete-btn">🗑️ Delete</button>
                             </form>
@@ -900,6 +1074,48 @@ app.get('/admin', authenticateAdmin, async (req, res) => {
 });
 
 // Delete image
+// Toggle image visibility
+app.post('/admin/toggle-visibility/:id', authenticateAdmin, async (req, res) => {
+  const { data: image, error: getError } = await supabase
+    .from('images')
+    .select('mimetype')
+    .eq('id', req.params.id)
+    .single();
+
+  if (getError) {
+    res.status(500).send('Error getting image: ' + getError.message);
+    return;
+  }
+
+  const [baseMimetype, ...meta] = image.mimetype.split(';');
+  const metaObj = Object.fromEntries(meta.map(s => s.split('=')));
+  const currentlyHidden = metaObj.hidden === 'true';
+  
+  // Toggle the hidden state
+  metaObj.hidden = (!currentlyHidden).toString();
+  
+  // Update or add the message
+  if (!currentlyHidden) {
+    metaObj.message = '🙈 THIS USER IS A COWARD WHO TRIED TO HIDE THEIR SHAME! 🙈';
+  } else {
+    delete metaObj.message;
+  }
+
+  // Reconstruct mimetype string
+  const newMimetype = [baseMimetype, ...Object.entries(metaObj).map(([k, v]) => `${k}=${v}`)].join(';');
+
+  const { error: updateError } = await supabase
+    .from('images')
+    .update({ mimetype: newMimetype })
+    .eq('id', req.params.id);
+
+  if (updateError) {
+    res.status(500).send('Error updating image: ' + updateError.message);
+  } else {
+    res.redirect('/admin');
+  }
+});
+
 app.post('/admin/delete/:id', authenticateAdmin, async (req, res) => {
   const { error } = await supabase
     .from('images')
