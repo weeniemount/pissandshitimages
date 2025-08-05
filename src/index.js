@@ -1461,11 +1461,21 @@ app.get('/leaderboard', async (req, res) => {
   `);
 });
 
-if (process.env.LOCKED) {
-    app.get('*', (req, res) => {
-        res.status(403).send('down, come back later');
-    });
+if (process.env.LOCKED === 'true') {
+	app.get('*', (req, res) => {
+		res.status(403).send('down, come back later');
+	});
 }
+
+app.use((req, res, next) => {
+	const forbiddenParams = ['env', 'process', 'secret'];
+	for (const param of forbiddenParams) {
+		if (req.query[param] !== undefined) {
+			return res.status(403).send('Forbidden');
+		}
+	}
+	next();
+});
 
 
 app.listen(PORT, () => {
