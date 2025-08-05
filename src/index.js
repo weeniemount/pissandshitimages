@@ -491,6 +491,8 @@ app.get('/gallery', async (req, res) => {
   const items = visibleImages.map(img => {
     const [mimetype, ...meta] = img.mimetype.split(';');
     const metaObj = Object.fromEntries(meta.map(s => s.split('=')));
+    const roll = parseFloat(metaObj.roll || '0');
+    const shitLevel = roll >= 50 ? 'LUCKY SURVIVOR' : (metaObj.shitlevel?.replace('_', ' ') || 'unknown');
     return `
       <div class="image-card">
         <div class="image-wrapper">
@@ -499,8 +501,8 @@ app.get('/gallery', async (req, res) => {
           </a>
         </div>
         <div class="info">
-          <div class="shitification">
-            🎲 ${metaObj.shitlevel?.replace('_', ' ') || 'unknown'} (${metaObj.roll || '??'}%)
+          <div class="shitification ${roll >= 50 ? 'lucky-survivor' : ''}">
+            ${roll >= 50 ? '✨' : '🎲'} ${shitLevel} (${roll.toFixed(2)}%)
           </div>
           <div class="date">
             📅 ${new Date(metaObj.date).toLocaleString() || 'unknown'}
@@ -581,6 +583,15 @@ app.get('/gallery', async (req, res) => {
                 padding: 5px;
                 border-radius: 5px;
                 margin: 5px;
+            }
+            .shitification.lucky-survivor {
+                background: #4CAF50;
+                animation: sparkle 1.5s infinite;
+            }
+            @keyframes sparkle {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
             }
             .date {
                 background: #4ecdc4;
@@ -870,10 +881,11 @@ app.get('/leaderboard', async (req, res) => {
     .map(img => {
       const [_, ...meta] = img.mimetype.split(';');
       const metaObj = Object.fromEntries(meta.map(s => s.split('=')));
+      const roll = parseFloat(metaObj.roll || '0');
       return {
         id: img.id,
-        roll: parseFloat(metaObj.roll || '0'),
-        shitlevel: metaObj.shitlevel?.replace('_', ' ') || 'unknown',
+        roll: roll,
+        shitlevel: roll >= 50 ? 'LUCKY SURVIVOR' : (metaObj.shitlevel?.replace('_', ' ') || 'unknown'),
         date: new Date(metaObj.date || Date.now()).toLocaleString()
       };
     })
