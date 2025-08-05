@@ -197,6 +197,8 @@ async function gamblingShitifyImage(buffer, mimetype) {
 
 // ShareX Config download
 app.get('/sharexconfig', (req, res) => {
+  const protocol = req.protocol;
+  const host = req.get('host');
   const config = {
     "Version": "14.1.0",
     "Name": "pissandshitimages",
@@ -206,10 +208,7 @@ app.get('/sharexconfig', (req, res) => {
     "Body": "MultipartFormData",
     "FileFormName": "image",
     "Parameters": {
-      "hide": {
-        "Value": false,
-        "Description": "Hide image (YOU COWARD!)"
-      }
+      "hide": "false"
     },
     "ResponseType": "RedirectionURL",
     "URL": "{responseurl}"
