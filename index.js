@@ -396,9 +396,11 @@ app.get('/gallery', async (req, res) => {
     const metaObj = Object.fromEntries(meta.map(s => s.split('=')));
     return `
       <div class="image-card">
-        <a href="/image/${img.id}">
-          <img src="/raw/${img.id}" alt="Shitified image" />
-        </a>
+        <div class="image-wrapper">
+          <a href="/image/${img.id}">
+            <img src="/raw/${img.id}" alt="Shitified image" />
+          </a>
+        </div>
         <div class="info">
           <div class="shitification">
             🎲 ${metaObj.shitlevel?.replace('_', ' ') || 'unknown'} (${metaObj.roll || '??'}%)
@@ -447,9 +449,28 @@ app.get('/gallery', async (req, res) => {
             .image-card:hover {
                 transform: scale(1.02);
             }
+            .image-wrapper {
+                position: relative;
+                width: 100%;
+                padding-bottom: 75%; /* 4:3 aspect ratio */
+                overflow: hidden;
+                border-radius: 5px;
+            }
+            .image-wrapper a {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: none;
+                padding: 0;
+            }
+            .image-wrapper a:hover {
+                background: none;
+            }
             .image-card img {
                 width: 100%;
-                height: 200px;
+                height: 100%;
                 object-fit: cover;
                 border-radius: 5px;
             }
