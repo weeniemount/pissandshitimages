@@ -726,15 +726,23 @@ app.post('/admin/login', (req, res) => {
 
 // Admin panel
 app.get('/admin', authenticateAdmin, async (req, res) => {
-  const { data: images, error } = await supabase
+  const page = parseInt(req.query.page) || 1;
+  const perPage = 20;
+  const from = (page - 1) * perPage;
+  const to = from + perPage - 1;
+
+  // Get paginated list without image data
+  const { data: images, count, error } = await supabase
     .from('images')
-    .select('*')
-    .order('id', { ascending: false });
+    .select('id,mimetype', { count: 'exact' })
+    .order('id', { ascending: false })
+    .range(from, to);
 
   if (error) return res.status(500).send('DB error: ' + error.message);
 
-  const totalSize = images.reduce((acc, img) => acc + Buffer.from(img.data, 'base64').length, 0);
-  const totalSizeMB = (totalSize / 1024 / 1024).toFixed(2);
+  // Get total size from a separate stats table or cache if needed
+  // For now, we'll just show count
+  const totalPages = Math.ceil(count / perPage);
 
   res.send(`
     <!DOCTYPE html>
@@ -801,6 +809,30 @@ app.get('/admin', authenticateAdmin, async (req, res) => {
                 object-fit: cover;
                 border-radius: 3px;
             }
+            .pagination {
+                margin-top: 20px;
+                text-align: center;
+            }
+            .pagination a {
+                display: inline-block;
+                padding: 8px 16px;
+                text-decoration: none;
+                background-color: #ff6b6b;
+                color: white;
+                border-radius: 5px;
+                margin: 0 5px;
+            }
+            .pagination a:hover {
+                background-color: #ff5252;
+            }
+            .pagination .current {
+                background-color: #ff5252;
+                font-weight: bold;
+            }
+            .pagination .disabled {
+                background-color: #cccccc;
+                pointer-events: none;
+            }
         </style>
     </head>
     <body>
@@ -808,8 +840,8 @@ app.get('/admin', authenticateAdmin, async (req, res) => {
         
         <div class="stats">
             <h2>📊 Stats</h2>
-            <p>Total Images: ${images.length}</p>
-            <p>Total Size: ${totalSizeMB} MB</p>
+            <p>Total Images: ${count}</p>
+            <p>Showing ${from + 1} - ${Math.min(to + 1, count)} of ${count} images</p>
         </div>
 
         <div class="image-list">
@@ -820,20 +852,26 @@ app.get('/admin', authenticateAdmin, async (req, res) => {
                     <th>ID</th>
                     <th>Shitification</th>
                     <th>Date</th>
-                    <th>Size</th>
                     <th>Actions</th>
                 </tr>
                 ${images.map(img => {
                   const [mimetype, ...meta] = img.mimetype.split(';');
                   const metaObj = Object.fromEntries(meta.map(s => s.split('=')));
-                  const size = (Buffer.from(img.data, 'base64').length / 1024).toFixed(2);
+                  const roll = parseFloat(metaObj.roll || '0');
+                  let shitLevel;
+                  if (roll >= 50) {
+                    shitLevel = 'LUCKY SURVIVOR';
+                  } else if (roll < 25) {
+                    shitLevel = 'EXTREME NUCLEAR';
+                  } else {
+                    shitLevel = 'NORMAL SHIT';
+                  }
                   return `
                     <tr>
-                        <td><img src="/raw/${img.id}" class="thumbnail" /></td>
+                        <td><img src="/raw/${img.id}" class="thumbnail" loading="lazy" /></td>
                         <td><a href="/image/${img.id}" target="_blank">${img.id}</a></td>
-                        <td>${metaObj.shitlevel?.replace('_', ' ') || 'unknown'} (${metaObj.roll || '??'}%)</td>
+                        <td>${shitLevel} (${roll.toFixed(2)}%)</td>
                         <td>${new Date(metaObj.date).toLocaleString()}</td>
-                        <td>${size} KB</td>
                         <td>
                             <form action="/admin/delete/${img.id}" method="post" style="display:inline;">
                                 <button type="submit" class="delete-btn">🗑️ Delete</button>
@@ -843,6 +881,18 @@ app.get('/admin', authenticateAdmin, async (req, res) => {
                   `;
                 }).join('')}
             </table>
+
+            <div class="pagination">
+                ${page > 1 ? `<a href="/admin?page=${page - 1}">⬅️ Previous</a>` : '<a class="disabled">⬅️ Previous</a>'}
+                ${Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  const pageNum = page + i - 2;
+                  if (pageNum > 0 && pageNum <= totalPages) {
+                    return `<a href="/admin?page=${pageNum}" class="${pageNum === page ? 'current' : ''}">${pageNum}</a>`;
+                  }
+                  return '';
+                }).join('')}
+                ${page < totalPages ? `<a href="/admin?page=${page + 1}">Next ➡️</a>` : '<a class="disabled">Next ➡️</a>'}
+            </div>
         </div>
     </body>
     </html>
