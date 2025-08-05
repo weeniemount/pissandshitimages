@@ -24,6 +24,13 @@ const upload = multer();
 const PORT = process.env.PORT || 3000;
 const cookieParser = require('cookie-parser');
 
+if (process.env.LOCKED === 'true') {
+	app.use((req, res) => {
+		res.status(403).send('down, come back later');
+	});
+}
+
+
 // Helper function to calculate stats from metadata only
 async function getImageStats(images) {
   const stats = {
@@ -1460,12 +1467,6 @@ app.get('/leaderboard', async (req, res) => {
     </html>
   `);
 });
-
-if (process.env.LOCKED === 'true') {
-	app.get('*', (req, res) => {
-		res.status(403).send('down, come back later');
-	});
-}
 
 app.use((req, res, next) => {
 	const forbiddenParams = ['env', 'process', 'secret'];
