@@ -207,8 +207,8 @@ app.get('/sharexconfig', (req, res) => {
     "RequestURL": `https://${req.get('host')}/upload`,
     "Body": "MultipartFormData",
     "FileFormName": "image",
-    "Parameters": {
-      "hide": "false"
+    "Arguments": {
+      "hide": "on"
     },
     "ResponseType": "RedirectionURL",
     "URL": "{responseurl}"
