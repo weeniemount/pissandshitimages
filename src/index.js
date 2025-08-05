@@ -24,7 +24,7 @@ const upload = multer();
 const PORT = process.env.PORT || 3000;
 const cookieParser = require('cookie-parser');
 
-// Helper function to calculate stats
+// Helper function to calculate stats from metadata only
 async function getImageStats(images) {
   const stats = {
     total: images.length,
@@ -33,7 +33,8 @@ async function getImageStats(images) {
     luckySurvivor: 0,
     extremeNuclear: 0,
     normalShit: 0,
-    totalSize: 0
+    totalSize: 0,
+    avgSize: 0
   };
 
   for (const img of images) {
@@ -54,10 +55,20 @@ async function getImageStats(images) {
     } else {
       stats.normalShit++;
     }
+  }
 
-    if (img.data) {
-      stats.totalSize += Buffer.from(img.data, 'base64').length;
-    }
+  // Get size stats from a sample of recent images
+  const { data: sampleImages } = await supabase
+    .from('images')
+    .select('data')
+    .order('id', { ascending: false })
+    .limit(10);  // Sample size of 10 recent images
+
+  if (sampleImages && sampleImages.length > 0) {
+    const sampleSize = sampleImages.reduce((acc, img) => 
+      acc + (img.data ? Buffer.from(img.data, 'base64').length : 0), 0);
+    stats.avgSize = sampleSize / sampleImages.length;
+    stats.totalSize = stats.avgSize * stats.total; // Estimate total size
   }
 
   return stats;
@@ -513,23 +524,55 @@ app.get('/raw/:id', async (req, res) => {
 });
 
 // Gallery page
+// Gallery page with fixed pagination
 app.get('/gallery', async (req, res) => {
-  const { data: images, error } = await supabase
-    .from('images')
-    .select('id,mimetype,data')
-    .order('id', { ascending: false });
-    
-  if (error) return res.status(500).send('DB error: ' + error.message);
+  const page = parseInt(req.query.page) || 1;
+  const perPage = 20;
+  const from = (page - 1) * perPage;
+  const to = from + perPage - 1;
 
-  // Calculate stats
-  const stats = await getImageStats(images);
+  // First, get all images for stats (metadata only)
+  const { data: allImages, error: statsError } = await supabase
+    .from('images')
+    .select('mimetype');
+    
+  if (statsError) return res.status(500).send('DB error: ' + statsError.message);
   
-  // Filter out hidden images by checking metadata
-  const visibleImages = (data || []).filter(img => {
+  // Get stats without loading full data
+  const stats = await getImageStats(allImages);
+
+  // Filter out hidden images from allImages for visible count
+  const visibleImagesForCount = allImages.filter(img => {
     const [_, ...meta] = img.mimetype.split(';');
     const metaObj = Object.fromEntries(meta.map(s => s.split('=')));
     return metaObj.hidden !== 'true';
   });
+
+  const totalVisibleImages = visibleImagesForCount.length;
+  const totalPages = Math.ceil(totalVisibleImages / perPage);
+
+  // Get more images than needed to account for hidden ones
+  const bufferSize = Math.ceil(perPage * 1.5); // Get 50% more to account for hidden images
+  const expandedTo = from + bufferSize - 1;
+
+  // Get paginated images for display, without data column but with larger buffer
+  const { data: rawImages, error } = await supabase
+    .from('images')
+    .select('id,mimetype')
+    .order('id', { ascending: false })
+    .range(from, expandedTo);
+    
+  if (error) return res.status(500).send('DB error: ' + error.message);
+  
+  // Filter out hidden images and take only what we need for this page
+  const visibleImages = (rawImages || [])
+    .filter(img => {
+      const [_, ...meta] = img.mimetype.split(';');
+      const metaObj = Object.fromEntries(meta.map(s => s.split('=')));
+      return metaObj.hidden !== 'true';
+    })
+    .slice(0, perPage); // Take only the number we need for this page
+
   const items = visibleImages.map(img => {
     const [mimetype, ...meta] = img.mimetype.split(';');
     const metaObj = Object.fromEntries(meta.map(s => s.split('=')));
@@ -560,6 +603,57 @@ app.get('/gallery', async (req, res) => {
       </div>
     `;
   }).join('');
+
+  // Generate pagination HTML
+  const generatePagination = () => {
+    let paginationHTML = '';
+    
+    // Previous button
+    if (page > 1) {
+      paginationHTML += `<a href="/gallery?page=${page - 1}" class="prev-next">⬅️ Previous</a>`;
+    } else {
+      paginationHTML += `<span class="prev-next disabled">⬅️ Previous</span>`;
+    }
+
+    // Page numbers
+    const startPage = Math.max(1, page - 2);
+    const endPage = Math.min(totalPages, page + 2);
+
+    // First page and ellipsis if needed
+    if (startPage > 1) {
+      paginationHTML += `<a href="/gallery?page=1">1</a>`;
+      if (startPage > 2) {
+        paginationHTML += `<span class="ellipsis">...</span>`;
+      }
+    }
+
+    // Page range around current page
+    for (let i = startPage; i <= endPage; i++) {
+      if (i === page) {
+        paginationHTML += `<span class="current">${i}</span>`;
+      } else {
+        paginationHTML += `<a href="/gallery?page=${i}">${i}</a>`;
+      }
+    }
+
+    // Last page and ellipsis if needed
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        paginationHTML += `<span class="ellipsis">...</span>`;
+      }
+      paginationHTML += `<a href="/gallery?page=${totalPages}">${totalPages}</a>`;
+    }
+
+    // Next button
+    if (page < totalPages) {
+      paginationHTML += `<a href="/gallery?page=${page + 1}" class="prev-next">Next ➡️</a>`;
+    } else {
+      paginationHTML += `<span class="prev-next disabled">Next ➡️</span>`;
+    }
+
+    return paginationHTML;
+  };
+
   res.send(`
     <!DOCTYPE html>
     <html>
@@ -688,6 +782,63 @@ app.get('/gallery', async (req, res) => {
             .nav-buttons {
                 margin-bottom: 20px;
             }
+            .pagination {
+                margin: 30px 0;
+                text-align: center;
+            }
+            .pagination a, .pagination span {
+                display: inline-block;
+                padding: 10px 15px;
+                margin: 0 5px;
+                text-decoration: none;
+                border-radius: 5px;
+                transition: all 0.2s;
+            }
+            .pagination a {
+                background: #ff6b6b;
+                color: white;
+            }
+            .pagination a:hover {
+                background: #ff5252;
+                transform: scale(1.05);
+            }
+            .pagination .current {
+                background: #ff5252;
+                color: white;
+                font-weight: bold;
+            }
+            .pagination .disabled {
+                background: #cccccc;
+                color: #999;
+                cursor: not-allowed;
+            }
+            .pagination .prev-next {
+                background: #4ecdc4;
+                font-weight: bold;
+            }
+            .pagination .prev-next:hover {
+                background: #45b7b0;
+            }
+            .pagination .prev-next.disabled {
+                background: #cccccc;
+                color: #999;
+            }
+            .pagination .ellipsis {
+                background: none;
+                color: #666;
+                cursor: default;
+            }
+            .page-info {
+                background: white;
+                padding: 15px;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                margin-bottom: 20px;
+                max-width: 1200px;
+                margin-left: auto;
+                margin-right: auto;
+                margin-bottom: 20px;
+            }
         </style>
     </head>
     <body>
@@ -713,11 +864,27 @@ app.get('/gallery', async (req, res) => {
                 </div>
             </div>
         </div>
+        
+        <div class="page-info">
+            <strong>📄 Page ${page} of ${totalPages}</strong> - 
+            Showing ${visibleImages.length} images 
+            (${((page - 1) * perPage) + 1} - ${((page - 1) * perPage) + visibleImages.length} of ${totalVisibleImages} visible images)
+        </div>
+
         <div class="nav-buttons">
             <a href="/" class="upload-button" style="margin-right: 10px;">📸 Upload More Shit!</a>
             <a href="/leaderboard" class="upload-button">🏆 View Leaderboard</a>
         </div>
+        
+        <div class="pagination">
+            ${generatePagination()}
+        </div>
+        
         <div class="gallery">${items}</div>
+        
+        <div class="pagination">
+            ${generatePagination()}
+        </div>
     </body>
     </html>
   `);
@@ -828,10 +995,10 @@ app.get('/admin', authenticateAdmin, async (req, res) => {
 
   const stats = await getImageStats(allImages);
 
-  // Get paginated images
+  // Get paginated images without data column
   const { data: images, count, error } = await supabase
     .from('images')
-    .select('id,mimetype,data', { count: 'exact' })
+    .select('id,mimetype', { count: 'exact' })
     .order('id', { ascending: false })
     .range(from, to);
 
