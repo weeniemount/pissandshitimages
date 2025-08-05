@@ -6,6 +6,10 @@ const { createClient } = require('@supabase/supabase-js');
 const app = express();
 const upload = multer();
 const PORT = process.env.PORT || 3000;
+const cookieParser = require('cookie-parser');
+
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
@@ -516,6 +520,239 @@ app.get('/gallery', async (req, res) => {
     </body>
     </html>
   `);
+});
+
+// Admin authentication middleware
+const authenticateAdmin = (req, res, next) => {
+  const isAuthenticated = req.cookies.adminAuth === 'true';
+  if (isAuthenticated) {
+    next();
+  } else {
+    res.redirect('/admin/login');
+  }
+};
+
+// Admin login page
+app.get('/admin/login', (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Admin Login - pissandshitimages</title>
+        <style>
+            body {
+                font-family: 'Comic Sans MS', cursive, sans-serif;
+                background: #f0f0f0;
+                margin: 0;
+                padding: 20px;
+                text-align: center;
+            }
+            h1 {
+                color: #ff6b6b;
+                text-shadow: 2px 2px 0 #000;
+                font-size: 2.5em;
+                margin-bottom: 30px;
+            }
+            .login-form {
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                display: inline-block;
+                margin-bottom: 20px;
+            }
+            input[type="password"] {
+                padding: 10px;
+                margin: 10px;
+                border: 2px solid #ff6b6b;
+                border-radius: 5px;
+                font-size: 1.1em;
+            }
+            button {
+                background: #ff6b6b;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                font-size: 1.2em;
+                cursor: pointer;
+                transition: transform 0.1s;
+            }
+            button:hover {
+                transform: scale(1.05);
+            }
+        </style>
+    </head>
+    <body>
+        <h1>🔒 Admin Login - pissandshitimages</h1>
+        <form class="login-form" action="/admin/login" method="post">
+            <input type="password" name="password" placeholder="Enter admin password" required>
+            <br>
+            <button type="submit">🔑 Login</button>
+        </form>
+    </body>
+    </html>
+  `);
+});
+
+// Handle admin login
+app.post('/admin/login', (req, res) => {
+  const { password } = req.body;
+  if (password === process.env.ADMIN_PASSWORD) {
+    res.cookie('adminAuth', 'true', { 
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    });
+    res.redirect('/admin');
+  } else {
+    res.status(401).send('Invalid password');
+  }
+});
+
+// Admin panel
+app.get('/admin', authenticateAdmin, async (req, res) => {
+  const { data: images, error } = await supabase
+    .from('images')
+    .select('*')
+    .order('id', { ascending: false });
+
+  if (error) return res.status(500).send('DB error: ' + error.message);
+
+  const totalSize = images.reduce((acc, img) => acc + Buffer.from(img.data, 'base64').length, 0);
+  const totalSizeMB = (totalSize / 1024 / 1024).toFixed(2);
+
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Admin Panel - pissandshitimages</title>
+        <style>
+            body {
+                font-family: 'Comic Sans MS', cursive, sans-serif;
+                background: #f0f0f0;
+                margin: 0;
+                padding: 20px;
+            }
+            h1 {
+                color: #ff6b6b;
+                text-shadow: 2px 2px 0 #000;
+                font-size: 2.5em;
+                margin-bottom: 30px;
+                text-align: center;
+            }
+            .stats {
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                margin-bottom: 20px;
+            }
+            .image-list {
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                padding: 10px;
+                border-bottom: 1px solid #ddd;
+                text-align: left;
+            }
+            th {
+                background: #ff6b6b;
+                color: white;
+            }
+            tr:nth-child(even) {
+                background: #f9f9f9;
+            }
+            .delete-btn {
+                background: #ff4757;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+            .delete-btn:hover {
+                background: #ff6b6b;
+            }
+            .thumbnail {
+                max-width: 100px;
+                max-height: 100px;
+                object-fit: cover;
+                border-radius: 3px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>🛠️ Admin Panel - pissandshitimages</h1>
+        
+        <div class="stats">
+            <h2>📊 Stats</h2>
+            <p>Total Images: ${images.length}</p>
+            <p>Total Size: ${totalSizeMB} MB</p>
+        </div>
+
+        <div class="image-list">
+            <h2>🖼️ Images</h2>
+            <table>
+                <tr>
+                    <th>Thumbnail</th>
+                    <th>ID</th>
+                    <th>Shitification</th>
+                    <th>Date</th>
+                    <th>Size</th>
+                    <th>Actions</th>
+                </tr>
+                ${images.map(img => {
+                  const [mimetype, ...meta] = img.mimetype.split(';');
+                  const metaObj = Object.fromEntries(meta.map(s => s.split('=')));
+                  const size = (Buffer.from(img.data, 'base64').length / 1024).toFixed(2);
+                  return `
+                    <tr>
+                        <td><img src="/raw/${img.id}" class="thumbnail" /></td>
+                        <td><a href="/image/${img.id}" target="_blank">${img.id}</a></td>
+                        <td>${metaObj.shitlevel?.replace('_', ' ') || 'unknown'} (${metaObj.roll || '??'}%)</td>
+                        <td>${new Date(metaObj.date).toLocaleString()}</td>
+                        <td>${size} KB</td>
+                        <td>
+                            <form action="/admin/delete/${img.id}" method="post" style="display:inline;">
+                                <button type="submit" class="delete-btn">🗑️ Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                  `;
+                }).join('')}
+            </table>
+        </div>
+    </body>
+    </html>
+  `);
+});
+
+// Delete image
+app.post('/admin/delete/:id', authenticateAdmin, async (req, res) => {
+  const { error } = await supabase
+    .from('images')
+    .delete()
+    .eq('id', req.params.id);
+  
+  if (error) {
+    res.status(500).send('Error deleting image: ' + error.message);
+  } else {
+    res.redirect('/admin');
+  }
+});
+
+// Admin logout
+app.get('/admin/logout', (req, res) => {
+  res.clearCookie('adminAuth');
+  res.redirect('/admin/login');
 });
 
 app.listen(PORT, () => {
