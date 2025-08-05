@@ -205,6 +205,12 @@ app.get('/sharexconfig', (req, res) => {
     "RequestURL": `https://${req.get('host')}/upload`,
     "Body": "MultipartFormData",
     "FileFormName": "image",
+    "Parameters": {
+      "hide": {
+        "Value": false,
+        "Description": "Hide image (YOU COWARD!)"
+      }
+    },
     "ResponseType": "RedirectionURL",
     "URL": "{responseurl}"
   };
@@ -282,8 +288,27 @@ app.get('/', (req, res) => {
         <form action="/upload" method="post" enctype="multipart/form-data">
             <input type="file" name="image" required accept="image/*">
             <br>
+            <div class="checkbox-wrapper">
+                <input type="checkbox" name="hide" id="hide">
+                <label for="hide">🕶️ Hide image (YOU COWARD!)</label>
+            </div>
+            <br>
             <button type="submit">📸 UPLOAD THIS SHIT! 🎲</button>
         </form>
+        <style>
+            .checkbox-wrapper {
+                margin: 10px 0;
+                font-size: 1.1em;
+            }
+            .checkbox-wrapper input[type="checkbox"] {
+                margin-right: 8px;
+                transform: scale(1.2);
+            }
+            .checkbox-wrapper label {
+                color: #ff6b6b;
+                cursor: pointer;
+            }
+        </style>
         <div style="margin-top: 20px;">
             <a href="/gallery" style="margin-right: 15px;">🖼️ View Gallery</a>
             <a href="/sharexconfig" class="sharex-button">📥 Download ShareX Config</a>
@@ -318,7 +343,8 @@ app.post('/upload', upload.single('image'), async (req, res) => {
   const result = await gamblingShitifyImage(buffer, mimetype);
   const base64 = result.buffer.toString('base64');
   const now = new Date().toISOString();
-  const customMimetype = `${result.mimetype};shitlevel=${result.gamblingResult};roll=${result.rollPercentage};date=${now}`;
+  const isHidden = req.body.hide === 'on';
+  const customMimetype = `${result.mimetype};shitlevel=${result.gamblingResult};roll=${result.rollPercentage};date=${now};hidden=${isHidden}${isHidden ? ';message=🙈 THIS USER IS A COWARD WHO TRIED TO HIDE THEIR SHAME! 🙈' : ''}`;
   const { data, error } = await supabase
     .from('images')
     .insert([{ data: base64, mimetype: customMimetype }])
@@ -422,6 +448,10 @@ app.get('/image/:id', async (req, res) => {
                 <div class="date">
                     📅 Date: ${new Date(metaObj.date).toLocaleString() || 'unknown'}
                 </div>
+                ${metaObj.hidden === 'true' ? `
+                <div class="shame" style="background: #ff4757; color: white; padding: 10px; border-radius: 5px; margin: 10px; display: inline-block;">
+                    ${metaObj.message || '🙈 THIS USER IS A COWARD WHO TRIED TO HIDE THEIR SHAME! 🙈'}
+                </div>` : ''}
             </div>
             <a href="/gallery">🔙 Back to gallery</a>
         </div>
