@@ -1,3 +1,19 @@
+// Mom i want the db schemas
+// okay sweetie here it is
+/*
+-- Create new table with UUID primary key
+CREATE TABLE images (
+	id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+	data text NOT NULL,
+	mimetype text NOT NULL
+);
+
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+Thank you mom
+no problem sweetie */
+
+
 require('dotenv').config();
 const express = require('express');
 const multer = require('multer');
