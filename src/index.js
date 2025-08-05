@@ -310,6 +310,7 @@ app.get('/', (req, res) => {
         </style>
         <div style="margin-top: 20px;">
             <a href="/gallery" style="margin-right: 15px;">🖼️ View Gallery</a>
+            <a href="/leaderboard" style="margin-right: 15px;">🏆 Leaderboard</a>
             <a href="/sharexconfig" class="sharex-button">📥 Download ShareX Config</a>
         </div>
         <style>
@@ -607,7 +608,10 @@ app.get('/gallery', async (req, res) => {
     </head>
     <body>
         <h1>🖼️ Gallery - pissandshitimages 💩</h1>
-        <a href="/" class="upload-button">📸 Upload More Shit!</a>
+        <div>
+            <a href="/" class="upload-button" style="margin-right: 10px;">📸 Upload More Shit!</a>
+            <a href="/leaderboard" class="upload-button">🏆 View Leaderboard</a>
+        </div>
         <div class="gallery">${items}</div>
     </body>
     </html>
@@ -845,6 +849,156 @@ app.post('/admin/delete/:id', authenticateAdmin, async (req, res) => {
 app.get('/admin/logout', (req, res) => {
   res.clearCookie('adminAuth');
   res.redirect('/admin/login');
+});
+
+// Leaderboard page
+app.get('/leaderboard', async (req, res) => {
+  const { data, error } = await supabase
+    .from('images')
+    .select('id,mimetype')
+    .order('id', { ascending: false });
+    
+  if (error) return res.status(500).send('DB error: ' + error.message);
+  
+  // Filter out hidden images and parse roll percentages
+  const rankedImages = (data || [])
+    .filter(img => {
+      const [_, ...meta] = img.mimetype.split(';');
+      const metaObj = Object.fromEntries(meta.map(s => s.split('=')));
+      return metaObj.hidden !== 'true';
+    })
+    .map(img => {
+      const [_, ...meta] = img.mimetype.split(';');
+      const metaObj = Object.fromEntries(meta.map(s => s.split('=')));
+      return {
+        id: img.id,
+        roll: parseFloat(metaObj.roll || '0'),
+        shitlevel: metaObj.shitlevel?.replace('_', ' ') || 'unknown',
+        date: new Date(metaObj.date || Date.now()).toLocaleString()
+      };
+    })
+    .sort((a, b) => b.roll - a.roll); // Sort by roll percentage, highest first
+
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Leaderboard - pissandshitimages</title>
+        <style>
+            body {
+                font-family: 'Comic Sans MS', cursive, sans-serif;
+                background: #f0f0f0;
+                margin: 0;
+                padding: 20px;
+                text-align: center;
+            }
+            h1 {
+                color: #ff6b6b;
+                text-shadow: 2px 2px 0 #000;
+                font-size: 2.5em;
+                margin-bottom: 30px;
+            }
+            .leaderboard {
+                max-width: 1000px;
+                margin: 0 auto;
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            }
+            .image-row {
+                display: flex;
+                align-items: center;
+                padding: 15px;
+                border-bottom: 1px solid #eee;
+                transition: transform 0.2s;
+            }
+            .image-row:hover {
+                transform: scale(1.02);
+                background: #f9f9f9;
+            }
+            .rank {
+                font-size: 2em;
+                font-weight: bold;
+                width: 60px;
+                color: #ff6b6b;
+            }
+            .medal-1 { color: #ffd700; } /* Gold */
+            .medal-2 { color: #c0c0c0; } /* Silver */
+            .medal-3 { color: #cd7f32; } /* Bronze */
+            .image-wrapper {
+                width: 100px;
+                height: 75px;
+                margin: 0 15px;
+            }
+            .image-wrapper img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 5px;
+            }
+            .info {
+                flex-grow: 1;
+                text-align: left;
+            }
+            .roll {
+                font-size: 1.2em;
+                font-weight: bold;
+                color: #ff6b6b;
+            }
+            .shitlevel {
+                margin-top: 5px;
+                color: #666;
+            }
+            .date {
+                color: #999;
+                font-size: 0.9em;
+            }
+            .nav-buttons {
+                margin-bottom: 20px;
+            }
+            .nav-button {
+                display: inline-block;
+                background: #ff6b6b;
+                color: white;
+                text-decoration: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                margin: 0 10px;
+                transition: transform 0.1s;
+            }
+            .nav-button:hover {
+                transform: scale(1.05);
+                background: #ff5252;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>🏆 Shitification Leaderboard 💩</h1>
+        <div class="nav-buttons">
+            <a href="/" class="nav-button">🏠 Home</a>
+            <a href="/gallery" class="nav-button">🖼️ Gallery</a>
+        </div>
+        <div class="leaderboard">
+            ${rankedImages.map((img, index) => `
+                <div class="image-row">
+                    <div class="rank ${index < 3 ? 'medal-' + (index + 1) : ''}">${index + 1}</div>
+                    <div class="image-wrapper">
+                        <a href="/image/${img.id}">
+                            <img src="/raw/${img.id}" alt="Rank ${index + 1}" />
+                        </a>
+                    </div>
+                    <div class="info">
+                        <div class="roll">Roll: ${img.roll.toFixed(2)}%</div>
+                        <div class="shitlevel">Level: ${img.shitlevel}</div>
+                        <div class="date">Date: ${img.date}</div>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    </body>
+    </html>
+  `);
 });
 
 app.listen(PORT, () => {
