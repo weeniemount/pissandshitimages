@@ -1461,6 +1461,13 @@ app.get('/leaderboard', async (req, res) => {
   `);
 });
 
+if (process.env.LOCKED) {
+    app.get('*', (req, res) => {
+        res.status(403).send('down, come back later');
+    });
+}
+
+
 app.listen(PORT, () => {
   console.log(`pissandshitimages running on http://localhost:${PORT}`);
 });
