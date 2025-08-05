@@ -179,6 +179,25 @@ async function gamblingShitifyImage(buffer, mimetype) {
     return result
 }
 
+// ShareX Config download
+app.get('/sharexconfig', (req, res) => {
+  const config = {
+    "Version": "14.1.0",
+    "Name": "pissandshitimages",
+    "DestinationType": "ImageUploader",
+    "RequestMethod": "POST",
+    "RequestURL": `${req.protocol}://${req.get('host')}/upload`,
+    "Body": "MultipartFormData",
+    "FileFormName": "image",
+    "ResponseType": "RedirectionURL",
+    "URL": "{responseurl}"
+  };
+  
+  res.setHeader('Content-Disposition', 'attachment; filename="pissandshitimages.sxcu"');
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify(config, null, 2));
+});
+
 // Upload page
 app.get('/', (req, res) => {
   res.send(`
@@ -249,12 +268,32 @@ app.get('/', (req, res) => {
             <br>
             <button type="submit">📸 UPLOAD THIS SHIT! 🎲</button>
         </form>
-        <br>
-        <a href="/gallery">🖼️ View Gallery</a>
+        <div style="margin-top: 20px;">
+            <a href="/gallery" style="margin-right: 15px;">🖼️ View Gallery</a>
+            <a href="/sharexconfig" class="sharex-button">📥 Download ShareX Config</a>
+        </div>
+        <style>
+            .sharex-button {
+                display: inline-block;
+                background: #ff6b6b;
+                color: white;
+                text-decoration: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                font-size: 1.2em;
+                transition: transform 0.1s;
+            }
+            .sharex-button:hover {
+                transform: scale(1.05);
+                background: #ff5252;
+            }
+        </style>
     </body>
     </html>
   `);
 });
+
+
 
 // Handle upload
 app.post('/upload', upload.single('image'), async (req, res) => {
