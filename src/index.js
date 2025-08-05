@@ -478,8 +478,16 @@ app.get('/gallery', async (req, res) => {
     .from('images')
     .select('id,mimetype')
     .order('id', { ascending: false });
+    
   if (error) return res.status(500).send('DB error: ' + error.message);
-  const items = (data || []).map(img => {
+  
+  // Filter out hidden images by checking metadata
+  const visibleImages = (data || []).filter(img => {
+    const [_, ...meta] = img.mimetype.split(';');
+    const metaObj = Object.fromEntries(meta.map(s => s.split('=')));
+    return metaObj.hidden !== 'true';
+  });
+  const items = visibleImages.map(img => {
     const [mimetype, ...meta] = img.mimetype.split(';');
     const metaObj = Object.fromEntries(meta.map(s => s.split('=')));
     return `
