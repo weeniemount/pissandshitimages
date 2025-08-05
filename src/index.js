@@ -186,7 +186,7 @@ app.get('/sharexconfig', (req, res) => {
     "Name": "pissandshitimages",
     "DestinationType": "ImageUploader",
     "RequestMethod": "POST",
-    "RequestURL": `${req.protocol}://${req.get('host')}/upload`,
+    "RequestURL": `https://${req.get('host')}/upload`,
     "Body": "MultipartFormData",
     "FileFormName": "image",
     "ResponseType": "RedirectionURL",
