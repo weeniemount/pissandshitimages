@@ -492,7 +492,14 @@ app.get('/gallery', async (req, res) => {
     const [mimetype, ...meta] = img.mimetype.split(';');
     const metaObj = Object.fromEntries(meta.map(s => s.split('=')));
     const roll = parseFloat(metaObj.roll || '0');
-    const shitLevel = roll >= 50 ? 'LUCKY SURVIVOR' : (metaObj.shitlevel?.replace('_', ' ') || 'unknown');
+    let shitLevel;
+    if (roll >= 50) {
+      shitLevel = 'LUCKY SURVIVOR';
+    } else if (roll < 25) {
+      shitLevel = 'EXTREME NUCLEAR';
+    } else {
+      shitLevel = 'NORMAL SHIT';
+    }
     return `
       <div class="image-card">
         <div class="image-wrapper">
@@ -882,10 +889,18 @@ app.get('/leaderboard', async (req, res) => {
       const [_, ...meta] = img.mimetype.split(';');
       const metaObj = Object.fromEntries(meta.map(s => s.split('=')));
       const roll = parseFloat(metaObj.roll || '0');
+      let shitlevel;
+      if (roll >= 50) {
+        shitlevel = 'LUCKY SURVIVOR';
+      } else if (roll < 25) {
+        shitlevel = 'EXTREME NUCLEAR';
+      } else {
+        shitlevel = 'NORMAL SHIT';
+      }
       return {
         id: img.id,
         roll: roll,
-        shitlevel: roll >= 50 ? 'LUCKY SURVIVOR' : (metaObj.shitlevel?.replace('_', ' ') || 'unknown'),
+        shitlevel: shitlevel,
         date: new Date(metaObj.date || Date.now()).toLocaleString()
       };
     })
