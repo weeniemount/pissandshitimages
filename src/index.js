@@ -73,6 +73,9 @@ const PORT = process.env.PORT || 3000;
 const cookieParser = require('cookie-parser');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
+const path = require('path')
+
+app.use(express.static(path.join(process.cwd(), 'src', 'public')));
 
 if (process.env.LOCKED === 'true') {
 	app.use((req, res) => {
