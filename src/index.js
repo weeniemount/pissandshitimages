@@ -1665,6 +1665,7 @@ app.get('/admin', authenticateAdmin, async (req, res) => {
   // Check for success messages
   const bannedSuccess = req.query.banned === 'success';
   const deletedSuccess = req.query.deleted === 'success';
+  const visibilitySuccess = req.query.visibility === 'success';
 
   // Get all images for stats
   const { data: allImages, error: statsError } = await supabase
@@ -1897,6 +1898,7 @@ app.get('/admin', authenticateAdmin, async (req, res) => {
         
         ${bannedSuccess ? '<div class="success-message">✅ IP has been successfully banned!</div>' : ''}
         ${deletedSuccess ? '<div class="success-message">✅ Image has been successfully deleted!</div>' : ''}
+        ${visibilitySuccess ? '<div class="success-message">✅ Image visibility has been successfully updated!</div>' : ''}
         
         <div class="stats">
             <h2>📊 Stats</h2>
@@ -1927,16 +1929,38 @@ app.get('/admin', authenticateAdmin, async (req, res) => {
             </div>
             
             <div style="margin-top: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                <h3 style="color: #ff6b6b; margin-top: 0;">🗑️ Delete Image by ID</h3>
-                <form action="/admin/delete-by-id" method="post" style="display: flex; gap: 10px; align-items: center;">
-                    <input type="text" name="imageId" placeholder="Paste image ID here" required 
+                <h3 style="color: #ff6b6b; margin-top: 0;">🛠️ Image Management by ID</h3>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" id="imageIdInput" placeholder="Paste image ID here" required 
                            style="flex: 1; padding: 10px; border: 2px solid #ff6b6b; border-radius: 5px;">
-                    <button type="submit" class="delete-btn" 
-                            style="padding: 10px 15px; background: #ff4757; color: white; border: none; border-radius: 5px; cursor: pointer;"
-                            onclick="return confirm('Are you sure you want to delete this image?')">
-                        🗑️ Delete
-                    </button>
-                </form>
+                    
+                    <form action="/admin/delete-by-id" method="post" style="display: inline;">
+                        <input type="hidden" name="imageId" id="deleteImageId">
+                        <button type="submit" class="delete-btn" 
+                                style="padding: 10px 15px; background: #ff4757; color: white; border: none; border-radius: 5px; cursor: pointer;"
+                                onclick="document.getElementById('deleteImageId').value = document.getElementById('imageIdInput').value; return confirm('Are you sure you want to delete this image?')">
+                            🗑️ Delete
+                        </button>
+                    </form>
+                    
+                    <form action="/admin/toggle-visibility-by-id" method="post" style="display: inline;">
+                        <input type="hidden" name="imageId" id="toggleImageId">
+                        <button type="submit" class="visibility-btn visible" 
+                                style="padding: 10px 15px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;"
+                                onclick="document.getElementById('toggleImageId').value = document.getElementById('imageIdInput').value; return confirm('Are you sure you want to toggle the visibility of this image?')">
+                            👁️ Toggle Visibility
+                        </button>
+                    </form>
+                    
+                    <form action="/admin/ban-ip-by-id" method="post" style="display: inline;">
+                        <input type="hidden" name="imageId" id="banImageId">
+                        <button type="submit" class="ban-btn" 
+                                style="padding: 10px 15px; background: #ff6b6b; color: white; border: none; border-radius: 5px; cursor: pointer;"
+                                onclick="document.getElementById('banImageId').value = document.getElementById('imageIdInput').value; return confirm('Are you sure you want to ban the IP associated with this image? This will prevent them from uploading any more images.')">
+                            🚫 Ban IP
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -2232,6 +2256,149 @@ app.post('/admin/delete/:id', authenticateAdmin, async (req, res) => {
   }
 });
 
+// Toggle image visibility by ID (from form input)
+app.post('/admin/toggle-visibility-by-id', authenticateAdmin, async (req, res) => {
+  const { imageId } = req.body;
+  
+  if (!imageId) {
+    return res.status(400).send('Image ID is required');
+  }
+  
+  try {
+    // Check if the image exists first
+    const { data: image, error: getError } = await supabase
+      .from('images')
+      .select('mimetype')
+      .eq('id', imageId)
+      .single();
+    
+    if (getError || !image) {
+      return res.status(404).send(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Error - Image Not Found</title>
+            <style>
+                body {
+                    font-family: 'Comic Sans MS', cursive, sans-serif;
+                    background: #f0f0f0;
+                    margin: 0;
+                    padding: 20px;
+                    text-align: center;
+                }
+                h1 { color: #ff6b6b; font-size: 2em; }
+                .error-box {
+                    background: #ff4757;
+                    color: white;
+                    padding: 20px;
+                    border-radius: 10px;
+                    margin: 20px auto;
+                    max-width: 600px;
+                }
+                a {
+                    display: inline-block;
+                    background: #4ecdc4;
+                    color: white;
+                    text-decoration: none;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    margin-top: 20px;
+                }
+            </style>
+        </head>
+        <body>
+        <script src="/oneko.js"></script>
+            <h1>❌ Error: Image Not Found</h1>
+            <div class="error-box">
+                <p>The image with ID <strong>${imageId}</strong> was not found in the database.</p>
+                <p>Please check the ID and try again.</p>
+            </div>
+            <a href="/admin">⬅️ Back to Admin Panel</a>
+        </body>
+        </html>
+      `);
+    }
+    
+    // Parse the mimetype to get metadata
+    const [baseMimetype, ...meta] = image.mimetype.split(';');
+    const metaObj = Object.fromEntries(meta.map(s => s.split('=')));
+    const currentlyHidden = metaObj.hidden === 'true';
+    
+    // Toggle the hidden state
+    metaObj.hidden = (!currentlyHidden).toString();
+    
+    // Update or add the message
+    if (!currentlyHidden) {
+      metaObj.message = '🙈 THIS USER IS A COWARD WHO TRIED TO HIDE THEIR SHAME! 🙈';
+    } else {
+      delete metaObj.message;
+    }
+
+    // Reconstruct mimetype string
+    const newMimetype = [baseMimetype, ...Object.entries(metaObj).map(([k, v]) => `${k}=${v}`)].join(';');
+
+    // Update the image
+    const { error: updateError } = await supabase
+      .from('images')
+      .update({ mimetype: newMimetype })
+      .eq('id', imageId);
+    
+    if (updateError) {
+      throw new Error(updateError.message);
+    }
+    
+    // Redirect back to admin panel with success message
+    res.redirect('/admin?visibility=success');
+    
+  } catch (error) {
+    console.error('Error toggling image visibility by ID:', error);
+    res.status(500).send(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <title>Error - Visibility Toggle Failed</title>
+          <style>
+              body {
+                  font-family: 'Comic Sans MS', cursive, sans-serif;
+                  background: #f0f0f0;
+                  margin: 0;
+                  padding: 20px;
+                  text-align: center;
+              }
+              h1 { color: #ff6b6b; font-size: 2em; }
+              .error-box {
+                  background: #ff4757;
+                  color: white;
+                  padding: 20px;
+                  border-radius: 10px;
+                  margin: 20px auto;
+                  max-width: 600px;
+              }
+              a {
+                  display: inline-block;
+                  background: #4ecdc4;
+                  color: white;
+                  text-decoration: none;
+                  padding: 10px 20px;
+                  border-radius: 5px;
+                  margin-top: 20px;
+              }
+          </style>
+      </head>
+      <body>
+        <script src="/oneko.js"></script>
+          <h1>❌ Error: Visibility Toggle Failed</h1>
+          <div class="error-box">
+              <p>Failed to toggle visibility for image with ID <strong>${imageId}</strong>.</p>
+              <p>Error: ${error.message}</p>
+          </div>
+          <a href="/admin">⬅️ Back to Admin Panel</a>
+      </body>
+      </html>
+    `);
+  }
+});
+
 // Delete image by ID (from form input)
 app.post('/admin/delete-by-id', authenticateAdmin, async (req, res) => {
   const { imageId } = req.body;
@@ -2348,6 +2515,176 @@ app.post('/admin/delete-by-id', authenticateAdmin, async (req, res) => {
           <h1>❌ Error: Delete Failed</h1>
           <div class="error-box">
               <p>Failed to delete image with ID <strong>${imageId}</strong>.</p>
+              <p>Error: ${error.message}</p>
+          </div>
+          <a href="/admin">⬅️ Back to Admin Panel</a>
+      </body>
+      </html>
+    `);
+  }
+});
+
+// Ban IP by image ID (from form input)
+app.post('/admin/ban-ip-by-id', authenticateAdmin, async (req, res) => {
+  const { imageId } = req.body;
+  
+  if (!imageId) {
+    return res.status(400).send('Image ID is required');
+  }
+  
+  try {
+    // Get the IP hash for this post
+    const { data: postIP, error: getIPError } = await supabase
+      .from('post_ips')
+      .select('ip_hash')
+      .eq('post_id', imageId)
+      .single();
+      
+    if (getIPError || !postIP) {
+      return res.status(404).send(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Error - IP Not Found</title>
+            <style>
+                body {
+                    font-family: 'Comic Sans MS', cursive, sans-serif;
+                    background: #f0f0f0;
+                    margin: 0;
+                    padding: 20px;
+                    text-align: center;
+                }
+                h1 { color: #ff6b6b; font-size: 2em; }
+                .error-box {
+                    background: #ff4757;
+                    color: white;
+                    padding: 20px;
+                    border-radius: 10px;
+                    margin: 20px auto;
+                    max-width: 600px;
+                }
+                a {
+                    display: inline-block;
+                    background: #4ecdc4;
+                    color: white;
+                    text-decoration: none;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    margin-top: 20px;
+                }
+            </style>
+        </head>
+        <body>
+        <script src="/oneko.js"></script>
+            <h1>❌ Error: IP Not Found</h1>
+            <div class="error-box">
+                <p>No IP address was found for the image with ID <strong>${imageId}</strong>.</p>
+                <p>This image may not have IP tracking information.</p>
+            </div>
+            <a href="/admin">⬅️ Back to Admin Panel</a>
+        </body>
+        </html>
+      `);
+    }
+    
+    // Add IP to banned list
+    const { error: banError } = await supabase
+      .from('banned_ips')
+      .insert([{ ip_hash: postIP.ip_hash }]);
+      
+    if (banError) {
+      // IP might already be banned
+      if (banError.code === '23505') { // unique violation
+        return res.status(400).send(`
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>Error - IP Already Banned</title>
+              <style>
+                  body {
+                      font-family: 'Comic Sans MS', cursive, sans-serif;
+                      background: #f0f0f0;
+                      margin: 0;
+                      padding: 20px;
+                      text-align: center;
+                  }
+                  h1 { color: #ff6b6b; font-size: 2em; }
+                  .error-box {
+                      background: #ff9800;
+                      color: white;
+                      padding: 20px;
+                      border-radius: 10px;
+                      margin: 20px auto;
+                      max-width: 600px;
+                  }
+                  a {
+                      display: inline-block;
+                      background: #4ecdc4;
+                      color: white;
+                      text-decoration: none;
+                      padding: 10px 20px;
+                      border-radius: 5px;
+                      margin-top: 20px;
+                  }
+              </style>
+          </head>
+          <body>
+          <script src="/oneko.js"></script>
+              <h1>⚠️ IP Already Banned</h1>
+              <div class="error-box">
+                  <p>The IP address associated with image ID <strong>${imageId}</strong> is already banned.</p>
+              </div>
+              <a href="/admin">⬅️ Back to Admin Panel</a>
+          </body>
+          </html>
+        `);
+      }
+      throw new Error(banError.message);
+    }
+    
+    // Redirect back to admin panel with success message
+    res.redirect('/admin?banned=success');
+    
+  } catch (error) {
+    console.error('Error banning IP by image ID:', error);
+    res.status(500).send(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <title>Error - Ban Failed</title>
+          <style>
+              body {
+                  font-family: 'Comic Sans MS', cursive, sans-serif;
+                  background: #f0f0f0;
+                  margin: 0;
+                  padding: 20px;
+                  text-align: center;
+              }
+              h1 { color: #ff6b6b; font-size: 2em; }
+              .error-box {
+                  background: #ff4757;
+                  color: white;
+                  padding: 20px;
+                  border-radius: 10px;
+                  margin: 20px auto;
+                  max-width: 600px;
+              }
+              a {
+                  display: inline-block;
+                  background: #4ecdc4;
+                  color: white;
+                  text-decoration: none;
+                  padding: 10px 20px;
+                  border-radius: 5px;
+                  margin-top: 20px;
+              }
+          </style>
+      </head>
+      <body>
+        <script src="/oneko.js"></script>
+          <h1>❌ Error: Ban Failed</h1>
+          <div class="error-box">
+              <p>Failed to ban IP for image with ID <strong>${imageId}</strong>.</p>
               <p>Error: ${error.message}</p>
           </div>
           <a href="/admin">⬅️ Back to Admin Panel</a>
