@@ -2365,6 +2365,10 @@ app.get('/admin/logout', (req, res) => {
 
 // Leaderboard page
 app.get('/leaderboard', async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const perPage = 20;
+  
+  // First, get all images for stats (metadata only)
   const { data, error } = await supabase
     .from('images')
     .select('id,mimetype')
@@ -2373,7 +2377,7 @@ app.get('/leaderboard', async (req, res) => {
   if (error) return res.status(500).send('DB error: ' + error.message);
   
   // Filter out hidden images and parse roll percentages
-  const rankedImages = (data || [])
+  const visibleImages = (data || [])
     .filter(img => {
       const [_, ...meta] = img.mimetype.split(';');
       const metaObj = Object.fromEntries(meta.map(s => s.split('=')));
@@ -2399,6 +2403,71 @@ app.get('/leaderboard', async (req, res) => {
       };
     })
     .sort((a, b) => b.roll - a.roll); // Sort by roll percentage, highest first
+    
+  // Calculate pagination values
+  const totalImages = visibleImages.length;
+  const totalPages = Math.ceil(totalImages / perPage);
+  const startIndex = (page - 1) * perPage;
+  const endIndex = startIndex + perPage;
+  
+  // Get the images for the current page
+  const rankedImages = visibleImages.slice(startIndex, endIndex);
+  
+  // Generate pagination HTML
+  const generatePagination = () => {
+    let paginationHTML = '';
+    
+    // Previous button
+    if (page > 1) {
+      paginationHTML += `<a href="/leaderboard?page=${page - 1}" class="prev-next">⬅️ Previous</a>`;
+    } else {
+      paginationHTML += `<span class="prev-next disabled">⬅️ Previous</span>`;
+    }
+
+    // Page numbers
+    const startPage = Math.max(1, page - 2);
+    const endPage = Math.min(totalPages, page + 2);
+
+    // First page and ellipsis if needed
+    if (startPage > 1) {
+      paginationHTML += `<a href="/leaderboard?page=1">1</a>`;
+      if (startPage > 2) {
+        paginationHTML += `<span class="ellipsis">...</span>`;
+      }
+    }
+
+    // Page range around current page
+    for (let i = startPage; i <= endPage; i++) {
+      if (i === page) {
+        paginationHTML += `<span class="current">${i}</span>`;
+      } else {
+        paginationHTML += `<a href="/leaderboard?page=${i}">${i}</a>`;
+      }
+    }
+
+    // Last page and ellipsis if needed
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        paginationHTML += `<span class="ellipsis">...</span>`;
+      }
+      paginationHTML += `<a href="/leaderboard?page=${totalPages}">${totalPages}</a>`;
+    }
+
+    // Next button
+    if (page < totalPages) {
+      paginationHTML += `<a href="/leaderboard?page=${page + 1}" class="prev-next">Next ➡️</a>`;
+    } else {
+      paginationHTML += `<span class="prev-next disabled">Next ➡️</span>`;
+    }
+
+    return paginationHTML;
+  };
+  
+  // Calculate the global rank for each image on the current page
+  const rankedImagesWithGlobalRank = rankedImages.map((img, index) => {
+    const globalRank = startIndex + index + 1; // +1 because ranks start at 1, not 0
+    return { ...img, globalRank };
+  })
 
   res.send(`
     <!DOCTYPE html>
@@ -2492,6 +2561,62 @@ app.get('/leaderboard', async (req, res) => {
                 transform: scale(1.05);
                 background: #ff5252;
             }
+            .pagination {
+                margin: 30px 0;
+                text-align: center;
+            }
+            .pagination a, .pagination span {
+                display: inline-block;
+                padding: 10px 15px;
+                margin: 0 5px;
+                text-decoration: none;
+                border-radius: 5px;
+                transition: all 0.2s;
+            }
+            .pagination a {
+                background: #ff6b6b;
+                color: white;
+            }
+            .pagination a:hover {
+                background: #ff5252;
+                transform: scale(1.05);
+            }
+            .pagination .current {
+                background: #ff5252;
+                color: white;
+                font-weight: bold;
+            }
+            .pagination .disabled {
+                background: #cccccc;
+                color: #999;
+                cursor: not-allowed;
+            }
+            .pagination .prev-next {
+                background: #4ecdc4;
+                font-weight: bold;
+            }
+            .pagination .prev-next:hover {
+                background: #45b7b0;
+            }
+            .pagination .prev-next.disabled {
+                background: #cccccc;
+                color: #999;
+            }
+            .pagination .ellipsis {
+                background: none;
+                color: #666;
+                cursor: default;
+            }
+            .page-info {
+                background: white;
+                padding: 15px;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                margin-bottom: 20px;
+                max-width: 1000px;
+                margin-left: auto;
+                margin-right: auto;
+            }
         </style>
     </head>
     <body>
@@ -2501,13 +2626,22 @@ app.get('/leaderboard', async (req, res) => {
             <a href="/" class="nav-button">🏠 Home</a>
             <a href="/gallery" class="nav-button">🖼️ Gallery</a>
         </div>
+        
+        <div class="page-info">
+            <p>Showing ${startIndex + 1}-${Math.min(startIndex + rankedImages.length, totalImages)} of ${totalImages} images</p>
+        </div>
+        
+        <div class="pagination">
+            ${generatePagination()}
+        </div>
+        
         <div class="leaderboard">
-            ${rankedImages.map((img, index) => `
+            ${rankedImagesWithGlobalRank.map((img, index) => `
                 <div class="image-row">
-                    <div class="rank ${index < 3 ? 'medal-' + (index + 1) : ''}">${index + 1}</div>
+                    <div class="rank ${img.globalRank <= 3 ? 'medal-' + img.globalRank : ''}">${img.globalRank}</div>
                     <div class="image-wrapper">
                         <a href="/image/${img.id}">
-                            <img src="/raw/${img.id}" alt="Rank ${index + 1}" />
+                            <img src="/raw/${img.id}" alt="Rank ${img.globalRank}" />
                         </a>
                     </div>
                     <div class="info">
@@ -2517,6 +2651,10 @@ app.get('/leaderboard', async (req, res) => {
                     </div>
                 </div>
             `).join('')}
+        </div>
+        
+        <div class="pagination">
+            ${generatePagination()}
         </div>
     </body>
     </html>
