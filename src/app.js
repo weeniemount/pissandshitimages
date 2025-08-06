@@ -56,9 +56,6 @@ app.use('/admin', adminRoutes);
 // Schedule cleanup of expired sessions
 scheduleSessionCleanup();
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
-
+// Export the app without starting the server
+// This allows index.js to control when the server starts
 module.exports = app;
