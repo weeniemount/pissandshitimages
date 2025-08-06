@@ -1652,8 +1652,9 @@ app.get('/admin', authenticateAdmin, async (req, res) => {
   const from = (page - 1) * perPage;
   const to = from + perPage - 1;
 
-  // Check for success message
+  // Check for success messages
   const bannedSuccess = req.query.banned === 'success';
+  const deletedSuccess = req.query.deleted === 'success';
 
   // Get all images for stats
   const { data: allImages, error: statsError } = await supabase
@@ -1884,6 +1885,7 @@ app.get('/admin', authenticateAdmin, async (req, res) => {
         </div>
         
         ${bannedSuccess ? '<div class="success-message">✅ IP has been successfully banned!</div>' : ''}
+        ${deletedSuccess ? '<div class="success-message">✅ Image has been successfully deleted!</div>' : ''}
         
         <div class="stats">
             <h2>📊 Stats</h2>
@@ -1911,6 +1913,19 @@ app.get('/admin', authenticateAdmin, async (req, res) => {
                     <p>Total Banned: ${bannedIPsCount || 0}</p>
                     <p><a href="/admin/banned-ips" style="color: #ff6b6b;">Manage Banned IPs →</a></p>
                 </div>
+            </div>
+            
+            <div style="margin-top: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <h3 style="color: #ff6b6b; margin-top: 0;">🗑️ Delete Image by ID</h3>
+                <form action="/admin/delete-by-id" method="post" style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" name="imageId" placeholder="Paste image ID here" required 
+                           style="flex: 1; padding: 10px; border: 2px solid #ff6b6b; border-radius: 5px;">
+                    <button type="submit" class="delete-btn" 
+                            style="padding: 10px 15px; background: #ff4757; color: white; border: none; border-radius: 5px; cursor: pointer;"
+                            onclick="return confirm('Are you sure you want to delete this image?')">
+                        🗑️ Delete
+                    </button>
+                </form>
             </div>
         </div>
 
@@ -2202,6 +2217,129 @@ app.post('/admin/delete/:id', authenticateAdmin, async (req, res) => {
     res.status(500).send('Error deleting image: ' + error.message);
   } else {
     res.redirect('/admin');
+  }
+});
+
+// Delete image by ID (from form input)
+app.post('/admin/delete-by-id', authenticateAdmin, async (req, res) => {
+  const { imageId } = req.body;
+  
+  if (!imageId) {
+    return res.status(400).send('Image ID is required');
+  }
+  
+  try {
+    // Check if the image exists first
+    const { data, error: checkError } = await supabase
+      .from('images')
+      .select('id')
+      .eq('id', imageId)
+      .single();
+    
+    if (checkError || !data) {
+      return res.status(404).send(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Error - Image Not Found</title>
+            <style>
+                body {
+                    font-family: 'Comic Sans MS', cursive, sans-serif;
+                    background: #f0f0f0;
+                    margin: 0;
+                    padding: 20px;
+                    text-align: center;
+                }
+                h1 { color: #ff6b6b; font-size: 2em; }
+                .error-box {
+                    background: #ff4757;
+                    color: white;
+                    padding: 20px;
+                    border-radius: 10px;
+                    margin: 20px auto;
+                    max-width: 600px;
+                }
+                a {
+                    display: inline-block;
+                    background: #4ecdc4;
+                    color: white;
+                    text-decoration: none;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    margin-top: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <h1>❌ Error: Image Not Found</h1>
+            <div class="error-box">
+                <p>The image with ID <strong>${imageId}</strong> was not found in the database.</p>
+                <p>Please check the ID and try again.</p>
+            </div>
+            <a href="/admin">⬅️ Back to Admin Panel</a>
+        </body>
+        </html>
+      `);
+    }
+    
+    // Delete the image
+    const { error: deleteError } = await supabase
+      .from('images')
+      .delete()
+      .eq('id', imageId);
+    
+    if (deleteError) {
+      throw new Error(deleteError.message);
+    }
+    
+    // Redirect back to admin panel with success message
+    res.redirect('/admin?deleted=success');
+    
+  } catch (error) {
+    console.error('Error deleting image by ID:', error);
+    res.status(500).send(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <title>Error - Delete Failed</title>
+          <style>
+              body {
+                  font-family: 'Comic Sans MS', cursive, sans-serif;
+                  background: #f0f0f0;
+                  margin: 0;
+                  padding: 20px;
+                  text-align: center;
+              }
+              h1 { color: #ff6b6b; font-size: 2em; }
+              .error-box {
+                  background: #ff4757;
+                  color: white;
+                  padding: 20px;
+                  border-radius: 10px;
+                  margin: 20px auto;
+                  max-width: 600px;
+              }
+              a {
+                  display: inline-block;
+                  background: #4ecdc4;
+                  color: white;
+                  text-decoration: none;
+                  padding: 10px 20px;
+                  border-radius: 5px;
+                  margin-top: 20px;
+              }
+          </style>
+      </head>
+      <body>
+          <h1>❌ Error: Delete Failed</h1>
+          <div class="error-box">
+              <p>Failed to delete image with ID <strong>${imageId}</strong>.</p>
+              <p>Error: ${error.message}</p>
+          </div>
+          <a href="/admin">⬅️ Back to Admin Panel</a>
+      </body>
+      </html>
+    `);
   }
 });
 
