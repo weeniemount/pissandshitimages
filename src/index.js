@@ -355,6 +355,7 @@ async function checkBannedIP(req, res, next) {
             </style>
         </head>
         <body>
+        <script src="/oneko.js"></script>
             <h1>🚫 BANNED 🚫</h1>
             <div class="banned-message">
                 <h2>Your IP has been banned!</h2>
@@ -462,6 +463,7 @@ app.get('/', (req, res) => {
         </style>
     </head>
     <body>
+        <script src="/oneko.js"></script>
         <h1>🚽 pissandshitimages - THE BEST IMAGE HOSTER EVER 💩</h1>
         <form action="/upload" method="post" enctype="multipart/form-data">
             <input type="file" name="image" required accept="image/*">
@@ -636,6 +638,7 @@ app.get('/image/:id', async (req, res) => {
         </style>
     </head>
     <body>
+        <script src="/oneko.js"></script>
         <h1>🚽 pissandshitimages 💩</h1>
         <div class="image-container">
             <img src="${imageUrl}" alt="Shitified image" />
@@ -990,6 +993,7 @@ app.get('/gallery', async (req, res) => {
         </style>
     </head>
     <body>
+        <script src="/oneko.js"></script>
         <h1>🖼️ Gallery - pissandshitimages 💩</h1>
         <div class="stats-container">
             <div class="stats-grid">
@@ -1193,6 +1197,7 @@ app.get('/admin/login', (req, res) => {
         </style>
     </head>
     <body>
+        <script src="/oneko.js"></script>
         <h1>🔒 Admin Login - pissandshitimages</h1>
         <form class="login-form" action="/admin/login" method="post">
             ${rateLimited ? '<div class="rate-limit-message">⚠️ Too many failed attempts. Please wait before trying again.</div>' : ''}
@@ -1420,6 +1425,7 @@ app.get('/admin/sessions', authenticateAdmin, async (req, res) => {
         </style>
     </head>
     <body>
+        <script src="/oneko.js"></script>
         <h1>🔐 Active Admin Sessions</h1>
         <a href="/admin" class="nav-button">⬅️ Back to Admin Panel</a>
         
@@ -1562,6 +1568,7 @@ app.get('/admin/change-password', authenticateAdmin, (req, res) => {
         </style>
     </head>
     <body>
+        <script src="/oneko.js"></script>
         <h1>🔐 Change Admin Password</h1>
         <a href="/admin" class="nav-button">⬅️ Back to Admin Panel</a>
         
@@ -1877,6 +1884,7 @@ app.get('/admin', authenticateAdmin, async (req, res) => {
         </style>
     </head>
     <body>
+        <script src="/oneko.js"></script>
         <h1>🛠️ Admin Panel - pissandshitimages</h1>
         
         <div class="nav-links">
@@ -2133,6 +2141,7 @@ app.get('/admin/banned-ips', authenticateAdmin, async (req, res) => {
         </style>
     </head>
     <body>
+        <script src="/oneko.js"></script>
         <h1>🚫 Banned IPs Management</h1>
         <a href="/admin" class="nav-button">⬅️ Back to Admin Panel</a>
         
@@ -2274,6 +2283,7 @@ app.post('/admin/delete-by-id', authenticateAdmin, async (req, res) => {
             </style>
         </head>
         <body>
+        <script src="/oneko.js"></script>
             <h1>❌ Error: Image Not Found</h1>
             <div class="error-box">
                 <p>The image with ID <strong>${imageId}</strong> was not found in the database.</p>
@@ -2334,6 +2344,7 @@ app.post('/admin/delete-by-id', authenticateAdmin, async (req, res) => {
           </style>
       </head>
       <body>
+        <script src="/oneko.js"></script>
           <h1>❌ Error: Delete Failed</h1>
           <div class="error-box">
               <p>Failed to delete image with ID <strong>${imageId}</strong>.</p>
@@ -2484,6 +2495,7 @@ app.get('/leaderboard', async (req, res) => {
         </style>
     </head>
     <body>
+        <script src="/oneko.js"></script>
         <h1>🏆 Shitification Leaderboard 💩</h1>
         <div class="nav-buttons">
             <a href="/" class="nav-button">🏠 Home</a>
