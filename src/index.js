@@ -1994,6 +1994,54 @@ app.get('/admin', authenticateAdmin, async (req, res) => {
   `);
 });
 
+
+// Add ban IP functionality to admin panel
+app.post('/admin/ban-ip/:id', authenticateAdmin, async (req, res) => {
+  try {
+    // Get the IP hash for this post
+    const { data: postIP, error: getIPError } = await supabase
+      .from('post_ips')
+      .select('ip_hash')
+      .eq('post_id', req.params.id)
+      .single();
+      
+    if (getIPError || !postIP) {
+      return res.status(404).send('IP not found for this post');
+    }
+    
+    // Add IP to banned list
+    const { error: banError } = await supabase
+      .from('banned_ips')
+      .insert([{ ip_hash: postIP.ip_hash }]);
+      
+    if (banError) {
+      // IP might already be banned
+      if (banError.code === '23505') { // unique violation
+        return res.status(400).send('IP is already banned');
+      }
+      return res.status(500).send('Error banning IP: ' + banError.message);
+    }
+    
+    res.redirect('/admin?banned=success');
+  } catch (error) {
+    res.status(500).send('Error: ' + error.message);
+  }
+});
+
+// Add unban IP functionality
+app.post('/admin/unban-ip/:hash', authenticateAdmin, async (req, res) => {
+  const { error } = await supabase
+    .from('banned_ips')
+    .delete()
+    .eq('ip_hash', req.params.hash);
+    
+  if (error) {
+    res.status(500).send('Error unbanning IP: ' + error.message);
+  } else {
+    res.redirect('/admin/banned-ips');
+  }
+});
+
 // Add banned IPs management page
 app.get('/admin/banned-ips', authenticateAdmin, async (req, res) => {
   const { data: bannedIPs, error } = await supabase
