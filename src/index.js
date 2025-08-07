@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser');
 const path = require('path')
 
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'pages', 'views')); // assumes /pages/image.ejs
+app.set('views', path.join(__dirname, 'pages', 'ejs')); // assumes /pages/image.ejs
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
