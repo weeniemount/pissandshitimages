@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta property="og:title" content="pissandshitimages.com - gallery" />
+        <meta property="og:description" content="the bestest image hoster ever (real)" />
+        <meta property="og:image" content="/banner.png" />
+        <meta property="og:type" content="website" />
+        <title>Gallery - pissandshitimages</title>
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+        <script src="/oneko.js"></script>
+        <h1>🖼️ Gallery - pissandshitimages 💩</h1>
+        <div class="stats-container">
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <h3>🖼️ Image Counts</h3>
+                    <p>Total Images: <%= stats.total %></p>
+                    <p>Visible Images: <%= stats.visible %></p>
+                    <p>Hidden Images: <%= stats.hidden %></p>
+                </div>
+                <div class="stat-box">
+                    <h3>🎲 Roll Stats</h3>
+                    <p>✨ Lucky Survivors: <%= stats.luckySurvivor %></p>
+                    <p>💩 Normal Shit: <%= stats.normalShit %></p>
+                    <p>💀 Extreme Nuclear: <%= stats.extremeNuclear %></p>
+                </div>
+                <div class="stat-box">
+                    <h3>📦 Storage</h3>
+                    <p>Total Size: <%= (stats.totalSize / 1024 / 1024).toFixed(2) %> MB</p>
+                    <p>Avg Size: <%= (stats.totalSize / stats.total / 1024).toFixed(2) %> KB per image</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-info">
+            <strong>📄 Page <%= page %> of <%= totalPages %></strong> -
+            Showing <%= visibleImages.length %> images 
+            (<%= ((page - 1) * perPage) + 1 %> - <%= ((page - 1) * perPage) + visibleImages.length %> of <%= totalVisibleImages %> visible images)
+        </div>
+
+        <div class="nav-buttons">
+            <a href="/" class="upload-button" style="margin-right: 10px;">📸 Upload More Shit!</a>
+            <a href="/leaderboard" class="upload-button">🏆 View Leaderboard</a>
+        </div>
+
+        <div class="pagination">
+            <%- pagination %>
+        </div>
+
+        <div class="gallery">
+            <%- galleryItems %>
+        </div>
+
+        <div class="pagination">
+            <%- pagination %>
+        </div>
+    </body>
+</html>

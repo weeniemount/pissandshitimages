@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Error - Admin Panel</title>
+        <style>
+            body {
+                font-family: 'Comic Sans MS', cursive, sans-serif;
+                background: #f0f0f0;
+                margin: 0;
+                padding: 20px;
+                text-align: center;
+            }
+            h1 { 
+                color: #ff6b6b; 
+                font-size: 2em; 
+            }
+            .error-box {
+                padding: 20px;
+                border-radius: 10px;
+                margin: 20px auto;
+                max-width: 600px;
+            }
+            .error-box.error {
+                background: #ff4757;
+                color: white;
+            }
+            .error-box.warning {
+                background: #ff9800;
+                color: white;
+            }
+            .error-box.info {
+                background: #4ecdc4;
+                color: white;
+            }
+            a {
+                display: inline-block;
+                background: #4ecdc4;
+                color: white;
+                text-decoration: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                margin-top: 20px;
+            }
+        </style>
+    </head>
+    <body>
+    <script src="/oneko.js"></script>
+    <h1><%= typeof icon !== 'undefined' ? icon : '❌' %> <%= title %></h1>
+
+    <div class="error-box <%= typeof errorType !== 'undefined' ? errorType : 'error' %>">
+        <p><%- message %></p>
+    </div>
+
+    <a href="<%= typeof backUrl !== 'undefined' ? backUrl : '/admin' %>">⬅️ Back to Admin Panel</a>
+    </body>
+</html>

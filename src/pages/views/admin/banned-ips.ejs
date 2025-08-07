@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Banned IPs - Admin Panel</title>
+        <link rel="stylesheet" href="/admin.css">
+    </head>
+    <body>
+        <script src="/oneko.js"></script>
+        <h1>🚫 Banned IPs Management</h1>
+        <a href="/admin" class="nav-button">⬅️ Back to Admin Panel</a>
+
+    <div class="content-container banned-list">
+        <h2>Banned IP Addresses (<%= bannedIPs.length %> total)</h2>
+        <% if (bannedIPs.length > 0) { %>
+            <table>
+                <tr>
+                    <th>IP Hash</th>
+                    <th>Banned Date</th>
+                    <th>Banned By</th>
+                    <th>Actions</th>
+                </tr>
+                <% bannedIPs.forEach(function(ban) { %>
+                    <tr>
+                        <td><code><%= ban.ip_hash.substring(0, 16) %>...</code></td>
+                        <td><%= new Date(ban.banned_at).toLocaleString() %></td>
+                        <td><%= ban.banned_by %></td>
+                        <td>
+                            <form action="/admin/unban-ip/<%= ban.ip_hash %>" method="post" style="display:inline;">
+                                <button type="submit" class="unban-btn" onclick="return confirm('Are you sure you want to unban this IP?')">
+                                    🔓 Unban
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            </table>
+        <% } else { %>
+            <p>No banned IPs found.</p>
+        <% } %>
+    </div>
+    </body>
+</html>

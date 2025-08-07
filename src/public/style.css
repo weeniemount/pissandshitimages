@@ -1,0 +1,622 @@
+/* pissandshitimages.com - the best place to find the worst images on the internet */
+
+/* Base body styles from all pages */
+body {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    background: #f0f0f0;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Line height for text-heavy pages */
+body.text-page {
+    line-height: 1.6;
+}
+
+/* Main headings */
+h1 {
+    color: #ff6b6b;
+    text-shadow: 2px 2px 0 #000;
+    font-size: 2.5em;
+    margin-bottom: 30px;
+}
+
+h2 {
+    color: #ff6b6b;
+    border-bottom: 2px solid #ff6b6b;
+    padding-bottom: 5px;
+}
+
+h3 {
+    color: #4ecdc4;
+}
+
+/* Form styles from home page */
+form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+input[type="file"] {
+    margin: 10px;
+    padding: 10px;
+    border: 2px dashed #ff6b6b;
+    border-radius: 5px;
+}
+
+button {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+/* Basic link styles */
+a {
+    display: inline-block;
+    background: #4ecdc4;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1.2em;
+    margin-top: 10px;
+}
+
+a:hover {
+    background: #45b7b0;
+}
+
+/* Checkbox wrapper from home page */
+.checkbox-wrapper {
+    margin: 10px 0;
+    font-size: 1.1em;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+    margin-right: 8px;
+    transform: scale(1.2);
+}
+
+.checkbox-wrapper label {
+    color: #ff6b6b;
+    cursor: pointer;
+}
+
+/* ShareX button from home page */
+.sharex-button {
+    display: inline-block;
+    background: #ff6b6b;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1.2em;
+    transition: transform 0.1s;
+}
+
+.sharex-button:hover {
+    transform: scale(1.05);
+    background: #ff5252;
+}
+
+/* Gallery styles */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.image-card {
+    background: white;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.image-card:hover {
+    transform: scale(1.02);
+}
+
+.image-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 75%; /* 4:3 aspect ratio */
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.image-wrapper a {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: none;
+    padding: 0;
+}
+
+.image-wrapper a:hover {
+    background: none;
+}
+
+.image-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.info {
+    margin-top: 10px;
+    font-size: 0.9em;
+}
+
+.shitification {
+    background: #ff6b6b;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+.shitification.lucky-survivor {
+    background: #4CAF50;
+    animation: sparkle 1.5s infinite;
+}
+
+@keyframes sparkle {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.date {
+    background: #4ecdc4;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+.upload-button {
+    display: inline-block;
+    background: #ff6b6b;
+    color: white;
+    text-decoration: none;
+    padding: 15px 30px;
+    border-radius: 5px;
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    transition: transform 0.1s;
+}
+
+.upload-button:hover {
+    transform: scale(1.05);
+    background: #ff5252;
+}
+
+.stats-container {
+    max-width: 1200px;
+    margin: 0 auto 20px auto;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 20px;
+}
+
+.stat-box {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.stat-box h3 {
+    color: #ff6b6b;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.nav-buttons {
+    margin-bottom: 20px;
+}
+
+.pagination {
+    margin: 30px 0;
+    text-align: center;
+}
+
+.pagination a, .pagination span {
+    display: inline-block;
+    padding: 10px 15px;
+    margin: 0 5px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.2s;
+}
+
+.pagination a {
+    background: #ff6b6b;
+    color: white;
+}
+
+.pagination a:hover {
+    background: #ff5252;
+    transform: scale(1.05);
+}
+
+.pagination .current {
+    background: #ff5252;
+    color: white;
+    font-weight: bold;
+}
+
+.pagination .disabled {
+    background: #cccccc;
+    color: #999;
+    cursor: not-allowed;
+}
+
+.pagination .prev-next {
+    background: #4ecdc4;
+    font-weight: bold;
+}
+
+.pagination .prev-next:hover {
+    background: #45b7b0;
+}
+
+.pagination .prev-next.disabled {
+    background: #cccccc;
+    color: #999;
+}
+
+.pagination .ellipsis {
+    background: none;
+    color: #666;
+    cursor: default;
+}
+
+.page-info {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+
+/* Leaderboard styles */
+.leaderboard {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.image-row {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    transition: transform 0.2s;
+}
+
+.image-row:hover {
+    transform: scale(1.02);
+    background: #f9f9f9;
+}
+
+.rank {
+    font-size: 2em;
+    font-weight: bold;
+    width: 60px;
+    color: #ff6b6b;
+}
+
+.medal-1 { color: #ffd700; } /* Gold */
+.medal-2 { color: #c0c0c0; } /* Silver */
+.medal-3 { color: #cd7f32; } /* Bronze */
+
+.image-row .image-wrapper {
+    width: 100px;
+    height: 75px;
+    margin: 0 15px;
+    position: static;
+    padding-bottom: 0;
+}
+
+.image-row .image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.image-row .info {
+    flex-grow: 1;
+    text-align: left;
+    margin-top: 0;
+    font-size: inherit;
+}
+
+.roll {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #ff6b6b;
+}
+
+.shitlevel {
+    margin-top: 5px;
+    color: #666;
+}
+
+.image-row .date {
+    color: #999;
+    font-size: 0.9em;
+    background: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+}
+
+.nav-button {
+    display: inline-block;
+    background: #ff6b6b;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin: 0 10px;
+    transition: transform 0.1s;
+}
+
+.nav-button:hover {
+    background: #ff5252;
+    transform: scale(1.05);
+}
+
+.leaderboard .page-info {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* About page styles */
+.about-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.highlight {
+    background: #ffeaa7;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px 0;
+    border-left: 5px solid #fdcb6e;
+}
+
+.story-box {
+    background: #74b9ff;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px 0;
+    font-weight: bold;
+}
+
+.github-button {
+    display: inline-block;
+    background: #2d3748;
+    color: white;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    margin: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.github-button:hover {
+    background: #4a5568;
+    transform: scale(1.05);
+}
+
+.creator-info {
+    background: #a29bfe;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px 0;
+}
+
+.fun-fact {
+    background: #fd79a8;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px 0;
+    font-weight: bold;
+}
+
+.last-updated {
+    color: #666;
+    font-style: italic;
+    text-align: center;
+    margin-top: 30px;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
+
+ul, ol {
+    margin-left: 20px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+.timeline {
+    background: #00b894;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px 0;
+}
+
+.quote {
+    font-style: italic;
+    font-size: 1.2em;
+    color: #636e72;
+    text-align: center;
+    margin: 20px 0;
+    padding: 15px;
+    border-left: 4px solid #ddd;
+}
+
+/* Image view page styles */
+.image-container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.image-container img {
+    max-width: 90vw;
+    max-height: 80vh;
+    border-radius: 5px;
+}
+
+.image-container .info {
+    margin: 20px 0;
+    font-size: 1.2em;
+}
+
+.image-container .shitification {
+    background: #ff6b6b;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px;
+    display: inline-block;
+}
+
+.image-container .date {
+    background: #4ecdc4;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px;
+    display: inline-block;
+}
+
+.shame {
+    background: #ff4757;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px;
+    display: inline-block;
+}
+
+/* Rules page styles */
+.rules-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.warning {
+    background: #ff4757;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px 0;
+    font-weight: bold;
+}
+
+.allowed {
+    background: #2ed573;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px 0;
+    font-weight: bold;
+}
+
+.contact-info {
+    background: #4ecdc4;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px 0;
+}
+
+.rule-category {
+    background: #ffa726;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 15px 0;
+    font-size: 1.1em;
+}
+
+.violation-warning {
+    background: #9c27b0;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px 0;
+    font-weight: bold;
+}
+
+/* TOS page styles */
+.tos-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}

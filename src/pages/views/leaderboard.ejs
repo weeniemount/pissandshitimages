@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta property="og:title" content="pissandshitimages.com - leaderboard" />
+        <meta property="og:description" content="the bestest image hoster ever (real)" />
+        <meta property="og:image" content="/banner.png" />
+        <meta property="og:type" content="website" />
+        <title><%= title %></title>
+        <style>
+            body {
+                font-family: 'Comic Sans MS', cursive, sans-serif;
+                background: #f0f0f0;
+                margin: 0;
+                padding: 20px;
+                text-align: center;
+            }
+            h1 {
+                color: #ff6b6b;
+                text-shadow: 2px 2px 0 #000;
+                font-size: 2.5em;
+                margin-bottom: 30px;
+            }
+            .leaderboard {
+                max-width: 1000px;
+                margin: 0 auto;
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            }
+            .image-row {
+                display: flex;
+                align-items: center;
+                padding: 15px;
+                border-bottom: 1px solid #eee;
+                transition: transform 0.2s;
+            }
+            .image-row:hover {
+                transform: scale(1.02);
+                background: #f9f9f9;
+            }
+            .rank {
+                font-size: 2em;
+                font-weight: bold;
+                width: 60px;
+                color: #ff6b6b;
+            }
+            .medal-1 { color: #ffd700; } /* Gold */
+            .medal-2 { color: #c0c0c0; } /* Silver */
+            .medal-3 { color: #cd7f32; } /* Bronze */
+            .image-wrapper {
+                width: 100px;
+                height: 75px;
+                margin: 0 15px;
+            }
+            .image-wrapper img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 5px;
+            }
+            .info {
+                flex-grow: 1;
+                text-align: left;
+            }
+            .roll {
+                font-size: 1.2em;
+                font-weight: bold;
+                color: #ff6b6b;
+            }
+            .shitlevel {
+                margin-top: 5px;
+                color: #666;
+            }
+            .date {
+                color: #999;
+                font-size: 0.9em;
+            }
+            .nav-buttons {
+                margin-bottom: 20px;
+            }
+            .nav-button {
+                display: inline-block;
+                background: #ff6b6b;
+                color: white;
+                text-decoration: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                margin: 0 10px;
+                transition: transform 0.1s;
+            }
+            .nav-button:hover {
+                transform: scale(1.05);
+                background: #ff5252;
+            }
+            .pagination {
+                margin: 30px 0;
+                text-align: center;
+            }
+            .pagination a, .pagination span {
+                display: inline-block;
+                padding: 10px 15px;
+                margin: 0 5px;
+                text-decoration: none;
+                border-radius: 5px;
+                transition: all 0.2s;
+            }
+            .pagination a {
+                background: #ff6b6b;
+                color: white;
+            }
+            .pagination a:hover {
+                background: #ff5252;
+                transform: scale(1.05);
+            }
+            .pagination .current {
+                background: #ff5252;
+                color: white;
+                font-weight: bold;
+            }
+            .pagination .disabled {
+                background: #cccccc;
+                color: #999;
+                cursor: not-allowed;
+            }
+            .pagination .prev-next {
+                background: #4ecdc4;
+                font-weight: bold;
+            }
+            .pagination .prev-next:hover {
+                background: #45b7b0;
+            }
+            .pagination .prev-next.disabled {
+                background: #cccccc;
+                color: #999;
+            }
+            .pagination .ellipsis {
+                background: none;
+                color: #666;
+                cursor: default;
+            }
+            .page-info {
+                background: white;
+                padding: 15px;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                margin-bottom: 20px;
+                max-width: 1000px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <script src="/oneko.js"></script>
+        <h1>🏆 Shitification Leaderboard 💩</h1>
+        
+        <div class="nav-buttons">
+            <a href="/" class="nav-button">🏠 Home</a>
+            <a href="/gallery" class="nav-button">🖼️ Gallery</a>
+        </div>
+        
+        <div class="page-info">
+            <p>Showing <%= pageInfo.start %>-<%= pageInfo.end %> of <%= pageInfo.total %> images</p>
+        </div>
+        
+        <div class="pagination">
+            <!-- Previous button -->
+            <% if (pagination.hasPrev) { %>
+                <a href="/leaderboard?page=<%= pagination.prevPage %>" class="prev-next">⬅️ Previous</a>
+            <% } else { %>
+                <span class="prev-next disabled">⬅️ Previous</span>
+            <% } %>
+            
+            <!-- Page numbers -->
+            <% pagination.pages.forEach(function(pageItem) { %>
+                <% if (pageItem.isEllipsis) { %>
+                    <span class="ellipsis">...</span>
+                <% } else if (pageItem.isCurrent) { %>
+                    <span class="current"><%= pageItem.number %></span>
+                <% } else { %>
+                    <a href="/leaderboard?page=<%= pageItem.number %>"><%= pageItem.number %></a>
+                <% } %>
+            <% }); %>
+            
+            <!-- Next button -->
+            <% if (pagination.hasNext) { %>
+                <a href="/leaderboard?page=<%= pagination.nextPage %>" class="prev-next">Next ➡️</a>
+            <% } else { %>
+                <span class="prev-next disabled">Next ➡️</span>
+            <% } %>
+        </div>
+        
+        <div class="leaderboard">
+            <% images.forEach(function(img) { %>
+                <div class="image-row">
+                    <div class="rank <%= img.globalRank <= 3 ? 'medal-' + img.globalRank : '' %>"><%= img.globalRank %></div>
+                    <div class="image-wrapper">
+                        <a href="/image/<%= img.id %>">
+                            <img src="/raw/<%= img.id %>" alt="Rank <%= img.globalRank %>" />
+                        </a>
+                    </div>
+                    <div class="info">
+                        <div class="roll">Roll: <%= img.roll.toFixed(2) %>%</div>
+                        <div class="shitlevel">Level: <%= img.shitlevel %></div>
+                        <div class="date">Date: <%= img.date %></div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+        
+        <div class="pagination">
+            <!-- Previous button -->
+            <% if (pagination.hasPrev) { %>
+                <a href="/leaderboard?page=<%= pagination.prevPage %>" class="prev-next">⬅️ Previous</a>
+            <% } else { %>
+                <span class="prev-next disabled">⬅️ Previous</span>
+            <% } %>
+            
+            <!-- Page numbers -->
+            <% pagination.pages.forEach(function(pageItem) { %>
+                <% if (pageItem.isEllipsis) { %>
+                    <span class="ellipsis">...</span>
+                <% } else if (pageItem.isCurrent) { %>
+                    <span class="current"><%= pageItem.number %></span>
+                <% } else { %>
+                    <a href="/leaderboard?page=<%= pageItem.number %>"><%= pageItem.number %></a>
+                <% } %>
+            <% }); %>
+            
+            <!-- Next button -->
+            <% if (pagination.hasNext) { %>
+                <a href="/leaderboard?page=<%= pagination.nextPage %>" class="prev-next">Next ➡️</a>
+            <% } else { %>
+                <span class="prev-next disabled">Next ➡️</span>
+            <% } %>
+        </div>
+    </body>
+</html>
