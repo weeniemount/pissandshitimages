@@ -2,7 +2,63 @@
 <html>
     <head>
         <title>Banned IPs - Admin Panel</title>
-        <link rel="stylesheet" href="/admin.css">
+        <style>
+            body {
+                font-family: 'Comic Sans MS', cursive, sans-serif;
+                background: #f0f0f0;
+                margin: 0;
+                padding: 20px;
+            }
+            h1 {
+                color: #ff6b6b;
+                text-shadow: 2px 2px 0 #000;
+                font-size: 2.5em;
+                margin-bottom: 30px;
+                text-align: center;
+            }
+            .banned-list {
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                padding: 10px;
+                border-bottom: 1px solid #ddd;
+                text-align: left;
+            }
+            th {
+                background: #ff6b6b;
+                color: white;
+            }
+            tr:nth-child(even) {
+                background: #f9f9f9;
+            }
+            .unban-btn {
+                background: #4CAF50;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+            .unban-btn:hover {
+                background: #45a049;
+            }
+            .nav-button {
+                display: inline-block;
+                background: #ff6b6b;
+                color: white;
+                text-decoration: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+            }
+        </style>
     </head>
     <body>
         <script src="/oneko.js"></script>
