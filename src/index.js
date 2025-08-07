@@ -517,10 +517,289 @@ app.get('/', (req, res) => {
         <marquee><img src="https://visitor-badge.laobi.icu/badge?page_id=weeniemount.pissandshitimages"> <img src="https://img.shields.io/github/stars/weeniemount/pissandshitimages?style=social"> <img src="https://img.shields.io/github/forks/weeniemount/pissandshitimages?style=social"> <img src="https://img.shields.io/badge/cursed-100%25-ff00cc"> <img src="https://img.shields.io/badge/quality-shit-brown"> <img src="https://img.shields.io/badge/brainrot-MAXIMUM-purple"> <img src="https://img.shields.io/badge/ohio-CERTIFIED-orange"> <img src="https://img.shields.io/badge/sigma-GRINDSET-blue"> <img src="https://img.shields.io/badge/chaos-OVER%209000-red"> <img src="https://img.shields.io/badge/skibidi-TOILET%20APPROVED-yellow"> <img src="https://img.shields.io/badge/rizz-UNMATCHED-pink"> <img src="https://img.shields.io/badge/based-ABSOLUTELY-green"> <img src="https://img.shields.io/badge/cringe-WEAPONIZED-darkred"> <img src="https://img.shields.io/badge/sus-AMONG%20US-cyan"> <img src="https://img.shields.io/badge/chad-GIGACHAD-gold"> <img src="https://img.shields.io/badge/meme-CERTIFIED%20BANGER-lime"> <img src="https://img.shields.io/badge/destruction-69420%25-crimson"> <img src="https://img.shields.io/badge/brain%20cells-0%20REMAINING-black"> <img src="https://img.shields.io/badge/grass%20touched-NEVER-darkgreen"> <img src="https://img.shields.io/badge/therapy-REQUIRED-lightblue"> <img src="https://img.shields.io/badge/FBI-MONITORING-navy"> <img src="https://img.shields.io/badge/mom-VERY%20DISAPPOINTED-purple"> <img src="https://img.shields.io/badge/dad-GONE%20FOR%20MILK-gray"> <img src="https://img.shields.io/badge/bitches-0-red"> <img src="https://img.shields.io/badge/gen%20alpha-APPROVED-rainbow"> <img src="https://img.shields.io/badge/boomer%20tears-COLLECTED-blue"> <img src="https://img.shields.io/badge/millennial%20trauma-ACTIVATED-darkblue"> <img src="https://img.shields.io/badge/gen%20z-CHAOTIC%20EVIL-violet"> <img src="https://img.shields.io/badge/tiktok%20brain-ROTTED-black"> <img src="https://img.shields.io/badge/twitter-RATIO%27D-lightblue"> <img src="https://img.shields.io/badge/reddit-WHOLESOME%20100-orange"> <img src="https://img.shields.io/badge/discord%20mod-POWER%20TRIP-indigo"> <img src="https://img.shields.io/badge/code%20quality-SPAGHETTI-yellow"> <img src="https://img.shields.io/badge/docs-CHAOTIC%20NEUTRAL-brown"> <img src="https://img.shields.io/badge/bugs-YES-red"> <img src="https://img.shields.io/badge/features-SOMETIMES-orange"> <img src="https://img.shields.io/badge/tests-WHAT%20TESTS-darkred"> <img src="https://img.shields.io/badge/security-YOLO-pink"> <img src="https://img.shields.io/badge/performance-POTATO-gray"> <img src="https://img.shields.io/badge/scalability-ONE%20USER-lightgray"> <img src="https://img.shields.io/badge/font-COMIC%20SANS%20ONLY-hotpink"> <img src="https://img.shields.io/badge/css-CRIMES%20AGAINST%20HUMANITY-crimson"> <img src="https://img.shields.io/badge/ux-DESIGNED%20BY%20SATAN-black"> <img src="https://img.shields.io/badge/a11y-FUCK%20THE%20COLORBLIND-darkred"> <img src="https://img.shields.io/badge/mobile-SEIZURE%20INDUCING-red"> <img src="https://img.shields.io/badge/seo-NEGATIVE%20INFINITY-black"> <img src="https://img.shields.io/badge/loading-GEOLOGICAL%20EPOCHS-brown"> <img src="https://img.shields.io/badge/browsers-INTERNET%20EXPLORER%206-blue"> <img src="https://img.shields.io/badge/gambling-ADDICTION%20CERTIFIED-gold"> <img src="https://img.shields.io/badge/rng%20jesus-BLESSED-white"> <img src="https://img.shields.io/badge/luck-SKILL%20ISSUE-red"> <img src="https://img.shields.io/badge/odds-RIGGED-darkred"> <img src="https://img.shields.io/badge/casino-HOUSE%20ALWAYS%20WINS-gold"> <img src="https://img.shields.io/badge/poker%20face-NONEXISTENT-pink"> <img src="https://img.shields.io/badge/slots-JACKPOT%20NEVER-red"> <img src="https://img.shields.io/badge/dice-LOADED-darkgray"> <img src="https://img.shields.io/badge/andrew%20tate-ESCAPE%20THE%20MATRIX-darkblue"> <img src="https://img.shields.io/badge/sigma%20male-GRINDSET%20ACTIVE-blue"> <img src="https://img.shields.io/badge/alpha-ENERGY%20DEPLETED-gray"> <img src="https://img.shields.io/badge/beta-CRINGE%20MODE-pink"> <img src="https://img.shields.io/badge/gigachad-ACHIEVED-gold"> <img src="https://img.shields.io/badge/virgin-VS%20CHAD-red"> <img src="https://img.shields.io/badge/pilled-RED%20BASED%20SIGMA-red"> <img src="https://img.shields.io/badge/npc-DIALOGUE%20TREE-gray"> <img src="https://img.shields.io/badge/degeneracy-MAXIMUM-purple"> <img src="https://img.shields.io/badge/autism-WEAPONIZED-lightblue"> <img src="https://img.shields.io/badge/adhd-HYPERFOCUS%20MODE-orange"> <img src="https://img.shields.io/badge/depression-CLINICAL-darkblue"> <img src="https://img.shields.io/badge/anxiety-CRIPPLING-yellow"> <img src="https://img.shields.io/badge/insomnia-CHRONIC-black"> <img src="https://img.shields.io/badge/caffeine-OVERDOSE-brown"> <img src="https://img.shields.io/badge/sanity-QUESTIONABLE-red"> <img src="https://img.shields.io/badge/warranty-VOIDED-red"> <img src="https://img.shields.io/badge/legal-GRAY%20AREA-gray"> <img src="https://img.shields.io/badge/ethics-OPTIONAL-darkred"> <img src="https://img.shields.io/badge/morals-SOLD%20SEPARATELY-gold"> <img src="https://img.shields.io/badge/responsibility-DENIED-red"> <img src="https://img.shields.io/badge/liability-NOT%20OUR%20PROBLEM-pink"> <img src="https://img.shields.io/badge/insurance-DOESN%27T%20COVER%20THIS-darkred"> <img src="https://img.shields.io/badge/refunds-LMAO%20NO-red"> <img src="https://img.shields.io/badge/web3-PONZI%20SCHEME-gold"> <img src="https://img.shields.io/badge/blockchain-UNNECESSARY-darkgreen"> <img src="https://img.shields.io/badge/nft-RIGHT%20CLICK%20SAVE-pink"> <img src="https://img.shields.io/badge/crypto-RUGPULL%20INCOMING-red"> <img src="https://img.shields.io/badge/defi-DEFINITELY%20SCAM-darkred"> <img src="https://img.shields.io/badge/metaverse-SECOND%20LIFE%202.0-purple"> <img src="https://img.shields.io/badge/ai-CHATGPT%20WROTE%20THIS-cyan"> <img src="https://img.shields.io/badge/ml-RANDOM%20FOREST-green"> <img src="https://img.shields.io/badge/viral-NEGATIVE%20INFINITY-black"> <img src="https://img.shields.io/badge/trending-ON%20MYSPACE-blue"> <img src="https://img.shields.io/badge/influencer-WANNABE-pink"> <img src="https://img.shields.io/badge/clout-CHASING-gold"> <img src="https://img.shields.io/badge/fame-15%20SECONDS-red"> <img src="https://img.shields.io/badge/legacy-DIGITAL%20DISASTER-darkred"> <img src="https://img.shields.io/badge/impact-NEGATIVE-black"> <img src="https://img.shields.io/badge/contribution-SOCIETY%20DECLINE-red"></marquee>
       <div style="text-align: center; margin-top: 30px;">
             <a href="/tos" class="nav-button">📜 TOS</a>
+            <a href="/rules" class="nav-button">📜 Rules (plz no 18+)</a>
       </div>
     </body>
     </html>
   `);
+});
+
+app.get('/rules', (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+<html>
+<head>
+    <meta property="og:title" content="pissandshitimages.com - Rules" />
+    <meta property="og:description" content="the bestest image hoster ever (real) - da rules" />
+    <meta property="og:image" content="/banner.png" />
+    <meta property="og:type" content="website" />
+    <title>Rules - pissandshitimages</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #ff6b6b;
+            text-shadow: 2px 2px 0 #000;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .rules-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #ff6b6b;
+            border-bottom: 2px solid #ff6b6b;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #4ecdc4;
+        }
+        .warning {
+            background: #ff4757;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .allowed {
+            background: #2ed573;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .nav-button {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .nav-button:hover {
+            background: #ff5252;
+            transform: scale(1.05);
+        }
+        .last-updated {
+            color: #666;
+            font-style: italic;
+            text-align: center;
+            margin-top: 30px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+        ul, ol {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .contact-info {
+            background: #4ecdc4;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .rule-category {
+            background: #ffa726;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-size: 1.1em;
+        }
+        .violation-warning {
+            background: #9c27b0;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <script src="/oneko.js"></script>
+    <div style="text-align: center;">
+        <a href="/" class="nav-button">⬅️ Back to Home</a>
+    </div>
+    
+    <h1>📋 DA RULES</h1>
+    
+    <div class="rules-container">
+        <div class="warning">
+            ⚠️ ATTENTION: These rules are not suggestions! Break them and face the consequences of the ban hammer! 🔨
+        </div>
+        
+        <h2>🎉 What's Actually Allowed Here</h2>
+        <div class="allowed">
+            ✅ MEMES ARE TOTALLY ALLOWED! We love your dank content!
+        </div>
+        <ul>
+            <li>🐸 Memes of all kinds (yes, even the terrible ones)</li>
+            <li>📸 Regular photos and images</li>
+            <li>🎨 Art, drawings, and creative content</li>
+            <li>📱 Screenshots (that don't violate other rules)</li>
+            <li>🤡 Shitposts and low-quality content (it's gonna get shittier anyway!)</li>
+            <li>🎮 Gaming content and funny clips</li>
+            <li>🐾 Pet photos (because who doesn't love animals?)</li>
+            <li>🍕 Food pics (even if they look cursed)</li>
+        </ul>
+        
+        <h2>🚫 The Big NO-NOs</h2>
+        <div class="warning">
+            These will get you IMMEDIATELY BANNED with no appeals:
+        </div>
+        
+        <div class="rule-category">
+            🔞 ABSOLUTELY NO PORN OR SEXUAL CONTENT
+        </div>
+        <ul>
+            <li>No nudity or sexually explicit material</li>
+            <li>No suggestive content involving minors</li>
+            <li>No "artistic nudity" - we're not an art gallery</li>
+            <li>No borderline/softcore content that's clearly sexual</li>
+            <li>Keep it PG-13 folks!</li>
+        </ul>
+        
+        <div class="rule-category">
+            👶 ZERO TOLERANCE FOR CHILD EXPLOITATION
+        </div>
+        <ul>
+            <li>Absolutely NO content exploiting or sexualizing minors</li>
+            <li>No inappropriate images of children</li>
+            <li>This includes "artistic" or "innocent" content with bad intentions</li>
+        </ul>
+        
+        <div class="rule-category">
+            🩸 NO GORE OR EXTREME VIOLENCE
+        </div>
+        <ul>
+            <li>No graphic violence or injury photos</li>
+            <li>No dead bodies or autopsy images</li>
+            <li>No animal cruelty or abuse</li>
+            <li>No torture or self-harm content</li>
+            <li>Keep your horror movies on Netflix, not here</li>
+        </ul>
+        
+        <div class="rule-category">
+            🚫 OTHER INAPPROPRIATE CONTENT
+        </div>
+        <ul>
+            <li>No doxxing or personal information of others</li>
+            <li>No harassment or targeted bullying images</li>
+            <li>No content promoting illegal activities</li>
+            <li>No malware or suspicious files disguised as images</li>
+            <li>No spam or excessive duplicate uploads</li>
+            <li>No copyright-protected content you don't own</li>
+        </ul>
+        
+        <h2>🎲 Special pissandshitimages Rules</h2>
+        
+        <div class="rule-category">
+            🎰 GAMBLING MECHANICS
+        </div>
+        <ul>
+            <li>Don't complain about your image getting destroyed - that's the point!</li>
+            <li>No trying to reverse-engineer our shitification algorithm</li>
+            <li>Accept your terrible results with grace and humor</li>
+            <li>The house always wins (we control the RNG)</li>
+        </ul>
+        
+        <div class="rule-category">
+            🔧 TECHNICAL RULES
+        </div>
+        <ul>
+            <li>No attempting to crash or overwhelm our servers</li>
+            <li>No trying to bypass upload limits or restrictions</li>
+            <li>No automated mass uploading (unless you're really funny about it)</li>
+            <li>File size limits exist for a reason - respect them</li>
+        </ul>
+        
+        <h2>⚡ Consequences & Enforcement</h2>
+        
+        <div class="violation-warning">
+            🔨 WHAT HAPPENS WHEN YOU BREAK RULES:
+        </div>
+        <ol>
+            <li><strong>Minor violations:</strong> Content removal + warning</li>
+            <li><strong>Major violations:</strong> Immediate IP ban</li>
+            <li><strong>Repeat offenses:</strong> Permanent ban with no appeals</li>
+        </ol>
+        
+        <div class="warning">
+            💀 We have a THREE STRIKE SYSTEM:
+            <br>Strike 1: Warning + content removal
+            <br>Strike 2: Temporary ban (24-48 hours)
+            <br>Strike 3: PERMANENT BAN HAMMER! 🔨
+        </div>
+        
+        <h2>🕵️ How We Enforce These Rules</h2>
+        <ul>
+            <li>🤖 Automated content scanning for obvious violations</li>
+            <li>👥 Community reporting (yes, users can snitch on you)</li>
+            <li>🔍 Admin review of flagged content</li>
+            <li>📊 Pattern detection for spam and abuse</li>
+            <li>🌐 IP tracking for ban evasion attempts</li>
+        </ul>
+        
+        <h2>🏠 Gallery and Public Display</h2>
+        <ul>
+            <li>Public gallery content must follow ALL rules</li>
+            <li>Hidden uploads still can't violate major rules</li>
+            <li>We reserve the right to make any content private</li>
+            <li>Popular content gets more scrutiny (with great power...)</li>
+        </ul>
+        
+        <div class="contact-info">
+            <h3>📧 Questions About Rules?</h3>
+            <p>If you're unsure whether your content follows the rules, ask yourself: "Would I be comfortable showing this to my grandmother AND a police officer at the same time?"</p>
+            <p>If the answer is no, probably don't upload it.</p>
+            <p><strong>Still confused?</strong> Contact admins through proper channels. But don't expect us to help you skirt the rules!</p>
+        </div>
+        
+        <h2>🎭 The Spirit of the Rules</h2>
+        <div class="allowed">
+            We want this to be a fun, chaotic place for memes and shitposts where your images get gloriously destroyed by RNG. Don't ruin it for everyone by being a creep or posting illegal stuff!
+        </div>
+        
+        <p>Remember: <strong>pissandshitimages.com</strong> is about having fun with intentionally bad image quality, not about pushing boundaries or testing limits. Keep it light, keep it legal, and keep it meme-worthy!</p>
+        
+        <div class="warning">
+            🎯 FINAL WARNING: "It's just a prank bro" is not a valid defense for rule violations. Play stupid games, win stupid prizes (like getting banned).
+        </div>
+        
+        <div class="last-updated">
+            Last updated: August 2025<br>
+            Version 1.0 - pissandshitimages.com Rules<br>
+            Remember: Ignorance of the rules is no excuse! 📖
+        </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="/" class="nav-button">🏠 Return to Home</a>
+        <a href="/gallery" class="nav-button">🖼️ View Gallery</a>
+        <a href="/tos" class="nav-button">📜 Terms of Service</a>
+    </div>
+</body>
+</html>
+    `)
 });
 
 // Handle upload
