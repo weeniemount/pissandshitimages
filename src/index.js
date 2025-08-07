@@ -717,7 +717,6 @@ app.get('/rules', (req, res) => {
         </div>
         <ul>
             <li>Don't complain about your image getting destroyed - that's the point!</li>
-            <li>No trying to reverse-engineer our shitification algorithm</li>
             <li>Accept your terrible results with grace and humor</li>
             <li>The house always wins (we control the RNG)</li>
         </ul>
