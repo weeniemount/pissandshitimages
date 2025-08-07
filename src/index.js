@@ -570,7 +570,7 @@ app.get('/image/:id', async (req, res) => {
     <!DOCTYPE html>
     <html>
     <head>
-        <meta property="og:title" content="PISSANDSHITIMAGES.VERCEL.APP - THE BEST IMAGE HOSTER EVER" />
+        <meta property="og:title" content="PISSANDSHITIMAGES.COM - THE BEST IMAGE HOSTER EVER" />
         <meta property="og:description" content="OOOOHHHH!!111 i just wasted ${fileSizeMB} PENTABYTES TO SHOW YOU THIS GARBAGE" />
         <meta property="og:image" content="${imageUrl}" />
         <meta property="og:type" content="image" />
