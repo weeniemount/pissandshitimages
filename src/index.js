@@ -515,6 +515,9 @@ app.get('/', (req, res) => {
             }
         </style>
         <marquee><img src="https://visitor-badge.laobi.icu/badge?page_id=weeniemount.pissandshitimages"> <img src="https://img.shields.io/github/stars/weeniemount/pissandshitimages?style=social"> <img src="https://img.shields.io/github/forks/weeniemount/pissandshitimages?style=social"> <img src="https://img.shields.io/badge/cursed-100%25-ff00cc"> <img src="https://img.shields.io/badge/quality-shit-brown"> <img src="https://img.shields.io/badge/brainrot-MAXIMUM-purple"> <img src="https://img.shields.io/badge/ohio-CERTIFIED-orange"> <img src="https://img.shields.io/badge/sigma-GRINDSET-blue"> <img src="https://img.shields.io/badge/chaos-OVER%209000-red"> <img src="https://img.shields.io/badge/skibidi-TOILET%20APPROVED-yellow"> <img src="https://img.shields.io/badge/rizz-UNMATCHED-pink"> <img src="https://img.shields.io/badge/based-ABSOLUTELY-green"> <img src="https://img.shields.io/badge/cringe-WEAPONIZED-darkred"> <img src="https://img.shields.io/badge/sus-AMONG%20US-cyan"> <img src="https://img.shields.io/badge/chad-GIGACHAD-gold"> <img src="https://img.shields.io/badge/meme-CERTIFIED%20BANGER-lime"> <img src="https://img.shields.io/badge/destruction-69420%25-crimson"> <img src="https://img.shields.io/badge/brain%20cells-0%20REMAINING-black"> <img src="https://img.shields.io/badge/grass%20touched-NEVER-darkgreen"> <img src="https://img.shields.io/badge/therapy-REQUIRED-lightblue"> <img src="https://img.shields.io/badge/FBI-MONITORING-navy"> <img src="https://img.shields.io/badge/mom-VERY%20DISAPPOINTED-purple"> <img src="https://img.shields.io/badge/dad-GONE%20FOR%20MILK-gray"> <img src="https://img.shields.io/badge/bitches-0-red"> <img src="https://img.shields.io/badge/gen%20alpha-APPROVED-rainbow"> <img src="https://img.shields.io/badge/boomer%20tears-COLLECTED-blue"> <img src="https://img.shields.io/badge/millennial%20trauma-ACTIVATED-darkblue"> <img src="https://img.shields.io/badge/gen%20z-CHAOTIC%20EVIL-violet"> <img src="https://img.shields.io/badge/tiktok%20brain-ROTTED-black"> <img src="https://img.shields.io/badge/twitter-RATIO%27D-lightblue"> <img src="https://img.shields.io/badge/reddit-WHOLESOME%20100-orange"> <img src="https://img.shields.io/badge/discord%20mod-POWER%20TRIP-indigo"> <img src="https://img.shields.io/badge/code%20quality-SPAGHETTI-yellow"> <img src="https://img.shields.io/badge/docs-CHAOTIC%20NEUTRAL-brown"> <img src="https://img.shields.io/badge/bugs-YES-red"> <img src="https://img.shields.io/badge/features-SOMETIMES-orange"> <img src="https://img.shields.io/badge/tests-WHAT%20TESTS-darkred"> <img src="https://img.shields.io/badge/security-YOLO-pink"> <img src="https://img.shields.io/badge/performance-POTATO-gray"> <img src="https://img.shields.io/badge/scalability-ONE%20USER-lightgray"> <img src="https://img.shields.io/badge/font-COMIC%20SANS%20ONLY-hotpink"> <img src="https://img.shields.io/badge/css-CRIMES%20AGAINST%20HUMANITY-crimson"> <img src="https://img.shields.io/badge/ux-DESIGNED%20BY%20SATAN-black"> <img src="https://img.shields.io/badge/a11y-FUCK%20THE%20COLORBLIND-darkred"> <img src="https://img.shields.io/badge/mobile-SEIZURE%20INDUCING-red"> <img src="https://img.shields.io/badge/seo-NEGATIVE%20INFINITY-black"> <img src="https://img.shields.io/badge/loading-GEOLOGICAL%20EPOCHS-brown"> <img src="https://img.shields.io/badge/browsers-INTERNET%20EXPLORER%206-blue"> <img src="https://img.shields.io/badge/gambling-ADDICTION%20CERTIFIED-gold"> <img src="https://img.shields.io/badge/rng%20jesus-BLESSED-white"> <img src="https://img.shields.io/badge/luck-SKILL%20ISSUE-red"> <img src="https://img.shields.io/badge/odds-RIGGED-darkred"> <img src="https://img.shields.io/badge/casino-HOUSE%20ALWAYS%20WINS-gold"> <img src="https://img.shields.io/badge/poker%20face-NONEXISTENT-pink"> <img src="https://img.shields.io/badge/slots-JACKPOT%20NEVER-red"> <img src="https://img.shields.io/badge/dice-LOADED-darkgray"> <img src="https://img.shields.io/badge/andrew%20tate-ESCAPE%20THE%20MATRIX-darkblue"> <img src="https://img.shields.io/badge/sigma%20male-GRINDSET%20ACTIVE-blue"> <img src="https://img.shields.io/badge/alpha-ENERGY%20DEPLETED-gray"> <img src="https://img.shields.io/badge/beta-CRINGE%20MODE-pink"> <img src="https://img.shields.io/badge/gigachad-ACHIEVED-gold"> <img src="https://img.shields.io/badge/virgin-VS%20CHAD-red"> <img src="https://img.shields.io/badge/pilled-RED%20BASED%20SIGMA-red"> <img src="https://img.shields.io/badge/npc-DIALOGUE%20TREE-gray"> <img src="https://img.shields.io/badge/degeneracy-MAXIMUM-purple"> <img src="https://img.shields.io/badge/autism-WEAPONIZED-lightblue"> <img src="https://img.shields.io/badge/adhd-HYPERFOCUS%20MODE-orange"> <img src="https://img.shields.io/badge/depression-CLINICAL-darkblue"> <img src="https://img.shields.io/badge/anxiety-CRIPPLING-yellow"> <img src="https://img.shields.io/badge/insomnia-CHRONIC-black"> <img src="https://img.shields.io/badge/caffeine-OVERDOSE-brown"> <img src="https://img.shields.io/badge/sanity-QUESTIONABLE-red"> <img src="https://img.shields.io/badge/warranty-VOIDED-red"> <img src="https://img.shields.io/badge/legal-GRAY%20AREA-gray"> <img src="https://img.shields.io/badge/ethics-OPTIONAL-darkred"> <img src="https://img.shields.io/badge/morals-SOLD%20SEPARATELY-gold"> <img src="https://img.shields.io/badge/responsibility-DENIED-red"> <img src="https://img.shields.io/badge/liability-NOT%20OUR%20PROBLEM-pink"> <img src="https://img.shields.io/badge/insurance-DOESN%27T%20COVER%20THIS-darkred"> <img src="https://img.shields.io/badge/refunds-LMAO%20NO-red"> <img src="https://img.shields.io/badge/web3-PONZI%20SCHEME-gold"> <img src="https://img.shields.io/badge/blockchain-UNNECESSARY-darkgreen"> <img src="https://img.shields.io/badge/nft-RIGHT%20CLICK%20SAVE-pink"> <img src="https://img.shields.io/badge/crypto-RUGPULL%20INCOMING-red"> <img src="https://img.shields.io/badge/defi-DEFINITELY%20SCAM-darkred"> <img src="https://img.shields.io/badge/metaverse-SECOND%20LIFE%202.0-purple"> <img src="https://img.shields.io/badge/ai-CHATGPT%20WROTE%20THIS-cyan"> <img src="https://img.shields.io/badge/ml-RANDOM%20FOREST-green"> <img src="https://img.shields.io/badge/viral-NEGATIVE%20INFINITY-black"> <img src="https://img.shields.io/badge/trending-ON%20MYSPACE-blue"> <img src="https://img.shields.io/badge/influencer-WANNABE-pink"> <img src="https://img.shields.io/badge/clout-CHASING-gold"> <img src="https://img.shields.io/badge/fame-15%20SECONDS-red"> <img src="https://img.shields.io/badge/legacy-DIGITAL%20DISASTER-darkred"> <img src="https://img.shields.io/badge/impact-NEGATIVE-black"> <img src="https://img.shields.io/badge/contribution-SOCIETY%20DECLINE-red"></marquee>
+      <div style="text-align: center; margin-top: 30px;">
+            <a href="/tos" class="nav-button">📜 TOS</a>
+      </div>
     </body>
     </html>
   `);
@@ -1078,6 +1081,269 @@ app.get('/gallery', async (req, res) => {
   `);
 });
 
+// Terms of Service page
+app.get('/tos', async (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta property="og:title" content="pissandshitimages.com - Terms of Service" />
+        <meta property="og:description" content="the bestest image hoster ever (real) - legal stuff" />
+        <meta property="og:image" content="/banner.png" />
+        <meta property="og:type" content="website" />
+        <title>Terms of Service - pissandshitimages</title>
+        <style>
+            body {
+                font-family: 'Comic Sans MS', cursive, sans-serif;
+                background: #f0f0f0;
+                margin: 0;
+                padding: 20px;
+                line-height: 1.6;
+            }
+            h1 {
+                color: #ff6b6b;
+                text-shadow: 2px 2px 0 #000;
+                font-size: 2.5em;
+                margin-bottom: 30px;
+                text-align: center;
+            }
+            .tos-container {
+                max-width: 800px;
+                margin: 0 auto;
+                background: white;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            }
+            h2 {
+                color: #ff6b6b;
+                border-bottom: 2px solid #ff6b6b;
+                padding-bottom: 5px;
+            }
+            h3 {
+                color: #4ecdc4;
+            }
+            .warning {
+                background: #ff4757;
+                color: white;
+                padding: 15px;
+                border-radius: 5px;
+                margin: 20px 0;
+                font-weight: bold;
+            }
+            .nav-button {
+                display: inline-block;
+                background: #ff6b6b;
+                color: white;
+                text-decoration: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            .nav-button:hover {
+                background: #ff5252;
+                transform: scale(1.05);
+            }
+            .last-updated {
+                color: #666;
+                font-style: italic;
+                text-align: center;
+                margin-top: 30px;
+                border-top: 1px solid #ddd;
+                padding-top: 20px;
+            }
+            ul, ol {
+                margin-left: 20px;
+            }
+            li {
+                margin-bottom: 8px;
+            }
+            .contact-info {
+                background: #4ecdc4;
+                color: white;
+                padding: 15px;
+                border-radius: 5px;
+                margin: 20px 0;
+            }
+        </style>
+    </head>
+    <body>
+        <script src="/oneko.js"></script>
+        <div style="text-align: center;">
+            <a href="/" class="nav-button">⬅️ Back to Home</a>
+        </div>
+        
+        <h1>📜 Terms of Service</h1>
+        
+        <div class="tos-container">
+            <div class="warning">
+                ⚠️ WARNING: This service involves image processing with unpredictable results. By using pissandshitimages.com, you acknowledge and accept all risks associated with our "shitification" process.
+            </div>
+            
+            <h2>1. Acceptance of Terms</h2>
+            <p>By accessing and using pissandshitimages.com (the "Service"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.</p>
+            
+            <h2>2. Description of Service</h2>
+            <p>pissandshitimages.com is an image hosting service that applies random image processing effects (referred to as "shitification") to uploaded images. The service includes:</p>
+            <ul>
+                <li>Random image quality degradation with gambling mechanics</li>
+                <li>Unpredictable compression and visual effects</li>
+                <li>Public gallery display (unless hidden option is selected)</li>
+                <li>Permanent storage of processed images</li>
+            </ul>
+            
+            <h2>3. User Responsibilities</h2>
+            <h3>3.1 Content Guidelines</h3>
+            <p>You are solely responsible for the content you upload. You may NOT upload:</p>
+            <ul>
+                <li>Illegal content including but not limited to child exploitation material</li>
+                <li>Copyright-infringing material without proper authorization</li>
+                <li>Content promoting violence, hatred, or discrimination</li>
+                <li>Personal information of others without consent</li>
+                <li>Malicious code or files designed to harm systems</li>
+                <li>Content violating others' privacy or rights</li>
+            </ul>
+            
+            <h3>3.2 Account Conduct</h3>
+            <ul>
+                <li>Do not attempt to circumvent our systems or abuse the service</li>
+                <li>Do not upload excessive amounts of content to overwhelm our servers</li>
+                <li>Respect the gambling/random nature of the shitification process</li>
+                <li>Do not complain about the quality results - that's the entire point!</li>
+            </ul>
+            
+            <h2>4. Service Disclaimers</h2>
+            
+            <h3>4.1 Image Quality</h3>
+            <div class="warning">
+                🎲 IMPORTANT: Our service INTENTIONALLY degrades image quality through random processes. We make NO guarantees about the final quality of your images. Results may range from "barely noticeable" to "completely destroyed."
+            </div>
+            
+            <h3>4.2 Availability</h3>
+            <ul>
+                <li>Service may be temporarily unavailable for maintenance</li>
+                <li>We reserve the right to suspend service at any time</li>
+                <li>No guarantee of uptime or availability</li>
+                <li>Images may be temporarily or permanently inaccessible</li>
+            </ul>
+            
+            <h3>4.3 Data Storage</h3>
+            <ul>
+                <li>Images are stored indefinitely but we make no backup guarantees</li>
+                <li>We may delete content without notice for violations or technical reasons</li>
+                <li>No guarantee against data loss, corruption, or technical failures</li>
+            </ul>
+            
+            <h2>5. Privacy and Data Collection</h2>
+            <h3>5.1 Information We Collect</h3>
+            <ul>
+                <li>Uploaded images and metadata</li>
+                <li>IP addresses (hashed for security)</li>
+                <li>Upload timestamps and technical information</li>
+                <li>Admin session data for authenticated users</li>
+            </ul>
+            
+            <h3>5.2 Use of Information</h3>
+            <ul>
+                <li>IP tracking for abuse prevention and banning</li>
+                <li>Technical metadata for service operation</li>
+                <li>Statistics and analytics (anonymized)</li>
+                <li>Legal compliance when required</li>
+            </ul>
+            
+            <h2>6. Content Moderation and Enforcement</h2>
+            <h3>6.1 Admin Rights</h3>
+            <p>Administrators reserve the right to:</p>
+            <ul>
+                <li>Remove any content at their sole discretion</li>
+                <li>Ban IP addresses for violations or abuse</li>
+                <li>Hide content from public view</li>
+                <li>Modify service features or terms without notice</li>
+            </ul>
+            
+            <h3>6.2 Violation Consequences</h3>
+            <ul>
+                <li>Immediate content removal</li>
+                <li>IP address banning (potentially permanent)</li>
+                <li>Reporting to authorities for illegal content</li>
+                <li>No appeals process guaranteed</li>
+            </ul>
+            
+            <h2>7. Intellectual Property</h2>
+            <h3>7.1 Your Content</h3>
+            <ul>
+                <li>You retain ownership of your original images</li>
+                <li>You grant us license to process, store, and display your content</li>
+                <li>You are responsible for ensuring you have rights to upload content</li>
+                <li>Processed versions become part of our service ecosystem</li>
+            </ul>
+            
+            <h3>7.2 Our Service</h3>
+            <ul>
+                <li>The pissandshitimages.com platform and code are proprietary</li>
+                <li>Our "shitification" algorithms and processes are our intellectual property</li>
+                <li>Service name, branding, and unique features are protected</li>
+            </ul>
+            
+            <h2>8. Limitation of Liability</h2>
+            <div class="warning">
+                ⚠️ CRITICAL DISCLAIMER: pissandshitimages.com and its operators are NOT LIABLE for:
+            </div>
+            <ul>
+                <li>Any damage to your images (that's literally the point!)</li>
+                <li>Loss of data, images, or content</li>
+                <li>Service interruptions or technical failures</li>
+                <li>Consequences of your content violations</li>
+                <li>Third-party access to your uploaded content</li>
+                <li>Any damages arising from use of the service</li>
+                <li>Seizures, eye strain, or other health effects from viewing shitified images</li>
+            </ul>
+            
+            <h2>9. Governing Law and Jurisdiction</h2>
+            <p>These terms are governed by applicable international law and local jurisdiction where the service is hosted. Any disputes will be resolved in appropriate courts.</p>
+            
+            <h2>10. Changes to Terms</h2>
+            <p>We reserve the right to modify these terms at any time without prior notice. Continued use of the service constitutes acceptance of modified terms. Check this page periodically for updates.</p>
+            
+            <h2>11. Service Termination</h2>
+            <p>We may terminate or suspend the service at any time, for any reason, with or without notice. Upon termination, these terms remain in effect regarding previously submitted content.</p>
+            
+            <div class="contact-info">
+                <h3>📧 Contact Information</h3>
+                <p>For questions, concerns, or DMCA takedown requests, contact the service administrators through appropriate channels. Response time is not guaranteed.</p>
+                <p><strong>Note:</strong> We do not provide technical support for image quality complaints - the random degradation is intentional!</p>
+            </div>
+            
+            <h2>12. Age Restrictions</h2>
+            <p>This service is intended for users 13 years and older. Users under 18 should have parental supervision. We do not knowingly collect information from children under 13.</p>
+            
+            <h2>13. Final Provisions</h2>
+            <ul>
+                <li>If any provision is deemed invalid, the remainder of these terms remain in effect</li>
+                <li>These terms constitute the complete agreement between you and the service</li>
+                <li>No waiver of any term shall be deemed a further or continuing waiver</li>
+                <li>Use of the service is at your own risk and discretion</li>
+            </ul>
+            
+            <div class="warning">
+                🎲 REMEMBER: This is a service that intentionally makes your images look terrible through random chance. If you don't want your images potentially destroyed, don't use this service!
+            </div>
+            
+            <div class="last-updated">
+                Last updated: August 2025<br>
+                Version 1.0 - pissandshitimages.com Terms of Service
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="/" class="nav-button">🏠 Return to Home</a>
+            <a href="/gallery" class="nav-button">🖼️ View Gallery</a>
+        </div>
+    </body>
+    </html>
+  `);
+});
 
 // Helper function to generate secure session tokens
 function generateSessionToken() {
