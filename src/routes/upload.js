@@ -4,7 +4,7 @@ const multer = require('multer');
 const upload = multer();
 const { getHashedIP, checkBannedIP } = require('../middleware/ipCheck.js');
 const { gamblingShitifyImage } = require('../utils/image.js');
-const { supabase } = require('../db.js');
+const { supabase } = require('../utils/db.js');
 
 uploadRouter.post('/upload', checkBannedIP, upload.single('image'), async (req, res) => {
   if (!req.file) return res.status(400).send('No file uploaded.');

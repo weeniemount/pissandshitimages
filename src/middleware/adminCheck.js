@@ -1,5 +1,5 @@
 const loginAttempts = new Map();
-const { supabase } = require('../db.js');
+const { supabase } = require('../utils/db.js');
 const { getHashedIP } = require('./ipCheck.js');
 const crypto = require('crypto');
 

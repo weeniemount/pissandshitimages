@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { supabase } = require('../db.js');
+const { supabase } = require('../utils/db.js');
 
 // Helper function to get client IP and hash it
 function getHashedIP(req) {

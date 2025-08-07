@@ -1,5 +1,5 @@
 const sharp = require('sharp');
-const { supabase } = require('../db.js');
+const { supabase } = require('./db.js');
 
 async function shitifyImageExtreme(buffer, mimetype) {
     try {
