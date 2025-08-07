@@ -405,6 +405,10 @@ app.get('/', (req, res) => {
     <!DOCTYPE html>
     <html>
     <head>
+        <meta property="og:title" content="pissandshitimages.com" />
+        <meta property="og:description" content="the bestest image hoster ever (real)" />
+        <meta property="og:image" content="/banner.png" />
+        <meta property="og:type" content="image" />
         <title>pissandshitimages - THE BEST IMAGE HOSTER EVER</title>
         <style>
             body {
@@ -837,6 +841,10 @@ app.get('/gallery', async (req, res) => {
     <!DOCTYPE html>
     <html>
     <head>
+        <meta property="og:title" content="pissandshitimages.com - gallery" />
+        <meta property="og:description" content="the bestest image hoster ever (real)" />
+        <meta property="og:image" content="/banner.png" />
+        <meta property="og:type" content="image" />
         <title>Gallery - pissandshitimages</title>
         <style>
             body {
@@ -2838,6 +2846,10 @@ app.get('/leaderboard', async (req, res) => {
     <!DOCTYPE html>
     <html>
     <head>
+      <meta property="og:title" content="pissandshitimages.com - leaderboard" />
+        <meta property="og:description" content="the bestest image hoster ever (real)" />
+        <meta property="og:image" content="/banner.png" />
+        <meta property="og:type" content="image" />
         <title>Leaderboard - pissandshitimages</title>
         <style>
             body {
