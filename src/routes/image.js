@@ -1,4 +1,4 @@
-const { supabase } = require('../db.js');
+const { supabase } = require('../utils/db.js');
 const express = require('express');
 const imageRouter = express.Router();
 

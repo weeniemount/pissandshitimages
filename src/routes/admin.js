@@ -1,4 +1,4 @@
-const { supabase } = require('../db.js');
+const { supabase } = require('../utils/db.js');
 const { getHashedIP } = require('../middleware/ipCheck.js');
 const { generateSessionToken, authenticateAdmin, recordLoginAttempt, isRateLimited } = require('../middleware/adminCheck.js');
 const express = require('express');
