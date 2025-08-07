@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta property="og:title" content="PISSANDSHITIMAGES.COM - THE BEST IMAGE HOSTER EVER" />
+        <meta property="og:description" content="OOOOHHHH!!111 i just wasted ${fileSizeMB} PENTABYTES TO SHOW YOU THIS GARBAGE" />
+        <meta property="og:image" content="<%= imageUrl %>" />
+        <meta property="og:type" content="image" />
+        <meta property="twitter:card" content="summary_large_image" />
+        <title>pissandshitimages - view</title>
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+        <script src="/oneko.js"></script>
+        <h1>🚽 pissandshitimages 💩</h1>
+        <div class="image-container">
+		<img src="<%= imageUrl %>" alt="Shitified image" />
+		<div class="info">
+            <div class="shitification">
+                🎲 Shitification: <%= shitlevel %> (<%= roll %>%)
+            </div>
+            <div class="date">
+                📅 Date: <%= date %>
+            </div>
+            <% if (hidden) { %>
+                <div class="shame" style="background: #ff4757; color: white; padding: 10px; border-radius: 5px; margin: 10px; display: inline-block;">
+                    <%= message %>
+                </div>
+            <% } %>
+            </div>
+            <a href="/gallery">🔙 Back to gallery</a>
+        </div>
+    </body>
+</html>

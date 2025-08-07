@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Active Sessions - Admin Panel</title>
+        <style>
+            body {
+                font-family: 'Comic Sans MS', cursive, sans-serif;
+                background: #f0f0f0;
+                margin: 0;
+                padding: 20px;
+            }
+            h1 {
+                color: #ff6b6b;
+                text-shadow: 2px 2px 0 #000;
+                font-size: 2.5em;
+                margin-bottom: 30px;
+                text-align: center;
+            }
+            .sessions-list {
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                padding: 10px;
+                border-bottom: 1px solid #ddd;
+                text-align: left;
+            }
+            th {
+                background: #ff6b6b;
+                color: white;
+            }
+            tr:nth-child(even) {
+                background: #f9f9f9;
+            }
+            .current-session {
+                background: #e8f5e8 !important;
+                font-weight: bold;
+            }
+            .revoke-btn {
+                background: #ff4757;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+            .revoke-btn:hover {
+                background: #ff6b6b;
+            }
+            .revoke-btn:disabled {
+                background: #ccc;
+                cursor: not-allowed;
+            }
+            .nav-button {
+                display: inline-block;
+                background: #ff6b6b;
+                color: white;
+                text-decoration: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <script src="/oneko.js"></script>
+        <h1>🔐 Active Admin Sessions</h1>
+        <a href="/admin" class="nav-button">⬅️ Back to Admin Panel</a>
+        
+        <div class="sessions-list">
+            <h2>Active Sessions (<%= sessions.length %> total)</h2>
+            <% if (sessions.length === 0) { %>
+                <p>No active sessions found.</p>
+            <% } else { %>
+                <table>
+                    <tr>
+                        <th>Session ID</th>
+                        <th>Created</th>
+                        <th>Expires</th>
+                        <th>IP Hash</th>
+                        <th>User Agent</th>
+                        <th>Actions</th>
+                    </tr>
+                    <% sessions.forEach(session => { %>
+                        <tr class="<%= session.session_token === currentSessionToken ? 'current-session' : '' %>">
+                            <td><code><%= session.session_token.substring(0, 16) %>...</code></td>
+                            <td><%= new Date(session.created_at).toLocaleString() %></td>
+                            <td><%= new Date(session.expires_at).toLocaleString() %></td>
+                            <td><code><%= session.ip_hash ? session.ip_hash.substring(0, 8) + '...' : 'N/A' %></code></td>
+                            <td><%= session.user_agent ? (session.user_agent.length > 50 ? session.user_agent.substring(0, 50) + '...' : session.user_agent) : 'N/A' %></td>
+                            <td>
+                                <% if (session.session_token === currentSessionToken) { %>
+                                    <span style="color: green;">Current Session</span>
+                                <% } else { %>
+                                    <form action="/admin/revoke-session/<%= session.session_token %>" method="post" style="display:inline;">
+                                        <button type="submit" class="revoke-btn" onclick="return confirm('Revoke this session?')">🗑️ Revoke</button>
+                                    </form>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </table>
+            <% } %>
+        </div>
+    </body>
+</html>

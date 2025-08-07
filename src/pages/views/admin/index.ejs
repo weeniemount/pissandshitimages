@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Admin Panel - pissandshitimages</title>
+        <style>
+            body {
+                font-family: 'Comic Sans MS', cursive, sans-serif;
+                background: #f0f0f0;
+                margin: 0;
+                padding: 20px;
+            }
+            h1 {
+                color: #ff6b6b;
+                text-shadow: 2px 2px 0 #000;
+                font-size: 2.5em;
+                margin-bottom: 30px;
+                text-align: center;
+            }
+            .stats {
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                margin-bottom: 20px;
+            }
+            .image-list {
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                padding: 10px;
+                border-bottom: 1px solid #ddd;
+                text-align: left;
+            }
+            th {
+                background: #ff6b6b;
+                color: white;
+            }
+            tr:nth-child(even) {
+                background: #f9f9f9;
+            }
+            .delete-btn {
+                background: #ff4757;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 3px;
+                cursor: pointer;
+                margin-right: 5px;
+            }
+            .delete-btn:hover {
+                background: #ff6b6b;
+            }
+            .ban-btn {
+                background: #ff6b6b;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 3px;
+                cursor: pointer;
+                margin-right: 5px;
+            }
+            .ban-btn:hover {
+                background: #ff4757;
+            }
+            .ban-btn:disabled {
+                background: #ccc;
+                cursor: not-allowed;
+            }
+            .thumbnail {
+                max-width: 100px;
+                max-height: 100px;
+                object-fit: cover;
+                border-radius: 3px;
+            }
+            .pagination {
+                margin-top: 20px;
+                text-align: center;
+            }
+            .pagination a {
+                display: inline-block;
+                padding: 8px 16px;
+                text-decoration: none;
+                background-color: #ff6b6b;
+                color: white;
+                border-radius: 5px;
+                margin: 0 5px;
+            }
+            .pagination a:hover {
+                background-color: #ff5252;
+            }
+            .pagination .current {
+                background-color: #ff5252;
+                font-weight: bold;
+            }
+            .pagination .disabled {
+                background-color: #cccccc;
+                pointer-events: none;
+            }
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+                margin-top: 20px;
+            }
+            .stat-box {
+                background: #fff;
+                padding: 15px;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .stat-box h3 {
+                color: #ff6b6b;
+                margin-top: 0;
+                margin-bottom: 10px;
+            }
+            .shitlevel-badge {
+                display: inline-block;
+                padding: 5px 10px;
+                border-radius: 15px;
+                color: white;
+                font-weight: bold;
+            }
+            .shitlevel-badge.lucky {
+                background: #4CAF50;
+            }
+            .shitlevel-badge.extreme {
+                background: #f44336;
+            }
+            .shitlevel-badge.normal {
+                background: #ff9800;
+            }
+            .visibility-btn {
+                padding: 5px 10px;
+                border: none;
+                border-radius: 3px;
+                cursor: pointer;
+                margin-right: 5px;
+            }
+            .visibility-btn.visible {
+                background: #4CAF50;
+                color: white;
+            }
+            .visibility-btn.hidden {
+                background: #ff9800;
+                color: white;
+            }
+            .visibility-btn:hover {
+                opacity: 0.9;
+            }
+            .success-message {
+                background: #4CAF50;
+                color: white;
+                padding: 15px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            .nav-links {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .nav-links a {
+                display: inline-block;
+                background: #4ecdc4;
+                color: white;
+                text-decoration: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                margin: 0 10px;
+            }
+            .nav-links a:hover {
+                background: #45b7b0;
+            }
+            .ip-info {
+                color: #666;
+                font-size: 0.9em;
+                font-family: monospace;
+            }
+        </style>
+    </head>
+    <body>
+        <script src="/oneko.js"></script>
+        <h1>🛠️ Admin Panel - pissandshitimages</h1>
+        
+        <div class="nav-links">
+            <a href="/admin/banned-ips">🚫 View Banned IPs (<%= bannedIPsCount %>)</a>
+            <a href="/admin/sessions">🔐 Active Sessions</a>
+            <a href="/admin/change-password">🔑 Change Password</a>
+            <a href="/gallery">🖼️ Gallery</a>
+            <a href="/admin/logout">🚪 Logout</a>
+        </div>
+        
+        <% if (bannedSuccess) { %>
+            <div class="success-message">✅ IP has been successfully banned!</div>
+        <% } %>
+        <% if (deletedSuccess) { %>
+            <div class="success-message">✅ Image has been successfully deleted!</div>
+        <% } %>
+        <% if (visibilitySuccess) { %>
+            <div class="success-message">✅ Image visibility has been successfully updated!</div>
+        <% } %>
+        
+        <div class="stats">
+            <h2>📊 Stats</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <h3>🖼️ Image Counts</h3>
+                    <p>Total Images: <%= stats.total %></p>
+                    <p>Visible Images: <%= stats.visible %></p>
+                    <p>Hidden Images: <%= stats.hidden %></p>
+                    <p>Showing <%= from %> - <%= to %> of <%= count %></p>
+                </div>
+                <div class="stat-box">
+                    <h3>🎲 Roll Stats</h3>
+                    <p>✨ Lucky Survivors: <%= stats.luckySurvivor %></p>
+                    <p>💩 Normal Shit: <%= stats.normalShit %></p>
+                    <p>💀 Extreme Nuclear: <%= stats.extremeNuclear %></p>
+                </div>
+                <div class="stat-box">
+                    <h3>📦 Storage</h3>
+                    <p>Total Size: <%= (stats.totalSize / 1024 / 1024).toFixed(2) %> MB</p>
+                    <p>Avg Size: <%= (stats.totalSize / stats.total / 1024).toFixed(2) %> KB per image</p>
+                </div>
+                <div class="stat-box">
+                    <h3>🚫 Banned IPs</h3>
+                    <p>Total Banned: <%= bannedIPsCount %></p>
+                    <p><a href="/admin/banned-ips" style="color: #ff6b6b;">Manage Banned IPs →</a></p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <h3 style="color: #ff6b6b; margin-top: 0;">🛠️ Image Management by ID</h3>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" id="imageIdInput" placeholder="Paste image ID here" required 
+                        style="flex: 1; padding: 10px; border: 2px solid #ff6b6b; border-radius: 5px;">
+                    
+                    <form action="/admin/delete-by-id" method="post" style="display: inline;">
+                        <input type="hidden" name="imageId" id="deleteImageId">
+                        <button type="submit" class="delete-btn" 
+                                style="padding: 10px 15px; background: #ff4757; color: white; border: none; border-radius: 5px; cursor: pointer;"
+                                onclick="document.getElementById('deleteImageId').value = document.getElementById('imageIdInput').value; return confirm('Are you sure you want to delete this image?')">
+                            🗑️ Delete
+                        </button>
+                    </form>
+                    
+                    <form action="/admin/toggle-visibility-by-id" method="post" style="display: inline;">
+                        <input type="hidden" name="imageId" id="toggleImageId">
+                        <button type="submit" class="visibility-btn visible" 
+                                style="padding: 10px 15px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;"
+                                onclick="document.getElementById('toggleImageId').value = document.getElementById('imageIdInput').value; return confirm('Are you sure you want to toggle the visibility of this image?')">
+                            👁️ Toggle Visibility
+                        </button>
+                    </form>
+                    
+                    <form action="/admin/ban-ip-by-id" method="post" style="display: inline;">
+                        <input type="hidden" name="imageId" id="banImageId">
+                        <button type="submit" class="ban-btn" 
+                                style="padding: 10px 15px; background: #ff6b6b; color: white; border: none; border-radius: 5px; cursor: pointer;"
+                                onclick="document.getElementById('banImageId').value = document.getElementById('imageIdInput').value; return confirm('Are you sure you want to ban the IP associated with this image? This will prevent them from uploading any more images.')">
+                            🚫 Ban IP
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="image-list">
+            <h2>🖼️ Images</h2>
+            <table>
+                <tr>
+                    <th>Thumbnail</th>
+                    <th>ID</th>
+                    <th>Shitification</th>
+                    <th>Date</th>
+                    <th>IP Info</th>
+                    <th>Actions</th>
+                </tr>
+                <% images.forEach(img => { %>
+                    <tr>
+                        <td><img src="/raw/<%= img.id %>" class="thumbnail" loading="lazy" /></td>
+                        <td><a href="/image/<%= img.id %>" target="_blank"><%= img.id %></a></td>
+                        <td>
+                            <span class="shitlevel-badge <%= img.shitLevelClass %>">
+                                <%= img.shitLevel %> (<%= img.roll.toFixed(2) %>%)
+                            </span>
+                        </td>
+                        <td><%= img.date %></td>
+                        <td class="ip-info">
+                            <%= img.hasIP ? img.ipHash : 'No IP tracked' %>
+                        </td>
+                        <td>
+                            <form action="/admin/toggle-visibility/<%= img.id %>" method="post" style="display:inline;">
+                                <input type="hidden" name="currentState" value="<%= img.isHidden %>">
+                                <button type="submit" class="visibility-btn <%= img.isHidden ? 'hidden' : 'visible' %>">
+                                    <%= img.isHidden ? '👁️ Show' : '🕶️ Hide' %>
+                                </button>
+                            </form>
+                            <% if (img.hasIP) { %>
+                                <form action="/admin/ban-ip/<%= img.id %>" method="post" style="display:inline;">
+                                    <button type="submit" class="ban-btn" onclick="return confirm('Are you sure you want to ban this IP? This will prevent them from uploading any more images.')">
+                                        🚫 Ban IP
+                                    </button>
+                                </form>
+                            <% } else { %>
+                                <button class="ban-btn" disabled>🚫 No IP</button>
+                            <% } %>
+                            <form action="/admin/delete/<%= img.id %>" method="post" style="display:inline;">
+                                <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this image?')">🗑️ Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            </table>
+
+            <div class="pagination">
+                <% if (page > 1) { %>
+                    <a href="/admin?page=<%= page - 1 %>">⬅️ Previous</a>
+                <% } else { %>
+                    <a class="disabled">⬅️ Previous</a>
+                <% } %>
+                
+                <% 
+                const startPage = Math.max(1, page - 2);
+                const endPage = Math.min(totalPages, page + 2);
+                for (let i = startPage; i <= endPage; i++) { %>
+                    <a href="/admin?page=<%= i %>" class="<%= i === page ? 'current' : '' %>"><%= i %></a>
+                <% } %>
+                
+                <% if (page < totalPages) { %>
+                    <a href="/admin?page=<%= page + 1 %>">Next ➡️</a>
+                <% } else { %>
+                    <a class="disabled">Next ➡️</a>
+                <% } %>
+            </div>
+        </div>
+    </body>
+</html>

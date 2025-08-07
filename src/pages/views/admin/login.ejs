@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Admin Login - pissandshitimages</title>
+        <style>
+            body {
+                font-family: 'Comic Sans MS', cursive, sans-serif;
+                background: #f0f0f0;
+                margin: 0;
+                padding: 20px;
+                text-align: center;
+            }
+            h1 {
+                color: #ff6b6b;
+                text-shadow: 2px 2px 0 #000;
+                font-size: 2.5em;
+                margin-bottom: 30px;
+            }
+            .login-form {
+                background: white;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                display: inline-block;
+                margin-bottom: 20px;
+                max-width: 400px;
+            }
+            input[type="text"], input[type="password"] {
+                width: 100%;
+                padding: 12px;
+                margin: 10px 0;
+                border: 2px solid #ff6b6b;
+                border-radius: 5px;
+                font-size: 1.1em;
+                box-sizing: border-box;
+            }
+            button {
+                background: #ff6b6b;
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 5px;
+                font-size: 1.2em;
+                cursor: pointer;
+                transition: transform 0.1s;
+                width: 100%;
+            }
+            button:hover {
+                transform: scale(1.05);
+                background: #ff5252;
+            }
+            .error-message {
+                background: #ff4757;
+                color: white;
+                padding: 10px;
+                border-radius: 5px;
+                margin-bottom: 15px;
+            }
+            .rate-limit-message {
+                background: #ff9800;
+                color: white;
+                padding: 15px;
+                border-radius: 5px;
+                margin-bottom: 15px;
+            }
+            label {
+                display: block;
+                text-align: left;
+                margin-top: 15px;
+                margin-bottom: 5px;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <script src="/oneko.js"></script>
+        <h1>🔒 Admin Login - pissandshitimages</h1>
+        <form class="login-form" action="/admin/login" method="post">
+            <% if (rateLimited) { %>
+			    <div class="rate-limit-message">⚠️ Too many failed attempts. Please wait before trying again.</div>
+            <% } %>
+            <% if (error) { %>
+                <div class="error-message">❌ <%= error %></div>
+            <% } %>
+            
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" required autocomplete="username">
+            
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required autocomplete="current-password">
+            
+            <button type="submit">🔑 Login</button>
+        </form>
+    </body>
+</html>
