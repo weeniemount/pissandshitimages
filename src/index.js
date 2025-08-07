@@ -518,6 +518,7 @@ app.get('/', (req, res) => {
       <div style="text-align: center; margin-top: 30px;">
             <a href="/tos" class="nav-button">📜 TOS</a>
             <a href="/rules" class="nav-button">📜 Rules (plz no 18+)</a>
+            <a href="/about" class="nav-button">📜 Why this thing exists</a>
       </div>
     </body>
     </html>
@@ -794,6 +795,294 @@ app.get('/rules', (req, res) => {
     <div style="text-align: center; margin-top: 30px;">
         <a href="/" class="nav-button">🏠 Return to Home</a>
         <a href="/gallery" class="nav-button">🖼️ View Gallery</a>
+        <a href="/tos" class="nav-button">📜 Terms of Service</a>
+    </div>
+</body>
+</html>
+    `)
+});
+
+app.get('/about', (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+<html>
+<head>
+    <meta property="og:title" content="pissandshitimages.com - About" />
+    <meta property="og:description" content="the bestest image hoster ever (real) - how this beautiful disaster started" />
+    <meta property="og:image" content="/banner.png" />
+    <meta property="og:type" content="website" />
+    <title>About - pissandshitimages</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #ff6b6b;
+            text-shadow: 2px 2px 0 #000;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .about-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #ff6b6b;
+            border-bottom: 2px solid #ff6b6b;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #4ecdc4;
+        }
+        .highlight {
+            background: #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 5px solid #fdcb6e;
+        }
+        .story-box {
+            background: #74b9ff;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .nav-button {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .nav-button:hover {
+            background: #ff5252;
+            transform: scale(1.05);
+        }
+        .github-button {
+            display: inline-block;
+            background: #2d3748;
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            margin: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .github-button:hover {
+            background: #4a5568;
+            transform: scale(1.05);
+        }
+        .creator-info {
+            background: #a29bfe;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .fun-fact {
+            background: #fd79a8;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .last-updated {
+            color: #666;
+            font-style: italic;
+            text-align: center;
+            margin-top: 30px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+        ul, ol {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .timeline {
+            background: #00b894;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .quote {
+            font-style: italic;
+            font-size: 1.2em;
+            color: #636e72;
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 4px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <script src="/oneko.js"></script>
+    <div style="text-align: center;">
+        <a href="/" class="nav-button">⬅️ Back to Home</a>
+    </div>
+    
+    <h1>🤔 About This Beautiful Disaster</h1>
+    
+    <div class="about-container">
+        <div class="quote">
+            "What started as a one-day joke has become my life. Send help." - weeniemount, probably
+        </div>
+        
+        <h2>🎭 The Origin Story</h2>
+        <div class="story-box">
+            📅 Once upon a time, this was supposed to be a simple 1-day joke...
+        </div>
+        
+        <p>Hello! I'm <strong>weeniemount</strong>, the creator and reluctant maintainer of this chaotic image hosting service. What you're experiencing right now was never supposed to exist for more than 24 hours.</p>
+        
+        <p>I thought it would be funny to make a parody of image hosts that probably spy on their users. You know the type - those sketchy sites that definitely do weird stuff with your data. So I made this deliberately chaotic alternative with a ridiculous name as a joke.</p>
+        
+        <p>Plot twist: I accidentally made one that's <em>similar-ish</em> to the others I tried to parody. Whoops! Turns out making a functional image host is harder than making fun of them. Who knew? 🤷‍♂️</p>
+        
+        <div class="highlight">
+            💡 <strong>Plot Twist:</strong> People actually started using it. Like, a LOT of people. Suddenly I had users, traffic, and responsibilities. What have I done?
+        </div>
+        
+        <h2>📈 How It Escalated Quickly</h2>
+        <div class="timeline">
+            <strong>The Completely Unplanned Timeline:</strong>
+            <ul>
+                <li><strong>Day 1:</strong> "Haha i made the worst image host ever"</li>
+                <li><strong>Day 1½:</strong> "Wait, people are actually uploading stuff..."</li>
+                <li><strong>Day 1⅓:</strong> "tovade's AI Copilot adds gambling mechanics and breaks everything"</li>
+                <li><strong>Day 1¼:</strong> "Site is broken again... thanks AI"</li>
+                <li><strong>Day 1⅕:</strong> "Third time's the charm... nope, still broken"</li>
+                <li><strong>Day 1.6:</strong> "Fourth time AI breaks the site. Maybe this is just our life now?"</li>
+                <li><strong>Day 2:</strong> "Oh god, I need to add moderation"</li>
+                <li><strong>Day 3:</strong> ".zach.o gets us a domain! WE'RE OFFICIAL NOW! 🎉"</li>
+                <li><strong>Day 3½:</strong> "Maybe I should write some proper terms of service?"</li>
+                <li><strong>Day 3⅓:</strong> "Writing rules because people are chaotic"</li>
+                <li><strong>Day 3 (Today):</strong> "I guess I'm running an image hosting service now..."</li>
+            </ul>
+        </div>
+        
+        <h2>🌐 The Domain Situation</h2>
+        <div class="fun-fact">
+            🎊 We actually got a proper domain! pissandshitimages.com is now a real website that exists on the internet. My mom would be so proud (please don't tell her).
+        </div>
+        
+        <p>Getting the domain was both the best and worst decision ever. On one hand, it's legitimately hilarious that this URL exists. On the other hand, it means I'm probably stuck maintaining this thing forever now. The domain costs money, which means I'm financially invested in keeping "pissandshitimages.com" alive. What a sentence to write.</p>
+        
+        <h2>🎲 What Even Is This Thing?</h2>
+        <p>For those just discovering this chaos, here's what you've stumbled into:</p>
+        <ul>
+            <li>🖼️ An image hosting service with intentional quality destruction</li>
+            <li>🎰 Gambling mechanics that determine how badly your images get "shitified" (thanks to tovade's Copilot AI that was literally on crack!)</li>
+            <li>🎭 A gallery full of gloriously destroyed memes and photos</li>
+            <li>🤡 The product of one person's questionable sense of humor and some very chaotic AI assistance</li>
+            <li>📊 Surprisingly robust infrastructure for what started as a joke (when it's not being broken by said AI)</li>
+        </ul>
+        
+        <div class="fun-fact">
+            💥 Fun fact: The RNG gambling system came from tovade's Copilot AI which was apparently having a very chaotic day and decided to add gambling mechanics AND break the site 4 times in a row. Sometimes the best features come from controlled chaos!
+        </div>
+        
+        <h2>🔧 The Technical Stuff</h2>
+        <div class="creator-info">
+            <h3>👨‍💻 About the Creator</h3>
+            <p><strong>weeniemount</strong> - Developer, accidental sysadmin, professional procrastinator</p>
+            <p>I make weird stuff on the internet and sometimes it accidentally becomes popular. This is one of those times.</p>
+        </div>
+        
+        <div style="text-align: center; margin: 20px 0;">
+            <a href="https://github.com/weeniemount" class="github-button">🐱 Check out my GitHub</a>
+            <a href="https://github.com/weeniemount/pissandshitimages" class="github-button">📂 View the Source Code</a>
+        </div>
+        
+        <p>The entire codebase is open source because transparency is cool and also because I figure if this thing breaks, maybe someone else can fix it. Feel free to contribute, suggest improvements, or just point and laugh at my code.</p>
+        
+        <h2>🎯 Current Status</h2>
+        <div class="highlight">
+            <strong>Where we are now:</strong>
+            <ul>
+                <li>✅ Actual users (somehow)</li>
+                <li>✅ Real domain (expensive but worth it)</li>
+                <li>✅ Proper infrastructure (it mostly doesn't crash)</li>
+                <li>✅ Content moderation (I have to look at so many memes)</li>
+                <li>✅ Terms of service (written in Comic Sans, as it should be)</li>
+                <li>❓ My sanity (status unknown)</li>
+            </ul>
+        </div>
+        
+        <h2>🚀 The Future (Maybe?)</h2>
+        <p>Honestly, I have no idea where this is going. The fact that it's lasted this long is already beyond my wildest expectations. But since you're all here using it, I guess I'll keep it running and maybe even add some new features.</p>
+        
+        <div class="fun-fact">
+            💭 Feature requests welcome! Though I reserve the right to implement them in the most chaotic way possible.
+        </div>
+        
+        <p>Some ideas bouncing around in my head:</p>
+        <ul>
+            <li>🎨 More image destruction algorithms</li>
+            <li>📊 User statistics and leaderboards</li>
+            <li>🏆 Achievement system for different types of image destruction</li>
+            <li>🤖 Maybe some AI integration to make things even more unpredictable</li>
+            <li>🎪 Whatever else seems funny at 3 AM</li>
+        </ul>
+        
+        <h2>🙏 Thanks & Acknowledgments</h2>
+        <div class="creator-info">
+            <h3>🎉 Special Thanks To:</h3>
+            <ul>
+                <li><strong>.zach.o on Discord</strong> - Thanks for hooking us up with the domain! Without you, we'd still be on some terrible free hosting with a URL nobody could remember. You're the real MVP! 🌐</li>
+                <li><strong>tovade on Discord</strong> - Thanks for their Copilot AI which was literally on crack and added RNG gambling to images... and also fucked the site 4 times in a row. Honestly, the chaos was perfect for what we were going for! 🤖💥</li>
+            </ul>
+        </div>
+        
+        <p>Shoutout to everyone who uses this ridiculous service. You've turned my throwaway joke into something that brings people joy (and frustration when the RNG destroys their favorite memes). Keep being awesome and keep uploading your terrible content!</p>
+        
+        <div class="story-box">
+            Remember: Every time someone uploads an image and watches it get destroyed by random chance, an angel gets its wings. Or something like that.
+        </div>
+        
+        <h2>📞 Get In Touch</h2>
+        <p>Want to chat about this project, contribute code, or just tell me how much you hate the gambling mechanics? Hit me up!</p>
+        
+        <ul>
+            <li>🐙 GitHub: <a href="https://github.com/weeniemount">github.com/weeniemount</a></li>
+            <li>📂 Project repo: <a href="https://github.com/weeniemount/pissandshitimages">github.com/weeniemount/pissandshitimages</a></li>
+            <li>🌐 Right here on this beautiful disaster of a website</li>
+        </ul>
+        
+        <div class="quote">
+            "I never thought I'd be explaining to people why I built a service called 'pissandshitimages.com', but here we are." - weeniemount, 2025
+        </div>
+        
+        <div class="last-updated">
+            Last updated: August 2025<br>
+            Written with love, confusion, and a concerning amount of caffeine<br>
+            - weeniemount 🏔️
+        </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="/" class="nav-button">🏠 Return to Home</a>
+        <a href="/gallery" class="nav-button">🖼️ View Gallery</a>
+        <a href="/rules" class="nav-button">📋 Rules</a>
         <a href="/tos" class="nav-button">📜 Terms of Service</a>
     </div>
 </body>
