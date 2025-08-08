@@ -2,7 +2,7 @@ const { supabase } = require('../../utils/db.js');
 const { authenticateAdmin } = require('../../middleware/adminCheck.js');
 const express = require('express');
 const adminPanelRouter = express.Router();
-const { getImageStats } = require('../../utils/image.js');
+const { getImageStats, parseImageMetadata } = require('../../utils/image.js');
 
 // Admin panel with sorting capabilities
 adminPanelRouter.get('/admin', authenticateAdmin, async (req, res) => {
@@ -55,16 +55,12 @@ adminPanelRouter.get('/admin', authenticateAdmin, async (req, res) => {
   
   // Process images and add metadata
   const processedImages = (rawImages || []).map(img => {
-    const [mimetype, ...meta] = img.mimetype.split(';');
-    const metaObj = Object.fromEntries(meta.map(s => s.split('=')));
-    const roll = parseFloat(metaObj.roll || '0');
-    const date = new Date(metaObj.date || Date.now());
-    const isHidden = metaObj.hidden === 'true';
+    const processed = parseImageMetadata(img);
     
     let shitLevel;
-    if (roll >= 50) {
+    if (processed.roll >= 50) {
       shitLevel = 'LUCKY SURVIVOR';
-    } else if (roll < 25) {
+    } else if (processed.roll < 25) {
       shitLevel = 'EXTREME NUCLEAR';
     } else {
       shitLevel = 'NORMAL SHIT';
@@ -74,15 +70,12 @@ adminPanelRouter.get('/admin', authenticateAdmin, async (req, res) => {
     const ipHash = hasIP ? img.post_ips[0].ip_hash : null;
     
     return {
-      ...img,
-      roll,
-      date,
-      isHidden,
+      ...processed,
+      isHidden: processed.hidden,
       shitLevel,
-      shitLevelClass: roll >= 50 ? 'lucky' : roll < 25 ? 'extreme' : 'normal',
+      shitLevelClass: processed.roll >= 50 ? 'lucky' : processed.roll < 25 ? 'extreme' : 'normal',
       hasIP,
-      ipHash: ipHash ? `${ipHash.substring(0, 8)}...` : null,
-      metaObj
+      ipHash: ipHash ? `${ipHash.substring(0, 8)}...` : null
     };
   });
   
