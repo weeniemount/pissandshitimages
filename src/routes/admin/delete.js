@@ -151,27 +151,69 @@ adminDeleteRouter.post('/admin/delete-all-by-image-ip/:imageId', authenticateAdm
   }
 });
 
-// Bulk delete all images by IP from form input
+// Bulk delete all images by IP from form input (can accept image ID or IP hash)
 adminDeleteRouter.post('/admin/delete-all-by-ip-input', authenticateAdmin, async (req, res) => {
-  const { ipHash } = req.body;
+  const { ipHash: input } = req.body;
   
-  if (!ipHash || ipHash.trim().length === 0) {
+  if (!input || input.trim().length === 0) {
     return res.status(400).render('admin/error', {
-      title: 'Missing IP Hash',
-      message: 'IP hash is required. Please enter a valid IP hash.',
+      title: 'Missing Input',
+      message: 'Image ID or IP hash is required. Please enter a valid image ID or IP hash.',
       backUrl: '/admin',
       icon: '❌'
     });
   }
   
-  const cleanIpHash = ipHash.trim();
+  const cleanInput = input.trim();
+  let actualIpHash = null;
   
   try {
+    // First, try to determine if input is an image ID or IP hash
+    // If it looks like a UUID (contains hyphens), treat as image ID
+    // Otherwise, treat as IP hash
+    
+    if (cleanInput.includes('-') && cleanInput.length >= 32) {
+      // Looks like a UUID - treat as image ID
+      console.log('Treating input as image ID:', cleanInput);
+      
+      // Look up the image to get its IP hash
+      const { data: imageData, error: imageError } = await supabase
+        .from('images')
+        .select(`
+          id,
+          post_ips(ip_hash)
+        `)
+        .eq('id', cleanInput)
+        .single();
+      
+      if (imageError) {
+        throw new Error(`Failed to find image: ${imageError.message}`);
+      }
+      
+      if (!imageData || !imageData.post_ips || imageData.post_ips.length === 0) {
+        return res.status(404).render('admin/error', {
+          title: 'No IP Found',
+          message: `No IP hash found for image ID <strong>${cleanInput}</strong>. The image may not exist or may not have IP data.`,
+          backUrl: '/admin',
+          icon: '❌'
+        });
+      }
+      
+      actualIpHash = imageData.post_ips[0].ip_hash;
+      console.log('Found IP hash for image:', actualIpHash);
+      
+    } else {
+      // Treat as IP hash directly
+      console.log('Treating input as IP hash:', cleanInput);
+      actualIpHash = cleanInput;
+    }
+    
+    // Now proceed with the IP hash we found
     // Get all post IDs for this IP
     const { data: postIPs, error: getPostsError } = await supabase
       .from('post_ips')
       .select('post_id')
-      .eq('ip_hash', cleanIpHash);
+      .eq('ip_hash', actualIpHash);
     
     if (getPostsError) {
       throw new Error(getPostsError.message);
@@ -180,7 +222,7 @@ adminDeleteRouter.post('/admin/delete-all-by-ip-input', authenticateAdmin, async
     if (!postIPs || postIPs.length === 0) {
       return res.status(404).render('admin/error', {
         title: 'No Images Found',
-        message: `No images were found for the IP hash <strong>${cleanIpHash.substring(0, 8)}...</strong>. Please verify the IP hash is correct.`,
+        message: `No images were found for the IP hash <strong>${actualIpHash.substring(0, 8)}...</strong>. Please verify the input is correct.`,
         backUrl: '/admin',
         icon: '❌'
       });
@@ -202,7 +244,7 @@ adminDeleteRouter.post('/admin/delete-all-by-ip-input', authenticateAdmin, async
     try {
       await supabase
         .from('banned_ips')
-        .insert([{ ip_hash: cleanIpHash }]);
+        .insert([{ ip_hash: actualIpHash }]);
     } catch (banError) {
       // Ignore unique constraint violations (IP already banned)
       if (banError.code !== '23505') {
@@ -211,13 +253,13 @@ adminDeleteRouter.post('/admin/delete-all-by-ip-input', authenticateAdmin, async
     }
     
     // Redirect back with success message
-    res.redirect(`/admin?bulk_deleted=${postIds.length}&banned=success`);
+    res.redirect(`/admin?bulk_deleted=${postIds.length}&banned=success&ip_hash=${actualIpHash.substring(0, 8)}`);
     
   } catch (error) {
     console.error('Error bulk deleting images by IP input:', error);
     res.status(500).render('admin/error', {
       title: 'Bulk Delete Failed',
-      message: `Failed to delete all images for IP hash <strong>${cleanIpHash.substring(0, 8)}...</strong>. Error: ${error.message}`,
+      message: `Failed to delete all images for input <strong>${cleanInput}</strong>. Error: ${error.message}`,
       backUrl: '/admin',
       icon: '❌'
     });
