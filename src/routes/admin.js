@@ -613,6 +613,215 @@ adminRouter.post('/admin/ban-ip-by-id', authenticateAdmin, async (req, res) => {
   }
 });
 
+// Delete all images by IP from image ID (convenience function)
+adminRouter.post('/admin/delete-all-by-image-ip/:imageId', authenticateAdmin, async (req, res) => {
+  const { imageId } = req.params;
+  
+  try {
+    // Get the IP hash for this image
+    const { data: postIP, error: getIPError } = await supabase
+      .from('post_ips')
+      .select('ip_hash')
+      .eq('post_id', imageId)
+      .single();
+      
+    if (getIPError || !postIP) {
+      return res.status(404).render('admin/error', {
+        title: 'IP Not Found',
+        message: `No IP address was found for the image with ID <strong>${imageId}</strong>. This image may not have IP tracking information.`,
+        backUrl: '/admin',
+        icon: '❌'
+      });
+    }
+    
+    // Get all post IDs for this IP
+    const { data: postIPs, error: getPostsError } = await supabase
+      .from('post_ips')
+      .select('post_id')
+      .eq('ip_hash', postIP.ip_hash);
+    
+    if (getPostsError) {
+      throw new Error(getPostsError.message);
+    }
+    
+    if (!postIPs || postIPs.length === 0) {
+      return res.status(404).render('admin/error', {
+        title: 'No Images Found',
+        message: `No images were found for this IP address.`,
+        backUrl: '/admin',
+        icon: '❌'
+      });
+    }
+    
+    const postIds = postIPs.map(p => p.post_id);
+    
+    // Delete all images with these IDs
+    const { error: deleteError } = await supabase
+      .from('images')
+      .delete()
+      .in('id', postIds);
+    
+    if (deleteError) {
+      throw new Error(deleteError.message);
+    }
+    
+    // Try to ban the IP if not already banned (ignore if already exists)
+    try {
+      await supabase
+        .from('banned_ips')
+        .insert([{ ip_hash: postIP.ip_hash }]);
+    } catch (banError) {
+      // Ignore unique constraint violations (IP already banned)
+      if (banError.code !== '23505') {
+        console.warn('Failed to ban IP (non-critical):', banError.message);
+      }
+    }
+    
+    // Redirect back with success message
+    res.redirect(`/admin?bulk_deleted=${postIds.length}&banned=success`);
+    
+  } catch (error) {
+    console.error('Error deleting all images by image IP:', error);
+    res.status(500).render('admin/error', {
+      title: 'Bulk Delete Failed',
+      message: `Failed to delete all images from the same IP as image <strong>${imageId}</strong>. Error: ${error.message}`,
+      backUrl: '/admin',
+      icon: '❌'
+    });
+  }
+});
+
+// Bulk delete all images by IP from form input
+adminRouter.post('/admin/delete-all-by-ip-input', authenticateAdmin, async (req, res) => {
+  const { ipHash } = req.body;
+  
+  if (!ipHash || ipHash.trim().length === 0) {
+    return res.status(400).render('admin/error', {
+      title: 'Missing IP Hash',
+      message: 'IP hash is required. Please enter a valid IP hash.',
+      backUrl: '/admin',
+      icon: '❌'
+    });
+  }
+  
+  const cleanIpHash = ipHash.trim();
+  
+  try {
+    // Get all post IDs for this IP
+    const { data: postIPs, error: getPostsError } = await supabase
+      .from('post_ips')
+      .select('post_id')
+      .eq('ip_hash', cleanIpHash);
+    
+    if (getPostsError) {
+      throw new Error(getPostsError.message);
+    }
+    
+    if (!postIPs || postIPs.length === 0) {
+      return res.status(404).render('admin/error', {
+        title: 'No Images Found',
+        message: `No images were found for the IP hash <strong>${cleanIpHash.substring(0, 8)}...</strong>. Please verify the IP hash is correct.`,
+        backUrl: '/admin',
+        icon: '❌'
+      });
+    }
+    
+    const postIds = postIPs.map(p => p.post_id);
+    
+    // Delete all images with these IDs
+    const { error: deleteError } = await supabase
+      .from('images')
+      .delete()
+      .in('id', postIds);
+    
+    if (deleteError) {
+      throw new Error(deleteError.message);
+    }
+    
+    // Try to ban the IP if not already banned (ignore if already exists)
+    try {
+      await supabase
+        .from('banned_ips')
+        .insert([{ ip_hash: cleanIpHash }]);
+    } catch (banError) {
+      // Ignore unique constraint violations (IP already banned)
+      if (banError.code !== '23505') {
+        console.warn('Failed to ban IP (non-critical):', banError.message);
+      }
+    }
+    
+    // Redirect back with success message
+    res.redirect(`/admin?bulk_deleted=${postIds.length}&banned=success`);
+    
+  } catch (error) {
+    console.error('Error bulk deleting images by IP input:', error);
+    res.status(500).render('admin/error', {
+      title: 'Bulk Delete Failed',
+      message: `Failed to delete all images for IP hash <strong>${cleanIpHash.substring(0, 8)}...</strong>. Error: ${error.message}`,
+      backUrl: '/admin',
+      icon: '❌'
+    });
+  }
+});
+
+// Delete all images by IP hash  
+adminRouter.post('/admin/delete-all-by-ip/:ipHash', authenticateAdmin, async (req, res) => {
+  const { ipHash } = req.params;
+  
+  if (!ipHash) {
+    return res.status(400).render('admin/error', {
+      title: 'Missing IP Hash',
+      message: 'IP hash is required',
+      backUrl: '/admin/banned-ips'
+    });
+  }
+  
+  try {
+    // First, get all post IDs for this IP
+    const { data: postIPs, error: getPostsError } = await supabase
+      .from('post_ips')
+      .select('post_id')
+      .eq('ip_hash', ipHash);
+    
+    if (getPostsError) {
+      throw new Error(getPostsError.message);
+    }
+    
+    if (!postIPs || postIPs.length === 0) {
+      return res.status(404).render('admin/error', {
+        title: 'No Images Found',
+        message: `No images were found for the IP hash <strong>${ipHash.substring(0, 8)}...</strong>`,
+        backUrl: '/admin/banned-ips',
+        icon: '❌'
+      });
+    }
+    
+    const postIds = postIPs.map(p => p.post_id);
+    
+    // Delete all images with these IDs
+    const { error: deleteError } = await supabase
+      .from('images')
+      .delete()
+      .in('id', postIds);
+    
+    if (deleteError) {
+      throw new Error(deleteError.message);
+    }
+    
+    // Redirect back with success message
+    res.redirect(`/admin/banned-ips?deleted_count=${postIds.length}&deleted_ip=${ipHash.substring(0, 8)}`);
+    
+  } catch (error) {
+    console.error('Error deleting all images by IP:', error);
+    res.status(500).render('admin/error', {
+      title: 'Bulk Delete Failed',
+      message: `Failed to delete all images for IP hash <strong>${ipHash.substring(0, 8)}...</strong>. Error: ${error.message}`,
+      backUrl: '/admin/banned-ips',
+      icon: '❌'
+    });
+  }
+});
+
 // Admin logout
 adminRouter.get('/admin/logout', (req, res) => {
   res.clearCookie('adminAuth');
