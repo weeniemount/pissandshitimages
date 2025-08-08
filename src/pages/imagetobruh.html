@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BRUH File Creator & Editor</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #00ff00;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section {
+            background: #222;
+            border: 1px solid #444;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .hex-output {
+            background: #000;
+            border: 1px solid #333;
+            padding: 15px;
+            word-break: break-all;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 20px 0;
+        }
+        button {
+            background: #333;
+            color: #00ff00;
+            border: 1px solid #555;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #444;
+        }
+        input[type="file"], input[type="number"] {
+            background: #333;
+            color: #00ff00;
+            border: 1px solid #555;
+            padding: 5px;
+            margin: 5px;
+        }
+        .preview {
+            margin: 20px 0;
+            display: inline-block;
+            border: 1px solid #333;
+            background: #333;
+        }
+        .pixel {
+            display: inline-block;
+            cursor: pointer;
+            border: 1px solid #555;
+            box-sizing: border-box;
+        }
+        .pixel:hover {
+            border-color: #00ff00;
+            border-width: 2px;
+        }
+        .row {
+            display: block;
+            height: fit-content;
+            line-height: 0;
+        }
+        .controls {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .color-picker {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        input[type="color"] {
+            width: 50px;
+            height: 30px;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+        .canvas-container {
+            display: none;
+        }
+        .info {
+            color: #888;
+            font-size: 12px;
+            margin: 10px 0;
+        }
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+        .tab {
+            background: #333;
+            color: #888;
+            border: 1px solid #555;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .tab.active {
+            background: #555;
+            color: #00ff00;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚽 BRUH File Creator & Editor 💩</h1>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('upload')">📁 Upload PNG</div>
+            <div class="tab" onclick="switchTab('create')">🎨 Create New</div>
+            <div class="tab" onclick="switchTab('edit')">✏️ Edit Pixels</div>
+        </div>
+
+        <!-- Upload PNG Tab -->
+        <div id="upload" class="tab-content active">
+            <div class="section">
+                <h3>Upload PNG to Convert</h3>
+                <input type="file" id="pngFile" accept="image/png" onchange="loadPNG()">
+                <div class="info">Select a PNG file to convert to .bruh format</div>
+            </div>
+        </div>
+
+        <!-- Create New Tab -->
+        <div id="create" class="tab-content">
+            <div class="section">
+                <h3>Create New Image</h3>
+                <div class="controls">
+                    <label>Width: <input type="number" id="newWidth" value="8" min="1" max="100"></label>
+                    <label>Height: <input type="number" id="newHeight" value="8" min="1" max="100"></label>
+                    <button onclick="createNew()">Create Blank Canvas</button>
+                    <button onclick="createRainbow()">Create Rainbow</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Pixels Tab -->
+        <div id="edit" class="tab-content">
+            <div class="section">
+                <h3>Pixel Editor</h3>
+                <div class="controls">
+                    <div class="color-picker">
+                        <label>Paint Color:</label>
+                        <input type="color" id="paintColor" value="#ff0000">
+                        <span id="colorDisplay">#ff0000</span>
+                    </div>
+                    <button onclick="fillAll()">Fill All</button>
+                    <button onclick="clearAll()">Clear All</button>
+                    <label>Pixel Size: <input type="number" id="pixelSize" value="20" min="5" max="50" onchange="updatePixelSize()"></label>
+                </div>
+                <div class="info">Click on pixels to paint them with the selected color</div>
+            </div>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="section">
+            <h3>Preview & Export</h3>
+            <div id="imageInfo" class="info">No image loaded</div>
+            <div id="preview" class="preview">Load or create an image first</div>
+            <div class="controls">
+                <button onclick="generateBruh()">Generate BRUH Data</button>
+                <button onclick="downloadBruh()">Download .bruh File</button>
+                <button onclick="downloadPNG()">Download as PNG</button>
+            </div>
+        </div>
+
+        <!-- Hex Output Section -->
+        <div class="section">
+            <h3>Raw Hex Bytes:</h3>
+            <div id="hexOutput" class="hex-output">Generate BRUH data to see hex bytes</div>
+            
+            <h3>File Structure:</h3>
+            <pre>
+Width (4 bytes LE):  <span id="widthBytes">--</span>
+Height (4 bytes LE): <span id="heightBytes">--</span>
+Total Size:          <span id="totalSize">--</span>
+Color Data Preview:  <span id="colorData">--</span>
+            </pre>
+        </div>
+
+        <div class="canvas-container">
+            <canvas id="hiddenCanvas"></canvas>
+        </div>
+    </div>
+
+    <script>
+        let currentImage = null;
+        let bruhData = null;
+        let currentWidth = 0;
+        let currentHeight = 0;
+
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function loadPNG() {
+            const file = document.getElementById('pngFile').files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.getElementById('hiddenCanvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    
+                    const imageData = ctx.getImageData(0, 0, img.width, img.height);
+                    currentImage = [];
+                    currentWidth = img.width;
+                    currentHeight = img.height;
+                    
+                    // Convert to our format
+                    for (let y = 0; y < img.height; y++) {
+                        currentImage[y] = [];
+                        for (let x = 0; x < img.width; x++) {
+                            const i = (y * img.width + x) * 4;
+                            const r = imageData.data[i].toString(16).padStart(2, '0');
+                            const g = imageData.data[i + 1].toString(16).padStart(2, '0');
+                            const b = imageData.data[i + 2].toString(16).padStart(2, '0');
+                            currentImage[y][x] = r + g + b;
+                        }
+                    }
+                    
+                    showPreview();
+                    updateImageInfo();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function createNew() {
+            const width = parseInt(document.getElementById('newWidth').value);
+            const height = parseInt(document.getElementById('newHeight').value);
+            
+            currentWidth = width;
+            currentHeight = height;
+            currentImage = [];
+            
+            // Create blank (black) image
+            for (let y = 0; y < height; y++) {
+                currentImage[y] = [];
+                for (let x = 0; x < width; x++) {
+                    currentImage[y][x] = '000000';
+                }
+            }
+            
+            showPreview();
+            updateImageInfo();
+        }
+
+        function createRainbow() {
+            const width = parseInt(document.getElementById('newWidth').value);
+            const height = parseInt(document.getElementById('newHeight').value);
+            
+            currentWidth = width;
+            currentHeight = height;
+            currentImage = [];
+            
+            // Create rainbow gradient
+            for (let y = 0; y < height; y++) {
+                currentImage[y] = [];
+                for (let x = 0; x < width; x++) {
+                    const hue = (x / width + y / height) * 180;
+                    const rgb = hslToRgb(hue / 360, 1, 0.5);
+                    const r = Math.round(rgb[0]).toString(16).padStart(2, '0');
+                    const g = Math.round(rgb[1]).toString(16).padStart(2, '0');
+                    const b = Math.round(rgb[2]).toString(16).padStart(2, '0');
+                    currentImage[y][x] = r + g + b;
+                }
+            }
+            
+            showPreview();
+            updateImageInfo();
+        }
+
+        function hslToRgb(h, s, l) {
+            let r, g, b;
+            if (s === 0) {
+                r = g = b = l;
+            } else {
+                const hue2rgb = (p, q, t) => {
+                    if (t < 0) t += 1;
+                    if (t > 1) t -= 1;
+                    if (t < 1/6) return p + (q - p) * 6 * t;
+                    if (t < 1/2) return q;
+                    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                    return p;
+                };
+                const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                const p = 2 * l - q;
+                r = hue2rgb(p, q, h + 1/3);
+                g = hue2rgb(p, q, h);
+                b = hue2rgb(p, q, h - 1/3);
+            }
+            return [r * 255, g * 255, b * 255];
+        }
+
+        function showPreview() {
+            if (!currentImage) return;
+            
+            const preview = document.getElementById('preview');
+            preview.innerHTML = '';
+            
+            const pixelSize = parseInt(document.getElementById('pixelSize').value);
+            
+            for (let y = 0; y < currentImage.length; y++) {
+                const row = document.createElement('div');
+                row.className = 'row';
+                for (let x = 0; x < currentImage[y].length; x++) {
+                    const pixel = document.createElement('div');
+                    pixel.className = 'pixel';
+                    pixel.style.width = pixelSize + 'px';
+                    pixel.style.height = pixelSize + 'px';
+                    pixel.style.backgroundColor = '#' + currentImage[y][x];
+                    pixel.onclick = () => paintPixel(x, y);
+                    pixel.title = `(${x},${y}) #${currentImage[y][x]}`;
+                    row.appendChild(pixel);
+                }
+                preview.appendChild(row);
+            }
+        }
+
+        function paintPixel(x, y) {
+            if (!currentImage) return;
+            const color = document.getElementById('paintColor').value.replace('#', '');
+            currentImage[y][x] = color;
+            showPreview();
+        }
+
+        function fillAll() {
+            if (!currentImage) return;
+            const color = document.getElementById('paintColor').value.replace('#', '');
+            for (let y = 0; y < currentImage.length; y++) {
+                for (let x = 0; x < currentImage[y].length; x++) {
+                    currentImage[y][x] = color;
+                }
+            }
+            showPreview();
+        }
+
+        function clearAll() {
+            if (!currentImage) return;
+            for (let y = 0; y < currentImage.length; y++) {
+                for (let x = 0; x < currentImage[y].length; x++) {
+                    currentImage[y][x] = '000000';
+                }
+            }
+            showPreview();
+        }
+
+        function updatePixelSize() {
+            showPreview();
+        }
+
+        function updateImageInfo() {
+            if (!currentImage) return;
+            document.getElementById('imageInfo').textContent = 
+                `Image: ${currentWidth}x${currentHeight} pixels (${currentWidth * currentHeight} total pixels)`;
+        }
+
+        function generateBruh() {
+            if (!currentImage) {
+                alert('Create or load an image first!');
+                return;
+            }
+
+            const width = currentWidth;
+            const height = currentHeight;
+            
+            // Create width and height bytes (little-endian)
+            const widthBytes = new Uint8Array(4);
+            const heightBytes = new Uint8Array(4);
+            const widthView = new DataView(widthBytes.buffer);
+            const heightView = new DataView(heightBytes.buffer);
+            widthView.setUint32(0, width, true);
+            heightView.setUint32(0, height, true);
+            
+            // Create color data string
+            let colorString = '';
+            for (let y = 0; y < height; y++) {
+                if (y > 0) colorString += '\n';
+                for (let x = 0; x < width; x++) {
+                    colorString += currentImage[y][x];
+                }
+            }
+            
+            const colorBytes = new TextEncoder().encode(colorString);
+            
+            // Combine all bytes
+            bruhData = new Uint8Array(8 + colorBytes.length);
+            bruhData.set(widthBytes, 0);
+            bruhData.set(heightBytes, 4);
+            bruhData.set(colorBytes, 8);
+            
+            // Display hex output
+            const hexString = Array.from(bruhData)
+                .map(byte => byte.toString(16).padStart(2, '0'))
+                .join(' ');
+            document.getElementById('hexOutput').textContent = hexString;
+            
+            // Display structure info
+            document.getElementById('widthBytes').textContent = Array.from(widthBytes)
+                .map(b => b.toString(16).padStart(2, '0')).join(' ');
+            document.getElementById('heightBytes').textContent = Array.from(heightBytes)
+                .map(b => b.toString(16).padStart(2, '0')).join(' ');
+            document.getElementById('totalSize').textContent = bruhData.length + ' bytes';
+            document.getElementById('colorData').textContent = colorString.substring(0, 50) + 
+                (colorString.length > 50 ? '...' : '');
+        }
+        
+        function downloadBruh() {
+            if (!bruhData) {
+                alert('Generate BRUH data first!');
+                return;
+            }
+            
+            const blob = new Blob([bruhData], { type: 'application/octet-stream' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'image.bruh';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadPNG() {
+            if (!currentImage) {
+                alert('Create or load an image first!');
+                return;
+            }
+
+            const canvas = document.getElementById('hiddenCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = currentWidth;
+            canvas.height = currentHeight;
+
+            const imageData = ctx.createImageData(currentWidth, currentHeight);
+            
+            for (let y = 0; y < currentHeight; y++) {
+                for (let x = 0; x < currentWidth; x++) {
+                    const i = (y * currentWidth + x) * 4;
+                    const hex = currentImage[y][x];
+                    const r = parseInt(hex.substring(0, 2), 16);
+                    const g = parseInt(hex.substring(2, 4), 16);
+                    const b = parseInt(hex.substring(4, 6), 16);
+                    
+                    imageData.data[i] = r;
+                    imageData.data[i + 1] = g;
+                    imageData.data[i + 2] = b;
+                    imageData.data[i + 3] = 255;
+                }
+            }
+            
+            ctx.putImageData(imageData, 0, 0);
+            
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'image.png';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+        }
+
+        // Update color display when changed
+        document.getElementById('paintColor').addEventListener('change', function() {
+            document.getElementById('colorDisplay').textContent = this.value;
+        });
+
+        // Start with a small rainbow example
+        document.getElementById('newWidth').value = 4;
+        document.getElementById('newHeight').value = 4;
+        createRainbow();
+    </script>
+</body>
+</html>
