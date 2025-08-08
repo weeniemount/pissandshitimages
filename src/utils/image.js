@@ -261,8 +261,43 @@ function bruhToPng(bruhBuffer) {
   }).png().toBuffer();
 }
 
+const parseImageMetadata = (img) => {
+  const [mimetype, ...meta] = img.mimetype.split(';');
+  const metaObj = Object.fromEntries(meta.map(s => {
+    const [key, value] = s.split('=');
+    return [key, value];
+  }));
+  
+  const roll = parseFloat(metaObj.roll || '0');
+  
+  // Fixed date parsing - use a consistent fallback instead of Date.now()
+  let date;
+  if (metaObj.date) {
+    date = new Date(metaObj.date);
+    // Validate the parsed date
+    if (isNaN(date.getTime())) {
+      console.warn(`Invalid date format for image ${img.id}: ${metaObj.date}`);
+      date = new Date('1970-01-01'); // Consistent fallback
+    }
+  } else {
+    date = new Date('1970-01-01'); // Consistent fallback for missing dates
+  }
+  
+  const hidden = metaObj.hidden === 'true';
+  
+  return {
+    ...img,
+    roll,
+    date,
+    hidden,
+    metaObj,
+    mimetype // Keep the original mimetype too
+  };
+};
+
 module.exports = {
     getImageStats,
     gamblingShitifyImage,
-    bruhToPng
+    bruhToPng,
+    parseImageMetadata
 }

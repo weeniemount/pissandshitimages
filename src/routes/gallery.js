@@ -1,6 +1,7 @@
 const { supabase } = require('../utils/db.js');
 const express = require('express');
 const galleryRouter = express.Router();
+const { parseImageMetadata } = require('../utils/image.js');
 
 // Gallery page with sorting capabilities
 galleryRouter.get('/gallery', async (req, res) => {
@@ -76,21 +77,7 @@ galleryRouter.get('/gallery', async (req, res) => {
 
 	// Filter visible images and add metadata
 	const processedImages = (rawImages || [])
-		.map(img => {
-			const [mimetype, ...meta] = img.mimetype.split(';');
-			const metaObj = Object.fromEntries(meta.map(s => s.split('=')));
-			const roll = parseFloat(metaObj.roll || '0');
-			const date = new Date(metaObj.date || Date.now());
-			const hidden = metaObj.hidden === 'true';
-
-			return {
-				...img,
-				roll,
-				date,
-				hidden,
-				metaObj
-			};
-		})
+		.map(parseImageMetadata)
 		.filter(img => !img.hidden); // Only visible images
 
 	// Apply sorting
