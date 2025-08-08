@@ -142,7 +142,7 @@ adminPanelRouter.get('/admin', authenticateAdmin, async (req, res) => {
     { value: 'roll_worst', label: '💀 Worst Rolls' }
   ];
   
-  res.render('admin', {
+  res.render('admin/panel', {
     page,
     totalPages,
     from: from + 1,
