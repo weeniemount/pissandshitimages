@@ -16,6 +16,92 @@
                 margin-bottom: 30px;
                 text-align: center;
             }
+            .browse-controls {
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                margin-bottom: 20px;
+            }
+            .browse-controls h3 {
+                color: #ff6b6b;
+                margin-top: 0;
+                margin-bottom: 15px;
+            }
+            .control-row {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+                flex-wrap: wrap;
+                margin-bottom: 15px;
+            }
+            .control-group {
+                display: flex;
+                gap: 5px;
+                align-items: center;
+            }
+            .control-group label {
+                font-weight: bold;
+                color: #333;
+                white-space: nowrap;
+            }
+            .control-group select, .control-group input[type="text"] {
+                padding: 8px;
+                border: 2px solid #ff6b6b;
+                border-radius: 5px;
+                font-size: 14px;
+            }
+            .search-input {
+                min-width: 200px;
+            }
+            .apply-btn {
+                background: #ff6b6b;
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: bold;
+            }
+            .apply-btn:hover {
+                background: #ff5252;
+            }
+            .clear-btn {
+                background: #ccc;
+                color: #333;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 5px;
+                cursor: pointer;
+                text-decoration: none;
+            }
+            .clear-btn:hover {
+                background: #bbb;
+            }
+            .active-filters {
+                background: #f0f8ff;
+                border: 2px solid #4ecdc4;
+                border-radius: 8px;
+                padding: 10px;
+                margin-top: 10px;
+            }
+            .filter-tag {
+                display: inline-block;
+                background: #4ecdc4;
+                color: white;
+                padding: 4px 8px;
+                border-radius: 12px;
+                margin: 2px;
+                font-size: 12px;
+            }
+            .checkbox-group {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+            .checkbox-group input[type="checkbox"] {
+                margin-right: 5px;
+            }
             .stats {
                 background: white;
                 padding: 20px;
@@ -242,6 +328,21 @@
             .bulk-delete-btn:hover {
                 background: #A0000A;
             }
+            @media (max-width: 768px) {
+                .control-row {
+                    flex-direction: column;
+                    align-items: stretch;
+                }
+                .control-group {
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 5px;
+                }
+                .search-input {
+                    min-width: auto;
+                    width: 100%;
+                }
+            }
         </style>
     </head>
     <body>
@@ -272,6 +373,64 @@
             <div class="success-message">🔥 Successfully deleted <%= query.deleted_count %> images from IP <%= query.deleted_ip %>...!</div>
         <% } %>
         
+        <div class="browse-controls">
+            <h3>🔍 Browse & Sort Images</h3>
+            <form method="get" action="/admin">
+                <div class="control-row">
+                    <div class="control-group">
+                        <label for="sort">Sort by:</label>
+                        <select name="sort" id="sort">
+                            <% sortOptions.forEach(option => { %>
+                                <option value="<%= option.value %>" <%= sortBy === option.value ? 'selected' : '' %>>
+                                    <%= option.label %>
+                                </option>
+                            <% }); %>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group" id="orderGroup" style="<%= sortBy.startsWith('roll_') ? 'display: none;' : '' %>">
+                        <label for="order">Order:</label>
+                        <select name="order" id="order">
+                            <option value="desc" <%= order === 'desc' ? 'selected' : '' %>>🔽 Newest/Highest First</option>
+                            <option value="asc" <%= order === 'asc' ? 'selected' : '' %>>🔼 Oldest/Lowest First</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="search_id">Search ID:</label>
+                        <input type="text" name="search_id" id="search_id" value="<%= searchId %>" 
+                               placeholder="Enter image ID..." class="search-input">
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" name="show_hidden" id="show_hidden" value="true" <%= showHidden ? 'checked' : '' %>>
+                        <label for="show_hidden">🕶️ Show Hidden Images</label>
+                    </div>
+                    
+                    <button type="submit" class="apply-btn">🔍 Apply</button>
+                    <a href="/admin" class="clear-btn">🧹 Clear All</a>
+                </div>
+                
+                <% if (searchId || sortBy !== 'id' || order !== 'desc' || showHidden) { %>
+                <div class="active-filters">
+                    <strong>Active filters:</strong>
+                    <% if (sortBy !== 'id') { %>
+                        <span class="filter-tag">Sort: <%= sortOptions.find(opt => opt.value === sortBy).label %></span>
+                    <% } %>
+                    <% if (order !== 'desc' && !sortBy.startsWith('roll_')) { %>
+                        <span class="filter-tag">Order: <%= order === 'asc' ? 'Ascending' : 'Descending' %></span>
+                    <% } %>
+                    <% if (searchId) { %>
+                        <span class="filter-tag">ID Search: <%= searchId %></span>
+                    <% } %>
+                    <% if (showHidden) { %>
+                        <span class="filter-tag">Including Hidden</span>
+                    <% } %>
+                </div>
+                <% } %>
+            </form>
+        </div>
+        
         <div class="stats">
             <h2>📊 Stats</h2>
             <div class="stats-grid">
@@ -280,7 +439,11 @@
                     <p>Total Images: <%= stats.total %></p>
                     <p>Visible Images: <%= stats.visible %></p>
                     <p>Hidden Images: <%= stats.hidden %></p>
-                    <p>Showing <%= from %> - <%= to %> of <%= count %></p>
+                    <p>Showing <%= from %> - <%= to %> of <%= count %> 
+                       <% if (searchId || sortBy !== 'id' || order !== 'desc' || showHidden) { %>
+                           <em>(filtered)</em>
+                       <% } %>
+                    </p>
                 </div>
                 <div class="stat-box">
                     <h3>🎲 Roll Stats</h3>
@@ -369,9 +532,12 @@
                     <th>Actions</th>
                 </tr>
                 <% images.forEach(img => { %>
-                    <tr>
+                    <tr style="<%= img.isHidden ? 'opacity: 0.6; background-color: #f5f5f5;' : '' %>">
                         <td><img src="/raw/<%= img.id %>" class="thumbnail" loading="lazy" /></td>
-                        <td><a href="/image/<%= img.id %>" target="_blank"><%= img.id %></a></td>
+                        <td>
+                            <a href="/image/<%= img.id %>" target="_blank"><%= img.id %></a>
+                            <% if (img.isHidden) { %><br><small style="color: #ff6b6b;">🕶️ HIDDEN</small><% } %>
+                        </td>
                         <td>
                             <span class="shitlevel-badge <%= img.shitLevelClass %>">
                                 <%= img.shitLevel %> (<%= img.roll.toFixed(2) %>%)
@@ -413,8 +579,12 @@
             </table>
 
             <div class="pagination">
+                <%
+                const baseUrl = `/admin?sort=${sortBy}&order=${order}${searchId ? `&search_id=${encodeURIComponent(searchId)}` : ''}${showHidden ? '&show_hidden=true' : ''}`;
+                %>
+                
                 <% if (page > 1) { %>
-                    <a href="/admin?page=<%= page - 1 %>">⬅️ Previous</a>
+                    <a href="<%= baseUrl %>&page=<%= page - 1 %>">⬅️ Previous</a>
                 <% } else { %>
                     <a class="disabled">⬅️ Previous</a>
                 <% } %>
@@ -423,15 +593,29 @@
                 const startPage = Math.max(1, page - 2);
                 const endPage = Math.min(totalPages, page + 2);
                 for (let i = startPage; i <= endPage; i++) { %>
-                    <a href="/admin?page=<%= i %>" class="<%= i === page ? 'current' : '' %>"><%= i %></a>
+                    <a href="<%= baseUrl %>&page=<%= i %>" class="<%= i === page ? 'current' : '' %>"><%= i %></a>
                 <% } %>
                 
                 <% if (page < totalPages) { %>
-                    <a href="/admin?page=<%= page + 1 %>">Next ➡️</a>
+                    <a href="<%= baseUrl %>&page=<%= page + 1 %>">Next ➡️</a>
                 <% } else { %>
                     <a class="disabled">Next ➡️</a>
                 <% } %>
             </div>
         </div>
+        
+        <script>
+            // Hide/show order dropdown based on sort selection
+            document.getElementById('sort').addEventListener('change', function() {
+                const orderGroup = document.getElementById('orderGroup');
+                const sortValue = this.value;
+                
+                if (sortValue.startsWith('roll_')) {
+                    orderGroup.style.display = 'none';
+                } else {
+                    orderGroup.style.display = 'flex';
+                }
+            });
+        </script>
     </body>
 </html>

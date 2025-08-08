@@ -7,10 +7,161 @@
         <meta property="og:type" content="website" />
         <title>Gallery - pissandshitimages</title>
         <link rel="stylesheet" href="/style.css">
+        <style>
+            .browse-controls {
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                margin-bottom: 20px;
+            }
+            .browse-controls h3 {
+                color: #ff6b6b;
+                margin-top: 0;
+                margin-bottom: 15px;
+            }
+            .control-row {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+                flex-wrap: wrap;
+                margin-bottom: 15px;
+            }
+            .control-group {
+                display: flex;
+                gap: 5px;
+                align-items: center;
+            }
+            .control-group label {
+                font-weight: bold;
+                color: #333;
+                white-space: nowrap;
+            }
+            select, input[type="text"] {
+                padding: 8px;
+                border: 2px solid #ff6b6b;
+                border-radius: 5px;
+                font-size: 14px;
+            }
+            .search-input {
+                min-width: 200px;
+            }
+            .apply-btn {
+                background: #ff6b6b;
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: bold;
+            }
+            .apply-btn:hover {
+                background: #ff5252;
+            }
+            .clear-btn {
+                background: #ccc;
+                color: #333;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            .clear-btn:hover {
+                background: #bbb;
+            }
+            .active-filters {
+                background: #f0f8ff;
+                border: 2px solid #4ecdc4;
+                border-radius: 8px;
+                padding: 10px;
+                margin-top: 10px;
+            }
+            .filter-tag {
+                display: inline-block;
+                background: #4ecdc4;
+                color: white;
+                padding: 4px 8px;
+                border-radius: 12px;
+                margin: 2px;
+                font-size: 12px;
+            }
+            .image-card .image-id {
+                font-size: 12px;
+                color: #666;
+                margin-bottom: 5px;
+                font-family: monospace;
+            }
+            @media (max-width: 768px) {
+                .control-row {
+                    flex-direction: column;
+                    align-items: stretch;
+                }
+                .control-group {
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 5px;
+                }
+                .search-input {
+                    min-width: auto;
+                    width: 100%;
+                }
+            }
+        </style>
     </head>
     <body>
         <script src="/oneko.js"></script>
         <h1>🖼️ Gallery - pissandshitimages 💩</h1>
+        
+        <div class="browse-controls">
+            <h3>🔍 Browse & Sort</h3>
+            <form method="get" action="/gallery">
+                <div class="control-row">
+                    <div class="control-group">
+                        <label for="sort">Sort by:</label>
+                        <select name="sort" id="sort">
+                            <% sortOptions.forEach(option => { %>
+                                <option value="<%= option.value %>" <%= sortBy === option.value ? 'selected' : '' %>>
+                                    <%= option.label %>
+                                </option>
+                            <% }); %>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group" id="orderGroup" style="<%= sortBy.startsWith('roll_') ? 'display: none;' : '' %>">
+                        <label for="order">Order:</label>
+                        <select name="order" id="order">
+                            <option value="desc" <%= order === 'desc' ? 'selected' : '' %>>🔽 Newest/Highest First</option>
+                            <option value="asc" <%= order === 'asc' ? 'selected' : '' %>>🔼 Oldest/Lowest First</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="search_id">Search ID:</label>
+                        <input type="text" name="search_id" id="search_id" value="<%= searchId %>" 
+                               placeholder="Enter image ID..." class="search-input">
+                    </div>
+                    
+                    <button type="submit" class="apply-btn">🔍 Apply</button>
+                    <a href="/gallery" class="clear-btn">🧹 Clear All</a>
+                </div>
+                
+                <% if (searchId || sortBy !== 'id' || order !== 'desc') { %>
+                <div class="active-filters">
+                    <strong>Active filters:</strong>
+                    <% if (sortBy !== 'id') { %>
+                        <span class="filter-tag">Sort: <%= sortOptions.find(opt => opt.value === sortBy).label %></span>
+                    <% } %>
+                    <% if (order !== 'desc' && !sortBy.startsWith('roll_')) { %>
+                        <span class="filter-tag">Order: <%= order === 'asc' ? 'Ascending' : 'Descending' %></span>
+                    <% } %>
+                    <% if (searchId) { %>
+                        <span class="filter-tag">ID Search: <%= searchId %></span>
+                    <% } %>
+                </div>
+                <% } %>
+            </form>
+        </div>
+        
         <div class="stats-container">
             <div class="stats-grid">
                 <div class="stat-box">
@@ -32,28 +183,50 @@
                 </div>
             </div>
         </div>
-
+        
         <div class="page-info">
             <strong>📄 Page <%= page %> of <%= totalPages %></strong> -
-            Showing <%= visibleImages.length %> images 
+            Showing <%= visibleImages.length %> images
             (<%= ((page - 1) * perPage) + 1 %> - <%= ((page - 1) * perPage) + visibleImages.length %> of <%= totalVisibleImages %> visible images)
+            <% if (searchId || sortBy !== 'id' || order !== 'desc') { %>
+                <br><em>Filtered/sorted results</em>
+            <% } %>
         </div>
-
+        
         <div class="nav-buttons">
             <a href="/" class="upload-button" style="margin-right: 10px;">📸 Upload More Shit!</a>
             <a href="/leaderboard" class="upload-button">🏆 View Leaderboard</a>
         </div>
-
+        
         <div class="pagination">
             <%- pagination %>
         </div>
-
+        
         <div class="gallery">
             <%- galleryItems %>
         </div>
-
+        
         <div class="pagination">
             <%- pagination %>
         </div>
+        
+        <script>
+            // Hide/show order dropdown based on sort selection
+            document.getElementById('sort').addEventListener('change', function() {
+                const orderGroup = document.getElementById('orderGroup');
+                const sortValue = this.value;
+                
+                if (sortValue.startsWith('roll_')) {
+                    orderGroup.style.display = 'none';
+                } else {
+                    orderGroup.style.display = 'flex';
+                }
+            });
+            
+            // Auto-submit on sort/order change for better UX
+            document.getElementById('sort').addEventListener('change', function() {
+                // Don't auto-submit, let user choose
+            });
+        </script>
     </body>
 </html>
