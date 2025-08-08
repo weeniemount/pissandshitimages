@@ -214,7 +214,55 @@ async function getImageStats(images) {
   return stats;
 }
 
+// Function to convert .bruh buffer to PNG buffer
+function bruhToPng(bruhBuffer) {
+  // Read width and height (first 8 bytes)
+  const width = bruhBuffer.readUInt32LE(0);
+  const height = bruhBuffer.readUInt32LE(4);
+  
+  // Get the hex color data (remaining bytes)
+  const colorData = bruhBuffer.slice(8).toString('utf8');
+  
+  // Remove newlines and split into 6-character hex colors
+  const sanitizedContent = colorData.replace(/\n/g, '');
+  const hexColors = [];
+  
+  for (let i = 0; i < sanitizedContent.length; i += 6) {
+    hexColors.push(sanitizedContent.substr(i, 6));
+  }
+  
+  // Create RGBA buffer (4 bytes per pixel)
+  const pixelCount = width * height;
+  const rgbaBuffer = Buffer.alloc(pixelCount * 4);
+  
+  for (let i = 0; i < hexColors.length && i < pixelCount; i++) {
+    const hex = hexColors[i];
+    
+    // Convert hex to RGB
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    const a = 255; // Full opacity
+    
+    const pixelIndex = i * 4;
+    rgbaBuffer[pixelIndex] = r;
+    rgbaBuffer[pixelIndex + 1] = g;
+    rgbaBuffer[pixelIndex + 2] = b;
+    rgbaBuffer[pixelIndex + 3] = a;
+  }
+  
+  // Use Sharp to create PNG from raw RGBA data
+  return sharp(rgbaBuffer, {
+    raw: {
+      width: width,
+      height: height,
+      channels: 4
+    }
+  }).png().toBuffer();
+}
+
 module.exports = {
     getImageStats,
-    gamblingShitifyImage
+    gamblingShitifyImage,
+    bruhToPng
 }
