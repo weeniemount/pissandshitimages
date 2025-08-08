@@ -11,8 +11,15 @@
     <body>
         <script src="/oneko.js"></script>
         <h1>🚽 pissandshitimages - THE BEST IMAGE HOSTER EVER 💩</h1>
-        <form action="/upload" method="post" enctype="multipart/form-data">
-            <input type="file" name="image" required accept="image/*,.bruh">
+        
+        <!-- Paste drop zone -->
+        <div id="pasteZone" style="border: 3px dashed #ff6b6b; padding: 20px; margin: 10px 0; border-radius: 10px; text-align: center; background: rgba(255, 107, 107, 0.1); cursor: pointer;">
+            <div id="pasteText">📋 Press Ctrl+V to paste an image, or click to select a file!</div>
+            <div id="pastedImagePreview"></div>
+        </div>
+        
+        <form action="/upload" method="post" enctype="multipart/form-data" id="uploadForm">
+            <input type="file" name="image" id="fileInput" required accept="image/*,.bruh" style="display: none;">
             <br>
             <div class="checkbox-wrapper">
                 <input type="checkbox" name="hide" id="hide">
@@ -31,11 +38,127 @@
         <script>
             let hasLookedAtGary = false;
             let uploadTime = 0;
+            let pastedImage = null;
+            let bypassGary = false; // Flag for paste uploads
 
+            // Paste functionality
+            document.addEventListener('paste', function(e) {
+                const items = e.clipboardData.items;
+                
+                for (let i = 0; i < items.length; i++) {
+                    const item = items[i];
+                    
+                    if (item.type.indexOf('image') !== -1) {
+                        const blob = item.getAsFile();
+                        handlePastedImage(blob);
+                        bypassGary = true; // Set bypass flag for pasted images
+                        break;
+                    }
+                }
+            });
+
+            // Click paste zone to open file dialog
+            document.getElementById('pasteZone').addEventListener('click', function() {
+                document.getElementById('fileInput').click();
+            });
+
+            // Handle file input change
+            document.getElementById('fileInput').addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    handleSelectedFile(e.target.files[0]);
+                    bypassGary = false; // Regular file selection goes through Gary
+                }
+            });
+
+            function handlePastedImage(blob) {
+                pastedImage = blob;
+                
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('pastedImagePreview');
+                    preview.innerHTML = `
+                        <div style="margin-top: 10px;">
+                            <img src="${e.target.result}" style="max-width: 200px; max-height: 200px; border-radius: 5px;">
+                            <div style="margin-top: 5px; color: #ff6b6b; font-weight: bold;">✅ Image pasted! Ready to upload</div>
+                        </div>
+                    `;
+                    document.getElementById('pasteText').style.display = 'none';
+                };
+                reader.readAsDataURL(blob);
+
+                // Create a new file input with the pasted image
+                const dt = new DataTransfer();
+                const file = new File([blob], 'pasted-image.png', { type: blob.type });
+                dt.items.add(file);
+                document.getElementById('fileInput').files = dt.files;
+            }
+
+            function handleSelectedFile(file) {
+                // Show preview for selected file
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('pastedImagePreview');
+                    preview.innerHTML = `
+                        <div style="margin-top: 10px;">
+                            <img src="${e.target.result}" style="max-width: 200px; max-height: 200px; border-radius: 5px;">
+                            <div style="margin-top: 5px; color: #ff6b6b; font-weight: bold;">📁 File selected!</div>
+                        </div>
+                    `;
+                    document.getElementById('pasteText').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+                pastedImage = null; // Clear pasted image flag
+            }
+
+            // Clear preview function
+            function clearPreview() {
+                document.getElementById('pastedImagePreview').innerHTML = '';
+                document.getElementById('pasteText').style.display = 'block';
+                pastedImage = null;
+                bypassGary = false;
+                document.getElementById('fileInput').value = '';
+            }
+
+            // Add clear button to preview
+            function addClearButton() {
+                const preview = document.getElementById('pastedImagePreview');
+                if (preview.innerHTML && !preview.querySelector('.clear-btn')) {
+                    const clearBtn = document.createElement('button');
+                    clearBtn.textContent = '❌ Clear';
+                    clearBtn.className = 'clear-btn';
+                    clearBtn.style.cssText = 'margin-left: 10px; padding: 5px 10px; background: #ff4444; color: white; border: none; border-radius: 3px; cursor: pointer;';
+                    clearBtn.onclick = function(e) {
+                        e.preventDefault();
+                        clearPreview();
+                    };
+                    preview.firstElementChild.appendChild(clearBtn);
+                }
+            }
+
+            // Update preview display
+            function updatePreview() {
+                setTimeout(addClearButton, 100);
+            }
+
+            // Modify the upload click handler
             upload.onclick = function(e) {
-                if(hasLookedAtGary) return;
-
                 e.preventDefault();
+                
+                // Check if we have an image to upload
+                if (!document.getElementById('fileInput').files.length) {
+                    alert('Please select or paste an image first!');
+                    return;
+                }
+
+                // If image was pasted (bypass Gary) or user has already looked at Gary
+                if (bypassGary || hasLookedAtGary) {
+                    // Submit directly
+                    document.getElementById('uploadForm').submit();
+                    return;
+                }
+
+                // Otherwise, show Gary captcha
                 uploadTime = Math.floor(Date.now()/1000);
                 garyBox.showModal();
                 moreGary();
@@ -49,7 +172,7 @@
                 }
                 garyBox.close();
                 hasLookedAtGary = true;
-                upload.click();
+                document.getElementById('uploadForm').submit();
             }
 
             async function moreGary() {
@@ -58,10 +181,26 @@
 
                 garyImage.src = garyJson.url;
             }
+
+            // Update previews when they're added
+            document.getElementById('pastedImagePreview').addEventListener('DOMNodeInserted', updatePreview);
         </script>
         <style>
             #garyImage {
                 max-height: 50vh;
+            }
+            
+            #pasteZone {
+                transition: all 0.3s ease;
+            }
+            
+            #pasteZone:hover {
+                background: rgba(255, 107, 107, 0.2);
+                transform: scale(1.02);
+            }
+            
+            .clear-btn:hover {
+                background: #ff2222 !important;
             }
         </style>
         <style>
