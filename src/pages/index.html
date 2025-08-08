@@ -19,8 +19,51 @@
                 <label for="hide">🕶️ Hide image (YOU COWARD!)</label>
             </div>
             <br>
-            <button type="submit">📸 UPLOAD THIS SHIT! 🎲</button>
+            <button type="submit" id="upload">📸 UPLOAD THIS SHIT! 🎲</button>
         </form>
+        <dialog id="garyBox">
+            <h3>To verify you're human, please look at images of Gary The Cat.</h1>
+            <img src="https://api.garythe.cat/gary/Gary444.jpg" id="garyImage">
+            <br>
+            <button onclick="moreGary();">More Gary!!!</button>
+            <button onclick="submitIt();">Upload</button>
+        </dialog>
+        <script>
+            let hasLookedAtGary = false;
+            let uploadTime = 0;
+
+            upload.onclick = function(e) {
+                if(hasLookedAtGary) return;
+
+                e.preventDefault();
+                uploadTime = Math.floor(Date.now()/1000);
+                garyBox.showModal();
+                moreGary();
+            }
+
+            function submitIt() {
+                let difference = Math.floor(Date.now()/1000)-uploadTime;
+                if(difference < 10) {
+                    alert(`You still have to look at Gary for ${10-Math.floor(difference)} second(s).`);
+                    return;
+                }
+                garyBox.close();
+                hasLookedAtGary = true;
+                upload.click();
+            }
+
+            async function moreGary() {
+                let gary = await fetch("https://api.garythe.cat/gary");
+                let garyJson = await gary.json();
+
+                garyImage.src = garyJson.url;
+            }
+        </script>
+        <style>
+            #garyImage {
+                max-height: 50vh;
+            }
+        </style>
         <style>
             .checkbox-wrapper {
                 margin: 10px 0;
