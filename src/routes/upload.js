@@ -2,6 +2,7 @@ const express = require('express');
 const uploadRouter = express.Router();
 const multer = require('multer');
 const upload = multer();
+const sharp = require('sharp');
 const { getHashedIP, checkBannedIP } = require('../middleware/ipCheck.js');
 const { gamblingShitifyImage, bruhToPng } = require('../utils/image.js');
 const { supabase } = require('../utils/db.js');
