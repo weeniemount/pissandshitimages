@@ -3,19 +3,32 @@ const uploadRouter = express.Router();
 const multer = require('multer');
 const upload = multer();
 const { getHashedIP, checkBannedIP } = require('../middleware/ipCheck.js');
-const { gamblingShitifyImage } = require('../utils/image.js');
+const { gamblingShitifyImage, bruhToPng } = require('../utils/image.js');
 const { supabase } = require('../utils/db.js');
 
 uploadRouter.post('/upload', checkBannedIP, upload.single('image'), async (req, res) => {
   if (!req.file) return res.status(400).send('No file uploaded.');
  
-  const { buffer, mimetype } = req.file;
+  let { buffer, mimetype } = req.file;
   
+  // Check if this is a .bruh file
+  if (req.file.originalname && req.file.originalname.toLowerCase().endsWith('.bruh')) {
+    try {
+      // Convert .bruh to PNG
+      buffer = await bruhToPng(buffer);
+      mimetype = 'image/png';
+      console.log('Converted .bruh file to PNG');
+    } catch (error) {
+      console.error('Failed to convert .bruh file:', error);
+      return res.status(400).send('Invalid .bruh file format.');
+    }
+  }
+ 
   // Strip EXIF metadata by re-encoding in the same format
   let cleanBuffer;
   try {
     let processor = sharp(buffer);
-    
+   
     // Only process formats that can contain EXIF data
     if (mimetype === 'image/png') {
       processor = processor.png();
@@ -29,7 +42,7 @@ uploadRouter.post('/upload', checkBannedIP, upload.single('image'), async (req, 
       // SVG and other formats don't have EXIF, so leave buffer unchanged
       cleanBuffer = buffer;
     }
-    
+   
     if (cleanBuffer === undefined) {
       cleanBuffer = await processor.toBuffer();
     }
@@ -38,7 +51,7 @@ uploadRouter.post('/upload', checkBannedIP, upload.single('image'), async (req, 
     // Fallback to original buffer if processing fails
     cleanBuffer = buffer;
   }
-  
+ 
   const result = await gamblingShitifyImage(cleanBuffer, mimetype);
   const base64 = result.buffer.toString('base64');
   const now = new Date().toISOString();
