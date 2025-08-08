@@ -39,7 +39,7 @@ adminPanelRouter.get('/admin', authenticateAdmin, async (req, res) => {
   
   // Apply ID search filter if provided
   if (searchId) {
-    query = query.ilike('id', `%${searchId}%`);
+    query = query.ilike('id::text', `%${searchId}%`);
   }
   
   const { data: rawImages, error } = await query
