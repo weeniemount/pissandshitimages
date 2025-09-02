@@ -6,10 +6,10 @@ const adminIpBanRouter = express.Router();
 // Add ban IP functionality to admin panel
 adminIpBanRouter.post('/admin/ban-ip/:id', authenticateAdmin, async (req, res) => {
   try {
-    // Get the IP hash for this post
+    // Get the IP hash and country for this post
     const { data: postIP, error: getIPError } = await supabase
       .from('post_ips')
-      .select('ip_hash')
+      .select('ip_hash, country')
       .eq('post_id', req.params.id)
       .single();
       
@@ -80,10 +80,10 @@ adminIpBanRouter.post('/admin/ban-ip-by-id', authenticateAdmin, async (req, res)
   }
   
   try {
-    // Get the IP hash for this post
+    // Get the IP hash and country for this post
     const { data: postIP, error: getIPError } = await supabase
       .from('post_ips')
-      .select('ip_hash')
+      .select('ip_hash, country')
       .eq('post_id', imageId)
       .single();
       
@@ -96,10 +96,13 @@ adminIpBanRouter.post('/admin/ban-ip-by-id', authenticateAdmin, async (req, res)
       });
     }
     
-    // Add IP to banned list
+    // Add IP to banned list with country info
     const { error: banError } = await supabase
       .from('banned_ips')
-      .insert([{ ip_hash: postIP.ip_hash }]);
+      .insert([{ 
+        ip_hash: postIP.ip_hash,
+        country: postIP.country || 'Unknown'
+      }]);
       
     if (banError) {
       // IP might already be banned

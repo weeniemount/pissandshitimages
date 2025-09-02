@@ -19,6 +19,7 @@ CREATE TABLE post_ips (
 CREATE TABLE banned_ips (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     ip_hash text NOT NULL UNIQUE,
+    country text DEFAULT 'Unknown',
     banned_at timestamp DEFAULT NOW(),
     banned_by text DEFAULT 'admin'
 );
