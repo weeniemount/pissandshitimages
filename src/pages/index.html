@@ -221,49 +221,8 @@
             <a href="/gallery" style="margin-right: 15px;">🖼️ View Gallery</a>
             <a href="/leaderboard" style="margin-right: 15px;">🏆 Leaderboard</a>
             <a href="/imagetobruh" style="margin-right: 15px;">🔃 Convert image to .bruh</a>
-            <% if (!user) { %>
-                <a href="/auth/discord?return_to=/" class="discord-button">🎮 Login with Discord</a>
-            <% } %>
             <a href="/sharexconfig" class="sharex-button">📥 Download ShareX Config</a>
-            <% if (user) { %>
-                <span class="user-info">
-                    <img src="<%= user.avatar %>" alt="<%= user.username %>'s avatar" class="user-avatar" />
-                    <%= user.username %>
-                </span>
-            <% } %>
         </div>
-        <style>
-            .discord-button {
-                display: inline-block;
-                background: #5865F2;
-                color: white;
-                text-decoration: none;
-                padding: 10px 20px;
-                border-radius: 5px;
-                font-size: 1.2em;
-                transition: transform 0.1s;
-                margin-right: 15px;
-            }
-            .discord-button:hover {
-                transform: scale(1.05);
-                background: #4752C4;
-            }
-            .user-info {
-                display: inline-flex;
-                align-items: center;
-                background: #ff6b6b;
-                color: white;
-                padding: 5px 15px;
-                border-radius: 25px;
-                margin-left: 15px;
-            }
-            .user-avatar {
-                width: 24px;
-                height: 24px;
-                border-radius: 50%;
-                margin-right: 8px;
-            }
-        </style>
         <style>
             .sharex-button {
                 display: inline-block;

@@ -6,13 +6,7 @@ const imageRouter = express.Router();
 imageRouter.get('/image/:id', async (req, res) => {
 	const { data, error } = await supabase
 		.from('images')
-		.select(`
-			*,
-			discord_users (
-				username,
-				avatar
-			)
-		`)
+		.select('*')
 		.eq('id', req.params.id)
 		.single();
 
@@ -31,8 +25,7 @@ imageRouter.get('/image/:id', async (req, res) => {
 		roll: metaObj.roll || '??',
 		date: new Date(metaObj.date).toLocaleString() || 'unknown',
 		hidden: metaObj.hidden === 'true',
-		message: metaObj.message || '🙈 THIS USER IS A COWARD WHO TRIED TO HIDE THEIR SHAME! 🙈',
-		uploader: data.discord_users
+		message: metaObj.message || '🙈 THIS USER IS A COWARD WHO TRIED TO HIDE THEIR SHAME! 🙈'
 	});
 });
 
