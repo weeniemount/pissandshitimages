@@ -35,11 +35,7 @@ app.use((req, res, next) => {
 
 
 // static pages
-app.get('/', (req, res) => { 
-    res.render('index', { 
-        user: req.user 
-    }); 
-});
+app.get('/', (req, res) => { res.sendFile(path.join(__dirname, 'pages', 'index.html')); });
 app.get('/rules', (req, res) => { res.sendFile(path.join(__dirname, 'pages', 'rules.html')); });
 app.get('/about', (req, res) => { res.sendFile(path.join(__dirname, 'pages', 'about.html')); });
 app.get('/tos', (req, res) => { res.sendFile(path.join(__dirname, 'pages', 'tos.html')); });
@@ -52,9 +48,7 @@ const leaderboardRouter = require('./routes/leaderboard.js');
 const galleryRouter = require('./routes/gallery.js');
 const imageRouter = require('./routes/image.js');
 const sharexConfigRouter = require('./routes/sharexconfig.js');
-const authRouter = require('./routes/auth.js');
 
-app.use('/', authRouter);
 app.use('/', adminRouter);
 app.use('/', uploadRouter);
 app.use('/', leaderboardRouter);
