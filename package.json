@@ -10,7 +10,7 @@
     "express-rate-limit": "^8.0.1",
     "geoip-lite": "^1.4.10",
     "multer": "^2.0.2",
-    "node-fetch": "^3.3.2",
+    "node-fetch": "^2.7.0",
     "sharp": "^0.34.3"
   }
 }
