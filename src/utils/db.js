@@ -12,6 +12,7 @@ CREATE TABLE post_ips (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     post_id uuid NOT NULL REFERENCES images(id) ON DELETE CASCADE,
     ip_hash text NOT NULL,
+    country text DEFAULT 'Unknown',
     created_at timestamp DEFAULT NOW()
 );
 
