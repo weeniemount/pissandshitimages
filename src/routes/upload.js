@@ -75,13 +75,14 @@ uploadRouter.post('/upload',
      
     if (error) return res.status(500).send('DB error: ' + error.message);
    
-    // Track the IP that uploaded this image
+    // Track the IP and country that uploaded this image
     const ipHash = getHashedIP(req);
     const { error: ipError } = await supabase
       .from('post_ips')
       .insert([{
         post_id: data.id,
-        ip_hash: ipHash
+        ip_hash: ipHash,
+        country: req.countryInfo.country
       }]);
      
     if (ipError) {

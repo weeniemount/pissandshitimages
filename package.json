@@ -8,6 +8,7 @@
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "express-rate-limit": "^8.0.1",
+    "geoip-lite": "^1.4.10",
     "multer": "^2.0.2",
     "sharp": "^0.34.3"
   }

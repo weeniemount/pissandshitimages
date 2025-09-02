@@ -5,7 +5,8 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const cookieParser = require('cookie-parser');
-const path = require('path')
+const path = require('path');
+const countryTracker = require('./middleware/countryTracker');
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'pages', 'ejs')); // assumes /pages/image.ejs
@@ -13,6 +14,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(express.static(path.join(process.cwd(), 'src', 'public')));
+app.use(countryTracker);
 
 if (process.env.LOCKED === 'true') {
 	app.use((req, res) => {
