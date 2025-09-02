@@ -7,12 +7,14 @@ const { getHashedIP, checkBannedIP } = require('../middleware/ipCheck.js');
 const { uploadRateLimit, strictUploadRateLimit } = require('../middleware/rateLimit.js');
 const { gamblingShitifyImage, bruhToPng } = require('../utils/image.js');
 const { supabase } = require('../utils/db.js');
+const { authenticateDiscordToken } = require('../middleware/discordAuth.js');
 
 uploadRouter.post('/upload', 
   // Apply rate limiting before other middleware
   uploadRateLimit,
   strictUploadRateLimit,
-  checkBannedIP, 
+  checkBannedIP,
+  authenticateDiscordToken,
   upload.single('image'), 
   async (req, res) => {
     if (!req.file) return res.status(400).send('No file uploaded.');
@@ -66,10 +68,14 @@ uploadRouter.post('/upload',
     const isHidden = req.body.hide === 'on';
     const customMimetype = `${result.mimetype};shitlevel=${result.gamblingResult};roll=${result.rollPercentage};date=${now};hidden=${isHidden}${isHidden ? ';message=🙈 THIS USER IS A COWARD WHO TRIED TO HIDE THEIR SHAME! 🙈' : ''}`;
    
-    // Insert the image
+    // Insert the image with user_id if authenticated
     const { data, error } = await supabase
       .from('images')
-      .insert([{ data: base64, mimetype: customMimetype }])
+      .insert([{ 
+        data: base64, 
+        mimetype: customMimetype,
+        user_id: req.user?.id || null
+      }])
       .select('id')
       .single();
      
