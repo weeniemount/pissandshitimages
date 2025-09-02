@@ -529,6 +529,7 @@
                     <th>Shitification</th>
                     <th>Date</th>
                     <th>IP Info</th>
+                    <th>Country</th>
                     <th>Actions</th>
                 </tr>
                 <% images.forEach(img => { %>
@@ -546,6 +547,9 @@
                         <td><%= img.date %></td>
                         <td class="ip-info">
                             <%= img.hasIP ? img.ipHash : 'No IP tracked' %>
+                        </td>
+                        <td>
+                            <%= img.hasIP ? img.country || 'Unknown' : 'No IP tracked' %>
                         </td>
                         <td>
                             <form action="/admin/toggle-visibility/<%= img.id %>" method="post" style="display:inline;">
