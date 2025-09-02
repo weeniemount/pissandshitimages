@@ -21,6 +21,12 @@
             <div class="date">
                 📅 Date: <%= date %>
             </div>
+            <div class="uploader">
+                👤 Uploader: <%= uploader ? uploader.username : 'Unknown Account' %>
+                <% if (uploader && uploader.avatar) { %>
+                    <img src="<%= uploader.avatar %>" alt="<%= uploader.username %>'s avatar" style="width: 24px; height: 24px; border-radius: 50%; vertical-align: middle; margin-left: 5px;" />
+                <% } %>
+            </div>
             <% if (hidden) { %>
                 <div class="shame" style="background: #ff4757; color: white; padding: 10px; border-radius: 5px; margin: 10px; display: inline-block;">
                     <%= message %>

@@ -55,6 +55,20 @@ CREATE TABLE admin_users (
     is_active boolean DEFAULT true
 );
 
+-- Create discord users table
+CREATE TABLE discord_users (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    discord_id text NOT NULL UNIQUE,
+    username text NOT NULL,
+    avatar text,
+    created_at timestamp DEFAULT NOW(),
+    auth_token text UNIQUE,
+    last_login timestamp
+);
+
+-- Add user reference to images table
+ALTER TABLE images ADD COLUMN user_id uuid REFERENCES discord_users(id);
+
 -- Insert default admin user (you should change this password!)
 -- Password is 'admin123' - CHANGE THIS IMMEDIATELY!
 INSERT INTO admin_users (username, password_hash) 
