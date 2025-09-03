@@ -247,7 +247,6 @@ adminDeleteRouter.post('/admin/delete-all-by-ip-input', authenticateAdmin, async
     
     // Delete all images with these IDs in batches
     const deletedCount = await batchDelete(postIds);
-    }
     
     // Try to ban the IP if not already banned (ignore if already exists)
     try {
@@ -262,7 +261,7 @@ adminDeleteRouter.post('/admin/delete-all-by-ip-input', authenticateAdmin, async
     }
     
     // Redirect back with success message
-    res.redirect(`/admin?bulk_deleted=${postIds.length}&banned=success&ip_hash=${actualIpHash.substring(0, 8)}`);
+    res.redirect(`/admin?bulk_deleted=${deletedCount}&banned=success&ip_hash=${actualIpHash.substring(0, 8)}`);
     
   } catch (error) {
     console.error('Error bulk deleting images by IP input:', error);
