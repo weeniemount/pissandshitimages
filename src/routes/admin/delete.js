@@ -3,8 +3,11 @@ const { authenticateAdmin } = require('../../middleware/adminCheck.js');
 const express = require('express');
 const adminDeleteRouter = express.Router();
 
+// Helper function to delay execution
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 // Batch delete helper function
-async function batchDelete(postIds, batchSize = 50) {
+async function batchDelete(postIds, batchSize = 10) {
   const batches = [];
   for (let i = 0; i < postIds.length; i += batchSize) {
     batches.push(postIds.slice(i, i + batchSize));
@@ -12,15 +15,25 @@ async function batchDelete(postIds, batchSize = 50) {
 
   let deletedCount = 0;
   for (const batch of batches) {
-    const { error } = await supabase
-      .from('images')
-      .delete()
-      .in('id', batch);
-    
-    if (error) {
-      throw new Error(`Batch delete failed: ${error.message}`);
+    try {
+      const { error } = await supabase
+        .from('images')
+        .delete()
+        .in('id', batch);
+      
+      if (error) {
+        console.error(`Error deleting batch: ${error.message}`);
+        continue; // Continue with next batch even if this one failed
+      }
+      
+      deletedCount += batch.length;
+      
+      // Add a small delay between batches to prevent overloading
+      await delay(500);
+    } catch (error) {
+      console.error(`Failed to delete batch: ${error.message}`);
+      // Continue with next batch even if this one failed
     }
-    deletedCount += batch.length;
   }
   return deletedCount;
 }
