@@ -16,13 +16,6 @@ app.use(express.static('public'));
 app.use(express.static(path.join(process.cwd(), 'src', 'public')));
 app.use(countryTracker);
 
-if (process.env.LOCKED === 'true') {
-	app.use((req, res) => {
-		res.status(403).send('down, come back later');
-	});
-}
-
-
 app.use((req, res, next) => {
 	const forbiddenParams = ['env', 'process', 'secret'];
 	for (const param of forbiddenParams) {
@@ -32,6 +25,19 @@ app.use((req, res, next) => {
 	}
 	next();
 });
+
+// Define admin routes before the lock middleware
+app.use('/', adminRouter);
+
+if (process.env.LOCKED === 'true') {
+	app.use((req, res, next) => {
+		// Allow admin routes to work even when locked
+		if (req.path.startsWith('/admin')) {
+			return next();
+		}
+		res.status(403).send('down, come back later');
+	});
+}
 
 
 // static pages
@@ -49,7 +55,6 @@ const galleryRouter = require('./routes/gallery.js');
 const imageRouter = require('./routes/image.js');
 const sharexConfigRouter = require('./routes/sharexconfig.js');
 
-app.use('/', adminRouter);
 app.use('/', uploadRouter);
 app.use('/', leaderboardRouter);
 app.use('/', galleryRouter);
