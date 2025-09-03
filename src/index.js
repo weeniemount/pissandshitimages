@@ -38,7 +38,7 @@ if (process.env.LOCKED === 'true') {
 			req.path === '/image') {
 			return next();
 		}
-		res.status(403).send('down, come back later');
+		res.status(503).sendFile(path.join(__dirname, 'pages', 'sitedown.html'));
 	});
 }
 
@@ -62,6 +62,11 @@ app.use('/', leaderboardRouter);
 app.use('/', galleryRouter);
 app.use('/', imageRouter);
 app.use('/', sharexConfigRouter);
+
+// 404 handler - must be after all other routes
+app.use((req, res) => {
+  res.status(404).sendFile(path.join(__dirname, 'pages', '404.html'));
+});
 
 app.listen(PORT, () => {
   console.log(`pissandshitimages running on http://localhost:${PORT}`);
