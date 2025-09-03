@@ -17,10 +17,12 @@ adminIpBanRouter.post('/admin/ban-ip/:id', authenticateAdmin, async (req, res) =
       return res.status(404).send('IP not found for this post');
     }
     
-    // Add IP to banned list
+    // Add IP to banned list - store the actual IP, not the hash
     const { error: banError } = await supabase
       .from('banned_ips')
-      .insert([{ ip_hash: postIP.ip_hash }]);
+      .insert([{ 
+        ip_hash: postIP.ip_hash.length === 64 ? postIP.ip_hash : postIP.ip_hash // Keep hash if it's legacy, otherwise store plain IP
+      }]);
       
     if (banError) {
       // IP might already be banned

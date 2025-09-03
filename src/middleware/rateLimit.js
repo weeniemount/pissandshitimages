@@ -12,7 +12,7 @@ const uploadRateLimit = rateLimit({
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
   
-  // Use the same hashed IP system as your existing middleware
+  // Use plain IP addresses
   keyGenerator: (req) => {
     return getHashedIP(req);
   },
