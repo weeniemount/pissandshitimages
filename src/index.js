@@ -26,6 +26,7 @@ app.use((req, res, next) => {
 	next();
 });
 
+const adminRouter = require('./routes/admin.js');
 // Define admin routes before the lock middleware
 app.use('/', adminRouter);
 
@@ -49,7 +50,6 @@ app.get('/imagetobruh', (req, res) => { res.sendFile(path.join(__dirname, 'pages
 
 // routes
 const uploadRouter = require('./routes/upload.js');
-const adminRouter = require('./routes/admin.js');
 const leaderboardRouter = require('./routes/leaderboard.js');
 const galleryRouter = require('./routes/gallery.js');
 const imageRouter = require('./routes/image.js');
