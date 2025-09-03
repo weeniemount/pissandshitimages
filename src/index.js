@@ -32,8 +32,10 @@ app.use('/', adminRouter);
 
 if (process.env.LOCKED === 'true') {
 	app.use((req, res, next) => {
-		// Allow admin routes to work even when locked
-		if (req.path.startsWith('/admin')) {
+		// Allow admin routes and image viewing to work even when locked
+		if (req.path.startsWith('/admin') || 
+			req.path.startsWith('/i/') || 
+			req.path === '/image') {
 			return next();
 		}
 		res.status(403).send('down, come back later');
