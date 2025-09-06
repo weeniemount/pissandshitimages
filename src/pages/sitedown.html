@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Maintenance - pissandshitimages</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        .maintenance-container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 600px;
+            margin: 4rem auto;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .maintenance-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+        }
+
+        .maintenance-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #ff6b6b;
+        }
+
+        .maintenance-message {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin-bottom: 2rem;
+            color: #ddd;
+        }
+
+        .maintenance-footer {
+            font-size: 0.9rem;
+            color: #999;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .oneko {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            pointer-events: none;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="maintenance-container">
+        <div class="maintenance-icon">🛠️</div>
+        <h1 class="maintenance-title">Site Under Maintenance</h1>
+        <p class="maintenance-message">
+            We're currently performing some important updates to make your experience better.
+            Please check back in a little while!
+        </p>
+        <div class="maintenance-footer">
+            <p>In the meantime, have a cat keep you company! →</p>
+        </div>
+    </div>
+    <script src="/oneko.js"></script>
+</body>
+</html>

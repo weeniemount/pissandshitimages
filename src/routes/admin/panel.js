@@ -34,7 +34,7 @@ adminPanelRouter.get('/admin', authenticateAdmin, async (req, res) => {
     .select(`
       id,
       mimetype,
-      post_ips(ip_hash, created_at)
+      post_ips(ip_hash, created_at, country)
     `);
   
   // Apply ID search filter if provided
@@ -68,6 +68,7 @@ adminPanelRouter.get('/admin', authenticateAdmin, async (req, res) => {
     
     const hasIP = img.post_ips && img.post_ips.length > 0;
     const ipHash = hasIP ? img.post_ips[0].ip_hash : null;
+    const country = hasIP ? img.post_ips[0].country : null;
     
     return {
       ...processed,
@@ -75,7 +76,8 @@ adminPanelRouter.get('/admin', authenticateAdmin, async (req, res) => {
       shitLevel,
       shitLevelClass: processed.roll >= 50 ? 'lucky' : processed.roll < 25 ? 'extreme' : 'normal',
       hasIP,
-      ipHash: ipHash ? `${ipHash.substring(0, 8)}...` : null
+      ipHash: ipHash ? `${ipHash.substring(0, 8)}...` : null,
+      country
     };
   });
   

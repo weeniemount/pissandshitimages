@@ -5,7 +5,8 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const cookieParser = require('cookie-parser');
-const path = require('path')
+const path = require('path');
+const countryTracker = require('./middleware/countryTracker');
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'pages', 'ejs')); // assumes /pages/image.ejs
@@ -13,13 +14,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(express.static(path.join(process.cwd(), 'src', 'public')));
-
-if (process.env.LOCKED === 'true') {
-	app.use((req, res) => {
-		res.status(403).send('down, come back later');
-	});
-}
-
+app.use(countryTracker);
 
 app.use((req, res, next) => {
 	const forbiddenParams = ['env', 'process', 'secret'];
@@ -31,6 +26,22 @@ app.use((req, res, next) => {
 	next();
 });
 
+const adminRouter = require('./routes/admin.js');
+// Define admin routes before the lock middleware
+app.use('/', adminRouter);
+
+if (process.env.LOCKED === 'true') {
+	app.use((req, res, next) => {
+		// Allow admin routes and image viewing to work even when locked
+		if (req.path.startsWith('/admin') || 
+			req.path.startsWith('/i/') || 
+			req.path === '/image') {
+			return next();
+		}
+		res.status(503).sendFile(path.join(__dirname, 'pages', 'sitedown.html'));
+	});
+}
+
 
 // static pages
 app.get('/', (req, res) => { res.sendFile(path.join(__dirname, 'pages', 'index.html')); });
@@ -41,18 +52,21 @@ app.get('/imagetobruh', (req, res) => { res.sendFile(path.join(__dirname, 'pages
 
 // routes
 const uploadRouter = require('./routes/upload.js');
-const adminRouter = require('./routes/admin.js');
 const leaderboardRouter = require('./routes/leaderboard.js');
 const galleryRouter = require('./routes/gallery.js');
 const imageRouter = require('./routes/image.js');
 const sharexConfigRouter = require('./routes/sharexconfig.js');
 
-app.use('/', adminRouter);
 app.use('/', uploadRouter);
 app.use('/', leaderboardRouter);
 app.use('/', galleryRouter);
 app.use('/', imageRouter);
 app.use('/', sharexConfigRouter);
+
+// 404 handler - must be after all other routes
+app.use((req, res) => {
+  res.status(404).sendFile(path.join(__dirname, 'pages', '404.html'));
+});
 
 app.listen(PORT, () => {
   console.log(`pissandshitimages running on http://localhost:${PORT}`);

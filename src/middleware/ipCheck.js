@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const { supabase } = require('../utils/db.js');
 
-// Helper function to get client IP and hash it
+// Helper function to get client IP
 function getHashedIP(req) {
   // Get the real IP address (handles proxies and load balancers)
   const ip = req.headers['x-forwarded-for'] || 
@@ -10,19 +10,19 @@ function getHashedIP(req) {
              req.socket.remoteAddress ||
              (req.connection.socket ? req.connection.socket.remoteAddress : null);
   
-  // Hash the IP with SHA256
-  return crypto.createHash('sha256').update(ip.toString()).digest('hex');
+  return ip.toString();
 }
 
 // Middleware to check if IP is banned
 async function checkBannedIP(req, res, next) {
   try {
-    const ipHash = getHashedIP(req);
+    const ip = getHashedIP(req);
     
+    // Check if the IP is banned either as a hash or as plain IP
     const { data: bannedIP, error } = await supabase
       .from('banned_ips')
-      .select('banned_at')
-      .eq('ip_hash', ipHash)
+      .select('banned_at, ip_hash')
+      .or(`ip_hash.eq.${ip},ip_hash.eq.${crypto.createHash('sha256').update(ip).digest('hex')}`)
       .single();
     
     if (bannedIP) {

@@ -71,13 +71,15 @@
             <table>
                 <tr>
                     <th>IP Hash</th>
+                    <th>Country</th>
                     <th>Banned Date</th>
                     <th>Banned By</th>
                     <th>Actions</th>
                 </tr>
                 <% bannedIPs.forEach(function(ban) { %>
                     <tr>
-                        <td><code><%= ban.ip_hash.substring(0, 16) %>...</code></td>
+                        <td><code><%= ban.ip_hash.length === 64 ? `${ban.ip_hash.substring(0, 16)}... (hashed)` : ban.ip_hash %></code></td>
+                        <td><%= ban.country || 'Unknown' %></td>
                         <td><%= new Date(ban.banned_at).toLocaleString() %></td>
                         <td><%= ban.banned_by %></td>
                         <td>

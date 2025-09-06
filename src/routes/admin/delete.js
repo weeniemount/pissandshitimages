@@ -3,6 +3,41 @@ const { authenticateAdmin } = require('../../middleware/adminCheck.js');
 const express = require('express');
 const adminDeleteRouter = express.Router();
 
+// Helper function to delay execution
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+// Batch delete helper function
+async function batchDelete(postIds, batchSize = 10) {
+  const batches = [];
+  for (let i = 0; i < postIds.length; i += batchSize) {
+    batches.push(postIds.slice(i, i + batchSize));
+  }
+
+  let deletedCount = 0;
+  for (const batch of batches) {
+    try {
+      const { error } = await supabase
+        .from('images')
+        .delete()
+        .in('id', batch);
+      
+      if (error) {
+        console.error(`Error deleting batch: ${error.message}`);
+        continue; // Continue with next batch even if this one failed
+      }
+      
+      deletedCount += batch.length;
+      
+      // Add a small delay between batches to prevent overloading
+      await delay(500);
+    } catch (error) {
+      console.error(`Failed to delete batch: ${error.message}`);
+      // Continue with next batch even if this one failed
+    }
+  }
+  return deletedCount;
+}
+
 adminDeleteRouter.post('/admin/delete/:id', authenticateAdmin, async (req, res) => {
   const { error } = await supabase
     .from('images')
@@ -115,15 +150,8 @@ adminDeleteRouter.post('/admin/delete-all-by-image-ip/:imageId', authenticateAdm
     
     const postIds = postIPs.map(p => p.post_id);
     
-    // Delete all images with these IDs
-    const { error: deleteError } = await supabase
-      .from('images')
-      .delete()
-      .in('id', postIds);
-    
-    if (deleteError) {
-      throw new Error(deleteError.message);
-    }
+    // Delete all images with these IDs in batches
+    const deletedCount = await batchDelete(postIds);
     
     // Try to ban the IP if not already banned (ignore if already exists)
     try {
@@ -138,7 +166,7 @@ adminDeleteRouter.post('/admin/delete-all-by-image-ip/:imageId', authenticateAdm
     }
     
     // Redirect back with success message
-    res.redirect(`/admin?bulk_deleted=${postIds.length}&banned=success`);
+    res.redirect(`/admin?bulk_deleted=${deletedCount}&banned=success`);
     
   } catch (error) {
     console.error('Error deleting all images by image IP:', error);
@@ -230,15 +258,8 @@ adminDeleteRouter.post('/admin/delete-all-by-ip-input', authenticateAdmin, async
     
     const postIds = postIPs.map(p => p.post_id);
     
-    // Delete all images with these IDs
-    const { error: deleteError } = await supabase
-      .from('images')
-      .delete()
-      .in('id', postIds);
-    
-    if (deleteError) {
-      throw new Error(deleteError.message);
-    }
+    // Delete all images with these IDs in batches
+    const deletedCount = await batchDelete(postIds);
     
     // Try to ban the IP if not already banned (ignore if already exists)
     try {
@@ -253,7 +274,7 @@ adminDeleteRouter.post('/admin/delete-all-by-ip-input', authenticateAdmin, async
     }
     
     // Redirect back with success message
-    res.redirect(`/admin?bulk_deleted=${postIds.length}&banned=success&ip_hash=${actualIpHash.substring(0, 8)}`);
+    res.redirect(`/admin?bulk_deleted=${deletedCount}&banned=success&ip_hash=${actualIpHash.substring(0, 8)}`);
     
   } catch (error) {
     console.error('Error bulk deleting images by IP input:', error);
@@ -300,18 +321,11 @@ adminDeleteRouter.post('/admin/delete-all-by-ip/:ipHash', authenticateAdmin, asy
     
     const postIds = postIPs.map(p => p.post_id);
     
-    // Delete all images with these IDs
-    const { error: deleteError } = await supabase
-      .from('images')
-      .delete()
-      .in('id', postIds);
-    
-    if (deleteError) {
-      throw new Error(deleteError.message);
-    }
+    // Delete all images with these IDs in batches
+    const deletedCount = await batchDelete(postIds);
     
     // Redirect back with success message
-    res.redirect(`/admin/banned-ips?deleted_count=${postIds.length}&deleted_ip=${ipHash.substring(0, 8)}`);
+    res.redirect(`/admin/banned-ips?deleted_count=${deletedCount}&deleted_ip=${ipHash.substring(0, 8)}`);
     
   } catch (error) {
     console.error('Error deleting all images by IP:', error);
