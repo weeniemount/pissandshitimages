@@ -42,7 +42,8 @@ if (process.env.LOCKED === 'true') {
 		// Allow admin routes and image viewing to work even when locked
 		if (req.path.startsWith('/admin') || 
 			req.path.startsWith('/i/') || 
-			req.path === '/image') {
+			req.path === '/image' ||
+			req.path === '/gary') {
 			return next();
 		}
 		res.status(503).sendFile(path.join(__dirname, 'pages', 'sitedown.html'));
