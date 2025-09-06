@@ -30,20 +30,12 @@ const adminRouter = require('./routes/admin.js');
 // Define admin routes before the lock middleware
 app.use('/', adminRouter);
 
-app.use('/gary', () => {
-	// send random gary picture from src/gary
-	const amount = 642; // total amount of gary pictures
-	const randomNum = Math.floor(Math.random() * amount) + 1;
-	res.sendFile(path.join(__dirname, 'gary', `Gary${randomNum}.jpg`));
-});
-
 if (process.env.LOCKED === 'true') {
 	app.use((req, res, next) => {
 		// Allow admin routes and image viewing to work even when locked
 		if (req.path.startsWith('/admin') || 
 			req.path.startsWith('/i/') || 
-			req.path === '/image' ||
-			req.path === '/gary') {
+			req.path === '/image') {
 			return next();
 		}
 		res.status(503).sendFile(path.join(__dirname, 'pages', 'sitedown.html'));
