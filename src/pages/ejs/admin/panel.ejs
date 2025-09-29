@@ -351,6 +351,7 @@
         
         <div class="nav-links">
             <a href="/admin/banned-ips">🚫 View Banned IPs (<%= bannedIPsCount %>)</a>
+            <a href="/admin/banned-discord">🎮 View Banned Discord Users (<%= bannedDiscordCount %>)</a>
             <a href="/admin/sessions">🔐 Active Sessions</a>
             <a href="/admin/change-password">🔑 Change Password</a>
             <a href="/gallery">🖼️ Gallery</a>
@@ -461,6 +462,11 @@
                     <p>Total Banned: <%= bannedIPsCount %></p>
                     <p><a href="/admin/banned-ips" style="color: #ff6b6b;">Manage Banned IPs →</a></p>
                 </div>
+                <div class="stat-box">
+                    <h3>🎮 Banned Discord Users</h3>
+                    <p>Total Banned: <%= bannedDiscordCount %></p>
+                    <p><a href="/admin/banned-discord" style="color: #ff6b6b;">Manage Discord Bans →</a></p>
+                </div>
             </div>
             
             <div class="management-section">
@@ -530,6 +536,7 @@
                     <th>Date</th>
                     <th>IP Info</th>
                     <th>Country</th>
+                    <th>Discord User</th>
                     <th>Actions</th>
                 </tr>
                 <% images.forEach(img => { %>
@@ -552,6 +559,16 @@
                             <%= img.hasIP ? img.country || 'Unknown' : 'No IP tracked' %>
                         </td>
                         <td>
+                            <% if (img.discordUserId) { %>
+                                <img src="https://cdn.discordapp.com/avatars/<%= img.discordUserId %>/<%= img.discordAvatar %>.png" 
+                                     style="width: 24px; height: 24px; border-radius: 50%; vertical-align: middle;">
+                                <%= img.discordUsername %>
+                                <% if (img.discordDiscriminator !== 'null') { %>#<%= img.discordDiscriminator %><% } %>
+                            <% } else { %>
+                                No Discord user
+                            <% } %>
+                        </td>
+                        <td>
                             <form action="/admin/toggle-visibility/<%= img.id %>" method="post" style="display:inline;">
                                 <input type="hidden" name="currentState" value="<%= img.isHidden %>">
                                 <button type="submit" class="visibility-btn <%= img.isHidden ? 'hidden' : 'visible' %>">
@@ -564,6 +581,15 @@
                                         🚫 Ban IP
                                     </button>
                                 </form>
+                                <% if (img.discordUserId) { %>
+                                <form action="/admin/discord/ban/<%= img.discordUserId %>" method="post" style="display:inline;">
+                                    <input type="hidden" name="reason" value="Banned via admin panel">
+                                    <button type="submit" class="ban-btn" style="background: #5865F2;" 
+                                            onclick="return confirm('Are you sure you want to ban Discord user <%= img.discordUsername %>? They will not be able to upload images.')">
+                                        🎮 Ban Discord User
+                                    </button>
+                                </form>
+                                <% } %>
                                 <form action="/admin/delete-all-by-image-ip/<%= img.id %>" method="post" style="display:inline;">
                                     <button type="submit" class="delete-btn nuclear" 
                                             onclick="return confirm('⚠️ NUCLEAR OPTION ⚠️\\n\\nThis will DELETE ALL IMAGES ever uploaded by this IP address!\\n\\nThis includes image <%= img.id %> and potentially many others.\\n\\nThis action CANNOT be undone!\\n\\nAre you absolutely sure?')">

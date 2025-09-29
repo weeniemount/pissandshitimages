@@ -9,11 +9,44 @@ class SupabaseStore extends session.Store {
 
     async initTable() {
         try {
-            // Create the sessions table if it doesn't exist
-            const { error } = await supabase.rpc('create_sessions_table');
-            if (error) {
-                console.error('Error creating sessions table:', error);
+            // Create the sessions table and set up RLS policies if needed
+            const { error } = await supabase
+                .from('sessions')
+                .select('sid')
+                .limit(1);
+
+            if (error && error.code === '42P01') { // Table does not exist
+                console.log('Creating sessions table...');
+                // We'll use raw SQL via the REST API since Supabase JS client doesn't support DDL
+                const response = await fetch(`${process.env.SUPABASE_URL}/rest/v1/rpc/create_sessions_table`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': process.env.SUPABASE_KEY,
+                        'Authorization': `Bearer ${process.env.SUPABASE_KEY}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    console.error('Error creating sessions table:', await response.text());
+                }
             }
+
+            // Clean up expired sessions
+            setInterval(async () => {
+                try {
+                    const { error: cleanupError } = await supabase
+                        .from('sessions')
+                        .delete()
+                        .lt('expire', new Date().toISOString());
+
+                    if (cleanupError) {
+                        console.error('Error cleaning up expired sessions:', cleanupError);
+                    }
+                } catch (err) {
+                    console.error('Session cleanup error:', err);
+                }
+            }, 15 * 60 * 1000); // Run every 15 minutes
         } catch (err) {
             console.error('Error initializing sessions table:', err);
         }
@@ -98,11 +131,15 @@ class SupabaseStore extends session.Store {
 const sessionMiddleware = session({
     store: new SupabaseStore(),
     secret: process.env.ADMIN_PASSWORD,
-    resave: false,
+    resave: true, // Changed to true to ensure session updates are saved
+    rolling: true, // Reset expiration on each request
     saveUninitialized: false,
+    name: 'piss.sid', // Custom cookie name
     cookie: {
         secure: process.env.NODE_ENV === 'production',
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+        maxAge: 7 * 24 * 60 * 60 * 1000, // Extended to 7 days
+        httpOnly: true,
+        sameSite: 'lax'
     }
 });
 

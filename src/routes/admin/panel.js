@@ -34,7 +34,7 @@ adminPanelRouter.get('/admin', authenticateAdmin, async (req, res) => {
     .select(`
       id,
       mimetype,
-      post_ips(ip_hash, created_at, country)
+      post_ips(ip_hash, created_at, country, discord_user_id, discord_username, discord_discriminator, discord_avatar)
     `);
   
   // Apply ID search filter if provided
@@ -51,6 +51,11 @@ adminPanelRouter.get('/admin', authenticateAdmin, async (req, res) => {
   // Get banned IPs count
   const { count: bannedIPsCount } = await supabase
     .from('banned_ips')
+    .select('*', { count: 'exact', head: true });
+
+  // Get banned Discord users count
+  const { count: bannedDiscordCount } = await supabase
+    .from('banned_discord_users')
     .select('*', { count: 'exact', head: true });
   
   // Process images and add metadata
@@ -69,6 +74,10 @@ adminPanelRouter.get('/admin', authenticateAdmin, async (req, res) => {
     const hasIP = img.post_ips && img.post_ips.length > 0;
     const ipHash = hasIP ? img.post_ips[0].ip_hash : null;
     const country = hasIP ? img.post_ips[0].country : null;
+    const discordUserId = hasIP ? img.post_ips[0].discord_user_id : null;
+    const discordUsername = hasIP ? img.post_ips[0].discord_username : null;
+    const discordDiscriminator = hasIP ? img.post_ips[0].discord_discriminator : null;
+    const discordAvatar = hasIP ? img.post_ips[0].discord_avatar : null;
     
     return {
       ...processed,
@@ -77,7 +86,11 @@ adminPanelRouter.get('/admin', authenticateAdmin, async (req, res) => {
       shitLevelClass: processed.roll >= 50 ? 'lucky' : processed.roll < 25 ? 'extreme' : 'normal',
       hasIP,
       ipHash: ipHash ? `${ipHash.substring(0, 8)}...` : null,
-      country
+      country,
+      discordUserId,
+      discordUsername,
+      discordDiscriminator,
+      discordAvatar
     };
   });
   
@@ -149,6 +162,7 @@ adminPanelRouter.get('/admin', authenticateAdmin, async (req, res) => {
     visibilitySuccess,
     stats,
     bannedIPsCount: bannedIPsCount || 0,
+    bannedDiscordCount: bannedDiscordCount || 0,
     images: finalImages,
     sortBy,
     order,

@@ -94,6 +94,33 @@ ALTER TABLE post_ips ADD COLUMN IF NOT EXISTS discord_username TEXT;
 ALTER TABLE post_ips ADD COLUMN IF NOT EXISTS discord_discriminator TEXT;
 ALTER TABLE post_ips ADD COLUMN IF NOT EXISTS discord_avatar TEXT;
 
+CREATE OR REPLACE FUNCTION create_sessions_table()
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+    -- Create the sessions table if it doesn't exist
+    CREATE TABLE IF NOT EXISTS sessions (
+        sid TEXT PRIMARY KEY,
+        sess JSONB NOT NULL,
+        expire TIMESTAMP WITH TIME ZONE NOT NULL
+    );
+
+    -- Create index for expired sessions cleanup if it doesn't exist
+    CREATE INDEX IF NOT EXISTS IDX_sessions_expire ON sessions (expire);
+
+    -- Set up RLS policies
+    ALTER TABLE sessions ENABLE ROW LEVEL SECURITY;
+
+    -- Allow all operations for authenticated service role
+    CREATE POLICY sessions_service_role_policy ON sessions
+        FOR ALL
+        USING (true)
+        WITH CHECK (true);
+END;
+$$;
+
 Thank you mom
 no problem sweetie */
 

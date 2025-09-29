@@ -19,15 +19,8 @@ app.use(express.static(path.join(process.cwd(), 'src', 'public')));
 app.use(countryTracker);
 
 // Session and auth setup
-app.use(session({
-    secret: process.env.ADMIN_PASSWORD, // reusing admin password as session secret
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
-    }
-}));
+const sessionMiddleware = require('./utils/session');
+app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
 
