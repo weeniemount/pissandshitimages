@@ -8,6 +8,7 @@ const { uploadRateLimit, strictUploadRateLimit } = require('../middleware/rateLi
 const { gamblingShitifyImage, bruhToPng } = require('../utils/image.js');
 const { supabase } = require('../utils/db.js');
 const { isAuthenticated, checkBannedDiscordUser } = require('../middleware/discordAuth.js');
+const validateDiscordToken = require('../middleware/validateDiscordToken.js');
 
 uploadRouter.post('/upload', 
   // Apply rate limiting before other middleware
@@ -22,6 +23,7 @@ uploadRouter.post('/upload',
   strictUploadRateLimit,
   checkBannedIP,
   isAuthenticated,
+  validateDiscordToken,
   checkBannedDiscordUser, 
   upload.single('image'), 
   async (req, res) => {
