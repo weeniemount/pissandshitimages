@@ -9,11 +9,39 @@ function countryTracker(req, res, next) {
         req.connection.remoteAddress
     ).trim();
 
-    // Clean the IP address
-    const cleanIp = ip.replace(/^.*:/, '').replace(/[^0-9.]/g, '');
+    // Handle special cases first
+    if (ip === '::1' || ip === '127.0.0.1') {
+        req.countryInfo = {
+            country: 'Local',
+        };
+        return next();
+    }
+
+    // Clean the IP address - handle both IPv4 and IPv6
+    let cleanIp = ip;
+    
+    // Handle IPv4-mapped IPv6 addresses
+    if (ip.startsWith('::ffff:')) {
+        cleanIp = ip.substring(7);
+    } else if (ip.includes(':')) {
+        // For other IPv6, keep as is - geoip-lite can handle IPv6
+        cleanIp = ip;
+    }
+    
+    // Remove any remaining unwanted characters but preserve dots and colons
+    cleanIp = cleanIp.replace(/[^0-9.:]/g, '');
     
     // Look up the location
     const geo = geoip.lookup(cleanIp);
+    
+    // Only log in development
+    if (process.env.NODE_ENV === 'development') {
+        console.log('IP Detection:', {
+            original: ip,
+            cleaned: cleanIp,
+            country: geo ? geo.country : 'Unknown'
+        });
+    }
     
     // Add country info to the request object
     req.countryInfo = {

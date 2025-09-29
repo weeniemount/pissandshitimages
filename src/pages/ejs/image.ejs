@@ -27,6 +27,17 @@
                 </div>
             <% } %>
             </div>
+            <% if (uploader) { %>
+                <div class="uploader-info" style="margin: 20px 0; padding: 15px; background: #2f3640; border-radius: 8px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <img src="<%= uploader.avatar %>" alt="Discord avatar" style="width: 32px; height: 32px; border-radius: 50%;">
+                        <div>
+                            <div>👤 Uploaded by: <%= uploader.username %></div>
+                            <div>📅 Upload date: <%= uploader.uploadDate %></div>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
             <a href="/gallery">🔙 Back to gallery</a>
         </div>
     </body>
