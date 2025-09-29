@@ -88,11 +88,26 @@ class SupabaseStore extends session.Store {
 
     async set(sid, session, callback) {
         try {
+            // Calculate expiration date from cookie
+            let expire;
+            if (session.cookie.expires) {
+                // expires is already a Date object
+                expire = new Date(session.cookie.expires).toISOString();
+            } else if (session.cookie.maxAge) {
+                // Calculate expiration from maxAge
+                expire = new Date(Date.now() + session.cookie.maxAge).toISOString();
+            } else {
+                // Default to 24 hours if no expiration set
+                expire = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+            }
+
             const sessData = {
                 sid: sid,
                 sess: JSON.stringify(session),
-                expire: session.cookie.expires.toISOString()
+                expire: expire
             };
+            
+            console.log('Setting session:', { sid, expire, hasUser: !!session.passport?.user });
             
             const { error } = await supabase
                 .from('sessions')
@@ -102,6 +117,7 @@ class SupabaseStore extends session.Store {
                 console.error('Error setting session:', error);
                 return callback(error);
             }
+            console.log('Session saved successfully');
             callback(null);
         } catch (err) {
             console.error('Session store set error:', err);
@@ -126,21 +142,49 @@ class SupabaseStore extends session.Store {
             callback(err);
         }
     }
+
+    // Add touch method to update session expiration
+    async touch(sid, session, callback) {
+        try {
+            let expire;
+            if (session.cookie.expires) {
+                expire = new Date(session.cookie.expires).toISOString();
+            } else if (session.cookie.maxAge) {
+                expire = new Date(Date.now() + session.cookie.maxAge).toISOString();
+            } else {
+                expire = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+            }
+
+            const { error } = await supabase
+                .from('sessions')
+                .update({ expire: expire })
+                .eq('sid', sid);
+
+            if (error) {
+                console.error('Error touching session:', error);
+                return callback(error);
+            }
+            callback(null);
+        } catch (err) {
+            console.error('Session store touch error:', err);
+            callback(err);
+        }
+    }
 }
 
 const sessionMiddleware = session({
     store: new SupabaseStore(),
     secret: process.env.ADMIN_PASSWORD,
-    resave: false, // Changed to true to ensure session updates are saved
+    resave: false, // Changed back to false since we now have touch()
     rolling: true, // Reset expiration on each request
     saveUninitialized: false,
-    name: 'piss.sid', // Custom cookie name
+    name: 'piss.sid',
     cookie: {
-        secure: process.env.NODE_ENV === 'production', // Secure in production only
+        secure: process.env.NODE_ENV === 'production',
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         httpOnly: true,
-        sameSite: 'lax',
-        domain: process.env.COOKIE_DOMAIN // Let it be controlled by env var only
+        sameSite: 'lax'
+        // Don't set domain - let it be automatic
     }
 });
 
