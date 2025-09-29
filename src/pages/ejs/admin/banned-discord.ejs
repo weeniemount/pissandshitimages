@@ -1,0 +1,38 @@
+<%- include('header') %>
+
+<div class="container">
+    <h2>Banned Discord Users</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Banned At</th>
+                <th>Reason</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% bannedUsers.forEach(function(user) { %>
+                <tr>
+                    <td>
+                        <% if (user.discord_users) { %>
+                            <img src="https://cdn.discordapp.com/avatars/<%= user.discord_id %>/<%= user.discord_users.avatar %>.png" width="32" height="32" style="border-radius: 50%;">
+                            <%= user.discord_users.username %>#<%= user.discord_users.discriminator %>
+                        <% } else { %>
+                            <%= user.discord_id %> (User not found)
+                        <% } %>
+                    </td>
+                    <td><%= new Date(user.banned_at).toLocaleString() %></td>
+                    <td><%= user.reason %></td>
+                    <td>
+                        <form action="/admin/discord/unban/<%= user.discord_id %>" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-warning btn-sm">Unban</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
+
+<%- include('footer') %>

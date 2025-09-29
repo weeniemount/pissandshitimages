@@ -7,12 +7,22 @@ const { getHashedIP, checkBannedIP } = require('../middleware/ipCheck.js');
 const { uploadRateLimit, strictUploadRateLimit } = require('../middleware/rateLimit.js');
 const { gamblingShitifyImage, bruhToPng } = require('../utils/image.js');
 const { supabase } = require('../utils/db.js');
+const { isAuthenticated, checkBannedDiscordUser } = require('../middleware/discordAuth.js');
 
 uploadRouter.post('/upload', 
   // Apply rate limiting before other middleware
+  (req, res, next) => {
+    // Check for session cookie
+    if (!req.cookies['connect.sid']) {
+      return res.status(401).send('No session cookie found. Please enable cookies and login.');
+    }
+    next();
+  },
   uploadRateLimit,
   strictUploadRateLimit,
-  checkBannedIP, 
+  checkBannedIP,
+  isAuthenticated,
+  checkBannedDiscordUser, 
   upload.single('image'), 
   async (req, res) => {
     if (!req.file) return res.status(400).send('No file uploaded.');
@@ -75,14 +85,18 @@ uploadRouter.post('/upload',
      
     if (error) return res.status(500).send('DB error: ' + error.message);
    
-    // Track the IP and country that uploaded this image
+    // Track the IP, country and Discord user that uploaded this image
     const ipHash = getHashedIP(req);
     const { error: ipError } = await supabase
       .from('post_ips')
       .insert([{
         post_id: data.id,
         ip_hash: ipHash,
-        country: req.countryInfo.country
+        country: req.countryInfo.country,
+        discord_user_id: req.user.id,
+        discord_username: req.user.username,
+        discord_discriminator: req.user.discriminator,
+        discord_avatar: req.user.avatar
       }]);
      
     if (ipError) {

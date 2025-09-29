@@ -60,6 +60,40 @@ CREATE TABLE admin_users (
 INSERT INTO admin_users (username, password_hash) 
 VALUES ('admin', '$2b$10$Ym9yzES/c/HMvuGN93/Dzu/4ZwWg2RWFtX8CATIR3bcOQzN4Vr43C');
 
+-- Create sessions table
+CREATE TABLE IF NOT EXISTS sessions (
+    sid TEXT PRIMARY KEY,
+    sess JSONB NOT NULL,
+    expire TIMESTAMP WITH TIME ZONE NOT NULL
+);
+
+-- Add index for expired sessions cleanup
+CREATE INDEX IF NOT EXISTS IDX_sessions_expire ON sessions (expire);
+
+-- Create discord_users table
+create table discord_users (
+    id text primary key,
+    username text not null,
+    discriminator text,
+    avatar text,
+    access_token text,
+    refresh_token text,
+    last_login timestamp with time zone default now()
+);
+
+-- Create banned_discord_users table
+create table banned_discord_users (
+    discord_id text primary key references discord_users(id),
+    banned_by text not null,
+    reason text,
+    banned_at timestamp with time zone default now()
+);
+
+ALTER TABLE post_ips ADD COLUMN IF NOT EXISTS discord_user_id TEXT;
+ALTER TABLE post_ips ADD COLUMN IF NOT EXISTS discord_username TEXT;
+ALTER TABLE post_ips ADD COLUMN IF NOT EXISTS discord_discriminator TEXT;
+ALTER TABLE post_ips ADD COLUMN IF NOT EXISTS discord_avatar TEXT;
+
 Thank you mom
 no problem sweetie */
 

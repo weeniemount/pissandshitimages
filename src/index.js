@@ -6,7 +6,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const cookieParser = require('cookie-parser');
 const path = require('path');
+const session = require('express-session');
 const countryTracker = require('./middleware/countryTracker');
+const { passport } = require('./middleware/discordAuth');
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'pages', 'ejs')); // assumes /pages/image.ejs
@@ -15,6 +17,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(express.static(path.join(process.cwd(), 'src', 'public')));
 app.use(countryTracker);
+
+// Session and auth setup
+app.use(session({
+    secret: process.env.ADMIN_PASSWORD, // reusing admin password as session secret
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use((req, res, next) => {
 	const forbiddenParams = ['env', 'process', 'secret'];
@@ -27,8 +42,10 @@ app.use((req, res, next) => {
 });
 
 const adminRouter = require('./routes/admin.js');
-// Define admin routes before the lock middleware
+const authRouter = require('./routes/auth.js');
+// Define admin and auth routes before the lock middleware
 app.use('/', adminRouter);
+app.use('/', authRouter);
 
 if (process.env.LOCKED === 'true') {
 	app.use((req, res, next) => {
@@ -44,7 +61,9 @@ if (process.env.LOCKED === 'true') {
 
 
 // static pages
-app.get('/', (req, res) => { res.sendFile(path.join(__dirname, 'pages', 'index.html')); });
+app.get('/', (req, res) => { 
+    res.render('index', { user: req.user }); 
+});
 app.get('/rules', (req, res) => { res.sendFile(path.join(__dirname, 'pages', 'rules.html')); });
 app.get('/about', (req, res) => { res.sendFile(path.join(__dirname, 'pages', 'about.html')); });
 app.get('/tos', (req, res) => { res.sendFile(path.join(__dirname, 'pages', 'tos.html')); });
