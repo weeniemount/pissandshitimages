@@ -136,11 +136,11 @@ const sessionMiddleware = session({
     saveUninitialized: false,
     name: 'piss.sid', // Custom cookie name
     cookie: {
-        secure: true, // Always use secure cookies in Vercel
+        secure: process.env.NODE_ENV === 'production', // Secure in production only
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         httpOnly: true,
         sameSite: 'lax',
-        domain: process.env.COOKIE_DOMAIN || 'pissandshitimages.com' // Ensure cookies work on your domain
+        domain: process.env.COOKIE_DOMAIN // Let it be controlled by env var only
     }
 });
 
