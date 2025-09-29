@@ -12,16 +12,24 @@ passport.deserializeUser(async (id, done) => {
             .eq('id', id)
             .single();
         
-        if (error) {
-            console.error('Error deserializing user:', error);
+        if (error || !data) {
             return done(null, null);
         }
-        if (!data) {
+
+        // Validate token immediately during deserialization
+        const response = await fetch('https://discord.com/api/users/@me', {
+            headers: {
+                Authorization: `Bearer ${data.access_token}`
+            }
+        });
+
+        if (!response.ok) {
+            // Token invalid, return null to force re-authentication
             return done(null, null);
         }
+
         done(null, data);
     } catch (err) {
-        console.error('Error in deserializeUser:', err);
         done(null, null);
     }
 });
