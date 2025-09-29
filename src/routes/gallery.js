@@ -197,7 +197,8 @@ galleryRouter.get('/gallery', async (req, res) => {
 		sortBy,
 		order,
 		searchId,
-		sortOptions
+		sortOptions,
+		user: req.user
 	});
 });
 

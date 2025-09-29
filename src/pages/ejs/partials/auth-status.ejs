@@ -1,0 +1,27 @@
+<% if (user) { %>
+    <div class="auth-status" style="text-align: right; padding: 10px; background: rgba(255, 107, 107, 0.1); margin-bottom: 20px;">
+        <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" style="width: 32px; height: 32px; border-radius: 50%; vertical-align: middle;">
+        <span style="margin: 0 10px;">Logged in as <%= user.username %></span>
+        <a href="/auth/logout" class="auth-button" style="background: #ff4444;">Logout</a>
+    </div>
+<% } else { %>
+    <div class="auth-status" style="text-align: right; padding: 10px; background: rgba(255, 107, 107, 0.1); margin-bottom: 20px;">
+        <span style="margin-right: 10px;">Login required to upload images</span>
+        <a href="/auth/discord" class="auth-button" style="background: #7289DA;">Login with Discord</a>
+    </div>
+<% } %>
+
+<style>
+.auth-button {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: opacity 0.2s;
+}
+.auth-button:hover {
+    opacity: 0.9;
+}
+</style>

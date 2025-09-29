@@ -14,6 +14,7 @@ const adminPanelRouter = require('./admin/panel.js');
 const adminIpBanRouter = require('./admin/ipBan.js');
 const adminVisibillityRouter = require('./admin/toggleVisibillity.js');
 const adminDeleteRouter = require('./admin/delete.js');
+const adminDiscordBanRouter = require('./admin/discordBan.js');
 
 adminRouter.use('/', adminLoginRouter)
 adminRouter.use('/', adminLogoutRouter);
@@ -23,5 +24,6 @@ adminRouter.use('/', adminPanelRouter);
 adminRouter.use('/', adminIpBanRouter);
 adminRouter.use('/', adminVisibillityRouter);
 adminRouter.use('/', adminDeleteRouter);
+adminRouter.use('/', adminDiscordBanRouter);
 
 module.exports = adminRouter;
