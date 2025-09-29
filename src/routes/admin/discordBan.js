@@ -30,11 +30,26 @@ discordBanRouter.post('/admin/discord/ban/:id', authenticateAdmin, async (req, r
     const reason = req.body.reason || 'No reason provided';
 
     try {
+        // Get admin session info
+        if (!req.adminSession) {
+            throw new Error('Admin session not found');
+        }
+
+        // Get admin user info
+        const { data: adminUser, error: adminError } = await supabase
+            .from('admin_users')
+            .select('username')
+            .single();
+
+        if (adminError || !adminUser) {
+            throw new Error('Admin user not found');
+        }
+
         const { error } = await supabase
             .from('banned_discord_users')
             .insert([{
                 discord_id: discordId,
-                banned_by: req.session.adminId,
+                banned_by: adminUser.username,
                 reason: reason,
                 banned_at: new Date().toISOString()
             }]);
@@ -43,7 +58,10 @@ discordBanRouter.post('/admin/discord/ban/:id', authenticateAdmin, async (req, r
         res.redirect('/admin/banned-discord');
     } catch (error) {
         console.error('Error banning Discord user:', error);
-        res.status(500).render('admin/error', { error: 'Failed to ban Discord user' });
+        res.status(500).render('admin/error', {
+            title: 'Error',
+            message: 'Failed to ban Discord user: ' + error.message
+        });
     }
 });
 
