@@ -1,38 +1,116 @@
-<%- include('header') %>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Banned Discord Users - Admin Panel</title>
+        <style>
+            body {
+                font-family: 'Comic Sans MS', cursive, sans-serif;
+                background: #f0f0f0;
+                margin: 0;
+                padding: 20px;
+            }
+            h1 {
+                color: #ff6b6b;
+                text-shadow: 2px 2px 0 #000;
+                font-size: 2.5em;
+                margin-bottom: 30px;
+                text-align: center;
+            }
+            .banned-list {
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                padding: 10px;
+                border-bottom: 1px solid #ddd;
+                text-align: left;
+            }
+            th {
+                background: #ff6b6b;
+                color: white;
+            }
+            tr:nth-child(even) {
+                background: #f9f9f9;
+            }
+            .unban-btn {
+                background: #4CAF50;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+            .unban-btn:hover {
+                background: #45a049;
+            }
+            .nav-button {
+                display: inline-block;
+                background: #ff6b6b;
+                color: white;
+                text-decoration: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+            }
+            .user-avatar {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                vertical-align: middle;
+                margin-right: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <script src="/oneko.js"></script>
+        <h1>🚫 Banned Discord Users Management</h1>
+        <a href="/admin" class="nav-button">⬅️ Back to Admin Panel</a>
 
-<div class="container">
-    <h2>Banned Discord Users</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>User</th>
-                <th>Banned At</th>
-                <th>Reason</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% bannedUsers.forEach(function(user) { %>
+    <div class="content-container banned-list">
+        <h2>Banned Discord Users (<%= bannedUsers.length %> total)</h2>
+        <% if (bannedUsers.length > 0) { %>
+            <table>
                 <tr>
-                    <td>
-                        <% if (user.discord_users) { %>
-                            <img src="https://cdn.discordapp.com/avatars/<%= user.discord_id %>/<%= user.discord_users.avatar %>.png" width="32" height="32" style="border-radius: 50%;">
-                            <%= user.discord_users.username %>#<%= user.discord_users.discriminator %>
-                        <% } else { %>
-                            <%= user.discord_id %> (User not found)
-                        <% } %>
-                    </td>
-                    <td><%= new Date(user.banned_at).toLocaleString() %></td>
-                    <td><%= user.reason %></td>
-                    <td>
-                        <form action="/admin/discord/unban/<%= user.discord_id %>" method="POST" style="display: inline;">
-                            <button type="submit" class="btn btn-warning btn-sm">Unban</button>
-                        </form>
-                    </td>
+                    <th>User</th>
+                    <th>Banned Date</th>
+                    <th>Banned By</th>
+                    <th>Reason</th>
+                    <th>Actions</th>
                 </tr>
-            <% }); %>
-        </tbody>
-    </table>
-</div>
-
-<%- include('footer') %>
+                <% bannedUsers.forEach(function(ban) { %>
+                    <tr>
+                        <td>
+                            <% if (ban.discord_users?.avatar) { %>
+                                <img 
+                                    src="https://cdn.discordapp.com/avatars/<%= ban.discord_id %>/<%= ban.discord_users.avatar %>.png" 
+                                    alt="Avatar" 
+                                    class="user-avatar"
+                                >
+                            <% } %>
+                            <%= ban.discord_users ? `${ban.discord_users.username}${ban.discord_users.discriminator ? '#' + ban.discord_users.discriminator : ''}` : ban.discord_id %>
+                        </td>
+                        <td><%= new Date(ban.banned_at).toLocaleString() %></td>
+                        <td><%= ban.banned_by %></td>
+                        <td><%= ban.reason || 'No reason provided' %></td>
+                        <td>
+                            <form action="/admin/discord/unban/<%= ban.discord_id %>" method="post" style="display:inline;">
+                                <button type="submit" class="unban-btn" onclick="return confirm('Are you sure you want to unban this user?')">
+                                    🔓 Unban
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            </table>
+        <% } else { %>
+            <p>No banned Discord users found.</p>
+        <% } %>
+    </div>
+    </body>
+</html>
