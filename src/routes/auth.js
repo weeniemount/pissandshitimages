@@ -6,7 +6,9 @@ authRouter.get('/auth/discord', passport.authenticate('discord'));
 
 authRouter.get('/auth/discord/callback', 
     (req, res, next) => {
+        console.log("got callback")
         passport.authenticate('discord', (err, user, info) => {
+            console.log("user info", user, info, err)
             if (err) {
                 console.error('Discord auth error:', err);
                 return res.redirect('/?error=' + encodeURIComponent(err.message));
@@ -15,6 +17,7 @@ authRouter.get('/auth/discord/callback',
                 return res.redirect('/?error=' + encodeURIComponent(info?.message || 'Authentication failed'));
             }
             req.logIn(user, (err) => {
+                console.log("logged in?", user, err)
                 if (err) {
                     console.error('Login error:', err);
                     return res.redirect('/?error=' + encodeURIComponent(err.message));

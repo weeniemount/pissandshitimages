@@ -131,7 +131,7 @@ class SupabaseStore extends session.Store {
 const sessionMiddleware = session({
     store: new SupabaseStore(),
     secret: process.env.ADMIN_PASSWORD,
-    resave: true, // Changed to true to ensure session updates are saved
+    resave: false, // Changed to true to ensure session updates are saved
     rolling: true, // Reset expiration on each request
     saveUninitialized: false,
     name: 'piss.sid', // Custom cookie name
