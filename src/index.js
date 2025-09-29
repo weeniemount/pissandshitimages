@@ -24,6 +24,8 @@ app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.set('trust proxy', 1)
+
 app.use((req, res, next) => {
 	const forbiddenParams = ['env', 'process', 'secret'];
 	for (const param of forbiddenParams) {
