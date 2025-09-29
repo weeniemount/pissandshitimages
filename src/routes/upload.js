@@ -14,7 +14,7 @@ uploadRouter.post('/upload',
   // Apply rate limiting before other middleware
   (req, res, next) => {
     // Check for session cookie
-    if (!req.cookies['connect.sid']) {
+    if (!req.cookies['piss.sid']) {
       return res.status(401).send('No session cookie found. Please enable cookies and login.');
     }
     next();
