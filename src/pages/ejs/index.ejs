@@ -66,12 +66,181 @@
                     }
                 }
             });
+            // Paste functionality
+            document.addEventListener('paste', function(e) {
+                const items = e.clipboardData.items;
+                
+                for (let i = 0; i < items.length; i++) {
+                    const item = items[i];
+                    
+                    if (item.type.indexOf('image') !== -1) {
+                        const blob = item.getAsFile();
+                        handlePastedImage(blob);
+                        bypassGary = true; // Set bypass flag for pasted images
+                        break;
+                    }
+                }
+            });
 
-            // Rest of the original JavaScript
-            // [Previous JavaScript code remains unchanged]
+            // Click paste zone to open file dialog
+            document.getElementById('pasteZone').addEventListener('click', function() {
+                document.getElementById('fileInput').click();
+            });
+
+            // Handle file input change
+            document.getElementById('fileInput').addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    handleSelectedFile(e.target.files[0]);
+                    bypassGary = false; // Regular file selection goes through Gary
+                }
+            });
+
+            function handlePastedImage(blob) {
+                pastedImage = blob;
+                
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('pastedImagePreview');
+                    preview.innerHTML = `
+                        <div style="margin-top: 10px;">
+                            <img src="${e.target.result}" style="max-width: 200px; max-height: 200px; border-radius: 5px;">
+                            <div style="margin-top: 5px; color: #ff6b6b; font-weight: bold;">✅ Image pasted! Ready to upload</div>
+                        </div>
+                    `;
+                    document.getElementById('pasteText').style.display = 'none';
+                };
+                reader.readAsDataURL(blob);
+
+                // Create a new file input with the pasted image
+                const dt = new DataTransfer();
+                const file = new File([blob], 'pasted-image.png', { type: blob.type });
+                dt.items.add(file);
+                document.getElementById('fileInput').files = dt.files;
+            }
+
+            function handleSelectedFile(file) {
+                // Show preview for selected file
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('pastedImagePreview');
+                    preview.innerHTML = `
+                        <div style="margin-top: 10px;">
+                            <img src="${e.target.result}" style="max-width: 200px; max-height: 200px; border-radius: 5px;">
+                            <div style="margin-top: 5px; color: #ff6b6b; font-weight: bold;">📁 File selected!</div>
+                        </div>
+                    `;
+                    document.getElementById('pasteText').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+                pastedImage = null; // Clear pasted image flag
+            }
+
+            // Clear preview function
+            function clearPreview() {
+                document.getElementById('pastedImagePreview').innerHTML = '';
+                document.getElementById('pasteText').style.display = 'block';
+                pastedImage = null;
+                bypassGary = false;
+                document.getElementById('fileInput').value = '';
+            }
+
+            // Add clear button to preview
+            function addClearButton() {
+                const preview = document.getElementById('pastedImagePreview');
+                if (preview.innerHTML && !preview.querySelector('.clear-btn')) {
+                    const clearBtn = document.createElement('button');
+                    clearBtn.textContent = '❌ Clear';
+                    clearBtn.className = 'clear-btn';
+                    clearBtn.style.cssText = 'margin-left: 10px; padding: 5px 10px; background: #ff4444; color: white; border: none; border-radius: 3px; cursor: pointer;';
+                    clearBtn.onclick = function(e) {
+                        e.preventDefault();
+                        clearPreview();
+                    };
+                    preview.firstElementChild.appendChild(clearBtn);
+                }
+            }
+
+            // Update preview display
+            function updatePreview() {
+                setTimeout(addClearButton, 100);
+            }
+
+            // Modify the upload click handler
+            upload.onclick = function(e) {
+                e.preventDefault();
+                
+                // Check if we have an image to upload
+                if (!document.getElementById('fileInput').files.length) {
+                    alert('Please select or paste an image first!');
+                    return;
+                }
+
+                // If image was pasted (bypass Gary) or user has already looked at Gary
+                if (bypassGary || hasLookedAtGary) {
+                    // Submit directly
+                    document.getElementById('uploadForm').submit();
+                    return;
+                }
+
+                // Otherwise, show Gary captcha
+                uploadTime = Math.floor(Date.now()/1000);
+                garyBox.showModal();
+                moreGary();
+            }
+
+            function submitIt() {
+                let difference = Math.floor(Date.now()/1000)-uploadTime;
+                if(difference < 10) {
+                    alert(`You still have to look at Gary for ${10-Math.floor(difference)} second(s).`);
+                    return;
+                }
+                garyBox.close();
+                hasLookedAtGary = true;
+                document.getElementById('uploadForm').submit();
+            }
+
+            async function moreGary() {
+                let gary = await fetch("https://api.garythe.cat/gary");
+                let garyJson = await gary.json();
+
+                garyImage.src = garyJson.url;
+            }
+
+            // Update previews when they're added
+            document.getElementById('pastedImagePreview').addEventListener('DOMNodeInserted', updatePreview);
         </script>
         <style>
-            /* Previous styles remain unchanged */
+            #garyImage {
+                max-height: 50vh;
+            }
+            
+            #pasteZone {
+                transition: all 0.3s ease;
+            }
+            
+            #pasteZone:hover {
+                background: rgba(255, 107, 107, 0.2);
+                transform: scale(1.02);
+            }
+            
+            .clear-btn:hover {
+                background: #ff2222 !important;
+            }
+        </style>
+        <style>
+            .checkbox-wrapper {
+                margin: 10px 0;
+                font-size: 1.1em;
+            }
+            .checkbox-wrapper input[type="checkbox"] {
+                margin-right: 8px;
+                transform: scale(1.2);
+            }
+            .checkbox-wrapper label {
+                color: #ff6b6b;
+                cursor: pointer;
+            }
         </style>
         <div style="margin-top: 20px;">
             <a href="/gallery" style="margin-right: 15px;">🖼️ View Gallery</a>
