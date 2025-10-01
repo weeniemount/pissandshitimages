@@ -83,5 +83,6 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, () => {
+  console.log("Ready!") // needed otherwise ptero thinks the server isn't started
   console.log(`pissandshitimages running on http://localhost:${PORT}`);
 });
