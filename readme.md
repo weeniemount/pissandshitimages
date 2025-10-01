@@ -42,16 +42,6 @@ make a new discord app and add localhost/server url you are hosting on as an val
 
 yo what's good gang 😭 welcome to the most UNHINGED, BRAINROTTED, OHIO-LEVEL image hosting service that's ever blessed (or cursed) this fucking planet! no cap this shit is absolutely SENDING me 💀💀💀
 
-## 🚀 DEPLOY THIS SIGMA MALE DISASTER! 🚀
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/weeniemount/pissandshitimages)
-
-**^ YO CLICK THIS SHIT RIGHT FUCKING NOW OR YOU'RE NOT SIGMA ^**
-
-*this button hits harder than your dad's belt fr* 💀
-
----
-
 ## 🎲 What the actual FUCK is this ohio ass project???
 
 PISSANDSHITIMAGES CASINO is some next-level **BRAINROT ENERGY** 🧠🔥 where your precious little images get absolutely **VIOLATED** by the RNG gods! It's giving main character energy but your images are definitely NOT the main character bestie 💅✨
