@@ -7,6 +7,7 @@ apiRouter.get('/randomimage', async (req, res) => {
   try {
     const raw = req.query.raw === 'true';
 
+    // First, get random image ID only (fast query)
     const { data: imageIds, error: idsError } = await supabase
       .from('images')
       .select('id')
@@ -24,10 +25,27 @@ apiRouter.get('/randomimage', async (req, res) => {
     // Pick random ID
     const randomId = imageIds[Math.floor(Math.random() * imageIds.length)].id;
 
-    // Now fetch the full image data only for that one image
+    // If raw, fetch full image data and return it
+    if (raw) {
+      const { data: randomImage, error: imageError } = await supabase
+        .from('images')
+        .select('*')
+        .eq('id', randomId)
+        .single();
+
+      if (imageError || !randomImage) {
+        return res.status(404).json({ error: 'Image not found' });
+      }
+
+      const [mimetype] = randomImage.mimetype.split(';');
+      res.set('Content-Type', mimetype);
+      return res.send(Buffer.from(randomImage.data, 'base64'));
+    }
+
+    // Otherwise, fetch minimal data for JSON response
     const { data: randomImage, error: imageError } = await supabase
       .from('images')
-      .select('*')
+      .select('id, mimetype, created_at')
       .eq('id', randomId)
       .single();
 
@@ -35,14 +53,7 @@ apiRouter.get('/randomimage', async (req, res) => {
       return res.status(404).json({ error: 'Image not found' });
     }
 
-    // If raw, just return the image
-    if (raw) {
-      const [mimetype] = randomImage.mimetype.split(';');
-      res.set('Content-Type', mimetype);
-      return res.send(Buffer.from(randomImage.data, 'base64'));
-    }
-
-    // Otherwise, get uploader info and return JSON
+    // Get uploader info
     const { data: uploaderInfo } = await supabase
       .from('post_ips')
       .select('discord_username, discord_avatar, discord_user_id, created_at')
@@ -51,7 +62,7 @@ apiRouter.get('/randomimage', async (req, res) => {
 
     const response = {
       id: randomImage.id,
-      image: randomImage.data,
+      image_url: `/api/image?id=${randomImage.id}`,
       mimetype: randomImage.mimetype.split(';')[0],
       created_at: randomImage.created_at,
       uploader: uploaderInfo ? {
