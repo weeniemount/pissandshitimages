@@ -63,6 +63,8 @@ app.get('/rules', (req, res) => { res.sendFile(path.join(__dirname, 'pages', 'ru
 app.get('/about', (req, res) => { res.sendFile(path.join(__dirname, 'pages', 'about.html')); });
 app.get('/tos', (req, res) => { res.sendFile(path.join(__dirname, 'pages', 'tos.html')); });
 app.get('/imagetobruh', (req, res) => { res.sendFile(path.join(__dirname, 'pages', 'imagetobruh.html')); });
+app.get('/api', (req, res) => { res.sendFile(path.join(__dirname, 'pages', 'api.html')); });
+
 
 // routes
 const uploadRouter = require('./routes/upload.js');
