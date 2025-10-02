@@ -1,10 +1,16 @@
 const express = require('express');
 const sharexConfigRouter = express.Router();
+const { isAuthenticated } = require('../middleware/discordAuth.js');
 
-// ShareX Config download
-sharexConfigRouter.get('/sharexconfig', (req, res) => {
-  const protocol = req.protocol;
-  const host = req.get('host');
+// ShareX Config download - requires authentication
+sharexConfigRouter.get('/sharexconfig', isAuthenticated, (req, res) => {
+  // Get the session cookie value
+  const sessionCookie = req.cookies['piss.sid'];
+  
+  if (!sessionCookie) {
+    return res.status(401).send('No session cookie found. Please log in first.');
+  }
+
   const config = {
     "Version": "14.1.0",
     "Name": "pissandshitimages",
@@ -15,6 +21,9 @@ sharexConfigRouter.get('/sharexconfig', (req, res) => {
     "FileFormName": "image",
     "Arguments": {
       "hide": "on"
+    },
+    "Headers": {
+      "Cookie": `piss.sid=${sessionCookie}`
     },
     "ResponseType": "RedirectionURL",
     "URL": "{responseurl}"
