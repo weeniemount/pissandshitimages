@@ -70,12 +70,14 @@ const leaderboardRouter = require('./routes/leaderboard.js');
 const galleryRouter = require('./routes/gallery.js');
 const imageRouter = require('./routes/image.js');
 const sharexConfigRouter = require('./routes/sharexconfig.js');
+const apiRouter = require('./routes/api');
 
 app.use('/', uploadRouter);
 app.use('/', leaderboardRouter);
 app.use('/', galleryRouter);
 app.use('/', imageRouter);
 app.use('/', sharexConfigRouter);
+app.use('/api', apiRouter);
 
 // 404 handler - must be after all other routes
 app.use((req, res) => {
