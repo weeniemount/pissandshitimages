@@ -5,6 +5,11 @@ const apiRouter = express.Router();
 // GET /api/randomimage - Returns a random image
 apiRouter.get('/randomimage', async (req, res) => {
   try {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+		res.setHeader('Pragma', 'no-cache');
+		res.setHeader('Expires', '0');
+		res.setHeader('Surrogate-Control', 'no-store');
+
     const raw = req.query.raw === 'true';
 
     const { data: imageIds, error: idsError } = await supabase
