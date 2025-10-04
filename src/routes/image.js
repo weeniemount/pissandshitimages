@@ -35,7 +35,7 @@ imageRouter.get('/image/:id', async (req, res) => {
 		country: uploaderInfo.country,
 		uploadDate: new Date(uploaderInfo.created_at).toLocaleString()
 	} : null;
-	if (uploader.username === "") uploader.username = unregistered
+	if (uploader.username === "") uploader.username = "unregistered"
 	res.render('image', {
 		imageUrl,
 		fileSizeMB,
@@ -63,3 +63,4 @@ imageRouter.get('/raw/:id', async (req, res) => {
 
 
 module.exports = imageRouter;
+
